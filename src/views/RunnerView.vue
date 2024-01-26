@@ -174,7 +174,12 @@ onMounted(() => {
       :title="getFullTitle()"
       @canvasContext="(can) => (mainCanvas = can)"
       @updateBackground="(b) => (photo = b)"
-      @updateScale="(s) => (photoScale += s)"
+      @updateScale="
+        (s) => {
+          photoScale += s
+          photoScale = Math.max(photoScale, 0.01)
+        }
+      "
       @updatePos="
         (l, t) => {
           photoLeft += l
