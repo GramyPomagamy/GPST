@@ -13,6 +13,10 @@ import imageLogoFoundationData from '../assets/logo_fundacja/na_ratunek.png'
 const canvasWidth = ref(1500)
 const canvasHeight = ref(1000)
 const backgroundImage: Ref<HTMLImageElement> = ref(new Image())
+backgroundImage.value.onload = () => {
+  photoLoaded.value = true
+  redrawThumbnail()
+}
 
 const mainCanvas: Ref<HTMLCanvasElement | null> = ref(null)
 const photo = ref('')
@@ -20,6 +24,7 @@ const photoScale = ref(1.0)
 const photoLeft = ref(0)
 const photoTop = ref(0)
 const photoRotation = ref(0)
+const photoLoaded = ref(false)
 
 const runner = ref('')
 const title = ref('')
@@ -50,31 +55,15 @@ function redrawThumbnail() {
   // ctx.fill()
   ctx.drawImage(imageGradient, 0, 0)
 
-  // TODO enhance image drawing
-  ctx.save()
-  ctx.translate(canvasWidth.value / 2, canvasHeight.value / 2)
-  ctx.rotate((photoRotation.value * Math.PI) / 180)
-
   let posX = photoLeft.value
   let posY = photoTop.value
-  if (photoRotation.value == 90) {
-    posX = photoTop.value
-    posY = -photoLeft.value
-  } else if (photoRotation.value == 180) {
-    posX = -photoLeft.value
-    posY = -photoTop.value
-  } else if (photoRotation.value == 270) {
-    posX = -photoTop.value
-    posY = photoLeft.value
-  }
   ctx.drawImage(
     backgroundImage.value,
-    (-backgroundImage.value.width * photoScale.value) / 2 + posX,
-    (-backgroundImage.value.height * photoScale.value) / 2 + posY,
+    posX,
+    posY,
     backgroundImage.value.width * photoScale.value,
     backgroundImage.value.height * photoScale.value
   )
-  ctx.restore()
 
   ctx.globalAlpha = 0.12
   ctx.drawImage(imageGradient, 0, 0)
@@ -124,7 +113,7 @@ function redrawThumbnail() {
 
   ctx.drawImage(imageLogoGSPS, 16, 17)
 
-  ctx.drawImage(imageLogoFoundation, 6, 734)
+  ctx.drawImage(imageLogoFoundation, 16, 734 - 17)
 }
 
 function getFullTitle(): string {
@@ -144,11 +133,9 @@ watch(photo, (photo: string) => {
   photoTop.value = 0
   photoScale.value = 1.0
   photoRotation.value = 0
+  photoLoaded.value = false
 
   backgroundImage.value.src = photo
-  backgroundImage.value.onload = () => {
-    redrawThumbnail()
-  }
 })
 document.fonts.onloadingdone = redrawThumbnail
 watch(runner, redrawThumbnail)
@@ -157,7 +144,28 @@ watch(subtitle, redrawThumbnail)
 watch(category, redrawThumbnail)
 watch(photoLeft, redrawThumbnail)
 watch(photoTop, redrawThumbnail)
-watch(photoRotation, redrawThumbnail)
+
+// rotate image once before using it
+watch(photoRotation, async () => {
+  // skip on image load
+  if (photoLoaded.value === false) {
+    return
+  }
+
+  let tmpCanvas = document.createElement('canvas')
+  tmpCanvas.width = backgroundImage.value.height
+  tmpCanvas.height = backgroundImage.value.width
+  // the image is on its side
+  const ctx = tmpCanvas.getContext('2d')!
+  ctx.translate(tmpCanvas.width / 2, tmpCanvas.height / 2)
+  ctx.rotate((90 * Math.PI) / 180)
+
+  ctx.drawImage(backgroundImage.value, -tmpCanvas.height / 2, -tmpCanvas.width / 2)
+
+  const data = tmpCanvas.toDataURL('image/png')
+  photoLoaded.value = false
+  backgroundImage.value.src = data
+})
 watch(photoScale, redrawThumbnail)
 
 onMounted(() => {
