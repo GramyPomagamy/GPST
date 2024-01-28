@@ -15,6 +15,13 @@ const canvasHeight = ref(1000)
 const backgroundImage: Ref<HTMLImageElement> = ref(new Image())
 backgroundImage.value.onload = () => {
   photoLoaded.value = true
+  // set default scale to fill the image
+  let scaleX = canvasWidth.value / backgroundImage.value.width
+  let scaleY = canvasHeight.value / backgroundImage.value.height
+  if (scaleX < scaleY) {
+    scaleX = scaleY
+  }
+  photoScale.value = Math.round(scaleX * 100) / 100
   redrawThumbnail()
 }
 
@@ -55,12 +62,10 @@ function redrawThumbnail() {
   // ctx.fill()
   ctx.drawImage(imageGradient, 0, 0)
 
-  let posX = photoLeft.value
-  let posY = photoTop.value
   ctx.drawImage(
     backgroundImage.value,
-    posX,
-    posY,
+    canvasWidth.value / 2 - (backgroundImage.value.width / 2) * photoScale.value + photoLeft.value,
+    canvasHeight.value / 2 - (backgroundImage.value.height / 2) * photoScale.value + photoTop.value,
     backgroundImage.value.width * photoScale.value,
     backgroundImage.value.height * photoScale.value
   )
