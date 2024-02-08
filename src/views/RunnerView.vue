@@ -4,12 +4,14 @@ import type { Ref } from 'vue'
 
 import CanvasItem from '../components/CanvasItem.vue'
 import RunnerItem from '../components/RunnerItem.vue'
+import { useRoute } from 'vue-router'
 
 import imageBannerData from '../assets/banner.png'
 import imageGradientData from '../assets/gradient.png'
 import imageLogoGSPSData from '../assets/logo_gsps/dzieciom2024.png'
 import imageLogoFoundationData from '../assets/logo_fundacja/na_ratunek.png'
 
+const route = useRoute()
 const canvasWidth = ref(1500)
 const canvasHeight = ref(1000)
 const backgroundImage: Ref<HTMLImageElement> = ref(new Image())
@@ -38,6 +40,11 @@ const title = ref('')
 const subtitle = ref('')
 const category = ref('')
 
+const initialRunner = ref('')
+const initialTitle = ref('')
+const initialSubtitle = ref('')
+const initialCategory = ref('')
+
 var imageBanner = new Image()
 imageBanner.onload = () => redrawThumbnail()
 imageBanner.src = imageBannerData
@@ -55,7 +62,13 @@ imageLogoFoundation.onload = () => redrawThumbnail()
 imageLogoFoundation.src = imageLogoFoundationData
 
 function redrawThumbnail() {
-  const ctx = mainCanvas.value?.getContext('2d')!
+  // TODO: add a check to see if the canvas is already loaded
+  if (mainCanvas.value == null) {
+    console.error('canvas not found,doing ugly retry in 0.1s')
+    setTimeout(redrawThumbnail, 100)
+    return
+  }
+  const ctx = mainCanvas.value.getContext('2d')!
   // ctx.clearRect(0, 0, canvasWidth.value, canvasHeight.value)
   // ctx.fillStyle = 'rgb(54,25,127)'
   // ctx.rect(0, 0, canvasWidth.value, canvasHeight.value)
@@ -173,6 +186,19 @@ watch(photoRotation, async () => {
 })
 watch(photoScale, redrawThumbnail)
 
+if (route.query.runner && typeof route.query.runner === 'string') {
+  initialRunner.value = route.query.runner
+}
+if (route.query.title && typeof route.query.title === 'string') {
+  initialTitle.value = route.query.title
+}
+if (route.query.subtitle && typeof route.query.subtitle === 'string') {
+  initialSubtitle.value = route.query.subtitle
+}
+if (route.query.category && typeof route.query.category === 'string') {
+  initialCategory.value = route.query.category
+}
+
 onMounted(() => {
   redrawThumbnail()
 })
@@ -207,6 +233,10 @@ onMounted(() => {
       @updateTitle="(t) => (title = t)"
       @updateSubtitle="(s) => (subtitle = s)"
       @updateCategory="(c) => (category = c)"
+      :runner="initialRunner"
+      :title="initialTitle"
+      :subtitle="initialSubtitle"
+      :category="initialCategory"
     />
   </div>
 </template>

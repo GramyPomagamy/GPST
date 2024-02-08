@@ -24,7 +24,6 @@ const sumX = ref(0)
 const sumY = ref(0)
 
 function canvasDrop(e: DragEvent) {
-  console.log(e)
   if (e.dataTransfer!.items && e.dataTransfer!.items.length == 1) {
     //emit('string', e.dataTransfer!.items[0])
     let reader = new FileReader()
@@ -87,7 +86,6 @@ function savePNG() {
 onMounted(() => {
   window.addEventListener('mousemove', windowMouseMove)
   window.addEventListener('mouseup', windowMouseUp)
-  console.log('pog')
   emit('canvasContext', canvasModel.value!)
 })
 </script>

@@ -8,6 +8,13 @@ const inputTitle = ref('')
 const inputSubtitle = ref('')
 const inputCategory = ref('')
 
+const props = defineProps<{
+  runner: string
+  title: string
+  subtitle: string
+  category: string
+}>()
+
 const emit = defineEmits<{
   updateBackground: [b: string]
   updateRunner: [r: string]
@@ -16,11 +23,27 @@ const emit = defineEmits<{
   updateCategory: [c: string]
 }>()
 
+if (props.runner) {
+  inputRunner.value = props.runner
+  emit('updateRunner', props.runner)
+}
+if (props.title) {
+  inputTitle.value = props.title
+  emit('updateTitle', inputTitle.value)
+}
+if (props.subtitle) {
+  inputSubtitle.value = props.subtitle
+  emit('updateSubtitle', props.subtitle)
+}
+if (props.category) {
+  inputCategory.value = props.category
+  emit('updateCategory', props.category)
+}
+
 function onNewBackground() {
   console.log(inputBackground.value!.files![0])
   let reader = new FileReader()
   reader.onloadend = function () {
-    console.log(reader.result)
     emit('updateBackground', reader.result as string)
   }
   reader.readAsDataURL(inputBackground.value!.files![0])
