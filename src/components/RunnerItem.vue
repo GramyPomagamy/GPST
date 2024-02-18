@@ -2,6 +2,8 @@
 import { ref, watch } from 'vue'
 import type { Ref } from 'vue'
 
+import axios from 'axios'
+
 const inputBackground: Ref<HTMLInputElement | null> = ref(null)
 const inputRunner = ref('')
 const inputTitle = ref('')
@@ -47,6 +49,10 @@ if (props.money) {
   emit('updateMoney', props.money)
 }
 
+// if (inputMoney.value <= 0) {
+//   updateMoney()
+// }
+
 function onNewBackground() {
   console.log(inputBackground.value!.files![0])
   let reader = new FileReader()
@@ -71,6 +77,12 @@ watch(inputCategory, () => {
 watch(inputMoney, () => {
   emit('updateMoney', inputMoney.value)
 })
+
+function updateMoney() {
+  axios.get('https://gsps.pl/donacje/index/gspsdzieciom2024?json=stunt_gp').then((resp) => {
+    inputMoney.value = Number(resp.data.agg.amount)
+  })
+}
 </script>
 
 <template>
@@ -131,15 +143,9 @@ watch(inputMoney, () => {
     </div>
     <div>
       <label for="money">Uzbierano:</label>
-      <input
-        v-model="inputCategory"
-        type="number"
-        name="money"
-        id="money"
-        placeholder="0"
-        required
-      />
+      <input v-model="inputMoney" type="number" name="money" id="money" placeholder="0" required />
       <!-- TODO update from the internet -->
+      <button type="button" @click="updateMoney">Aktualizuj</button>
     </div>
   </div>
 </template>

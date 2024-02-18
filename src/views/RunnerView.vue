@@ -183,6 +183,7 @@ watch(subtitle, redrawThumbnail)
 watch(category, redrawThumbnail)
 watch(photoLeft, redrawThumbnail)
 watch(photoTop, redrawThumbnail)
+watch(money, redrawThumbnail)
 
 // rotate image once before using it
 watch(photoRotation, async () => {
@@ -264,7 +265,6 @@ onMounted(() => {
       :subtitle="initialSubtitle"
       :category="initialCategory"
       :money="initialMoney"
-      initialMoney
     />
   </div>
 </template>
