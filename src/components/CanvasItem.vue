@@ -28,7 +28,6 @@ function canvasDrop(e: DragEvent) {
     //emit('string', e.dataTransfer!.items[0])
     let reader = new FileReader()
     reader.onloadend = function () {
-      console.log(reader.result)
       emit('updateBackground', reader.result as string)
     }
     reader.readAsDataURL(e.dataTransfer!.items[0].getAsFile()!)
@@ -37,10 +36,8 @@ function canvasDrop(e: DragEvent) {
 
 function canvasWheel(e: WheelEvent) {
   if (e.deltaY > 0) {
-    console.log('scroll w dół')
     emit('updateScale', -0.02)
   } else {
-    console.log('scroll w górę')
     emit('updateScale', 0.02)
   }
 }
@@ -51,7 +48,6 @@ function canvasMouseDown(e: MouseEvent) {
   }
   // wheel button
   if (((e.buttons >> 2) & 1) == 1) {
-    console.log('get rotated, idiot')
     emit('updateRotation', 90)
   }
 }
@@ -68,7 +64,6 @@ function windowMouseMove(e: MouseEvent) {
   if (canvasDragged.value) {
     sumX.value += e.movementX
     sumY.value += e.movementY
-    console.log(sumX.value, sumY.value)
     emit('updatePos', e.movementX, e.movementY)
   }
 }

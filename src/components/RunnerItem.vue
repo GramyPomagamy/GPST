@@ -145,7 +145,7 @@ function updateMoney() {
       <label for="money">Uzbierano:</label>
       <input v-model="inputMoney" type="number" name="money" id="money" placeholder="0" required />
       <!-- TODO update from the internet -->
-      <button type="button" @click="updateMoney">Aktualizuj</button>
+      <button type="button" @click.prevent="updateMoney">Aktualizuj</button>
     </div>
   </div>
 </template>
