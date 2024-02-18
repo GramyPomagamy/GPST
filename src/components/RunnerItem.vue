@@ -79,7 +79,7 @@ watch(inputMoney, () => {
 })
 
 function updateMoney() {
-  axios.get('https://gsps.pl/donacje/index/gspsdzieciom2024?json=stunt_gp').then((resp) => {
+  axios.get('https://gsps.pl/donacje/index/gspsdzieciom2024?json=gpst').then((resp) => {
     inputMoney.value = Number(resp.data.agg.amount)
   })
 }
