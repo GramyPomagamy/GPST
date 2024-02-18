@@ -7,12 +7,14 @@ const inputRunner = ref('')
 const inputTitle = ref('')
 const inputSubtitle = ref('')
 const inputCategory = ref('')
+const inputMoney = ref(0)
 
 const props = defineProps<{
   runner: string
   title: string
   subtitle: string
   category: string
+  money: number
 }>()
 
 const emit = defineEmits<{
@@ -21,6 +23,7 @@ const emit = defineEmits<{
   updateTitle: [t: string]
   updateSubtitle: [s: string]
   updateCategory: [c: string]
+  updateMoney: [m: number]
 }>()
 
 if (props.runner) {
@@ -38,6 +41,10 @@ if (props.subtitle) {
 if (props.category) {
   inputCategory.value = props.category
   emit('updateCategory', props.category)
+}
+if (props.money) {
+  inputMoney.value = props.money
+  emit('updateMoney', props.money)
 }
 
 function onNewBackground() {
@@ -60,6 +67,9 @@ watch(inputSubtitle, () => {
 })
 watch(inputCategory, () => {
   emit('updateCategory', inputCategory.value.trim())
+})
+watch(inputMoney, () => {
+  emit('updateMoney', inputMoney.value)
 })
 </script>
 
@@ -118,6 +128,18 @@ watch(inputCategory, () => {
         placeholder="Kategoria"
         required
       />
+    </div>
+    <div>
+      <label for="money">Uzbierano:</label>
+      <input
+        v-model="inputCategory"
+        type="number"
+        name="money"
+        id="money"
+        placeholder="0"
+        required
+      />
+      <!-- TODO update from the internet -->
     </div>
   </div>
 </template>

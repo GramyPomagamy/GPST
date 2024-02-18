@@ -6,10 +6,10 @@ import CanvasItem from '../components/CanvasItem.vue'
 import RunnerItem from '../components/RunnerItem.vue'
 import { useRoute } from 'vue-router'
 
-import imageBannerData from '../assets/banner.png'
+import imageBannerData from '../assets/banner_runner.png'
 import imageGradientData from '../assets/gradient.png'
-import imageLogoGSPSData from '../assets/logo_gsps/dzieciom2024.png'
-import imageLogoFoundationData from '../assets/logo_fundacja/na_ratunek.png'
+// import imageLogoGSPSData from '../assets/logo_gsps/dzieciom2024.png'
+// import imageLogoFoundationData from '../assets/logo_fundacja/na_ratunek.png'
 
 const route = useRoute()
 const canvasWidth = ref(1500)
@@ -39,11 +39,13 @@ const runner = ref('')
 const title = ref('')
 const subtitle = ref('')
 const category = ref('')
+const money = ref(0)
 
 const initialRunner = ref('')
 const initialTitle = ref('')
 const initialSubtitle = ref('')
 const initialCategory = ref('')
+const initialMoney = ref(0)
 
 var imageBanner = new Image()
 imageBanner.onload = () => redrawThumbnail()
@@ -53,13 +55,13 @@ var imageGradient = new Image()
 imageGradient.onload = () => redrawThumbnail()
 imageGradient.src = imageGradientData
 
-var imageLogoGSPS = new Image()
-imageLogoGSPS.onload = () => redrawThumbnail()
-imageLogoGSPS.src = imageLogoGSPSData
+// var imageLogoGSPS = new Image()
+// imageLogoGSPS.onload = () => redrawThumbnail()
+// imageLogoGSPS.src = imageLogoGSPSData
 
-var imageLogoFoundation = new Image()
-imageLogoFoundation.onload = () => redrawThumbnail()
-imageLogoFoundation.src = imageLogoFoundationData
+// var imageLogoFoundation = new Image()
+// imageLogoFoundation.onload = () => redrawThumbnail()
+// imageLogoFoundation.src = imageLogoFoundationData
 
 function redrawThumbnail() {
   // TODO: add a check to see if the canvas is already loaded
@@ -129,9 +131,28 @@ function redrawThumbnail() {
   ctx.strokeText(category.value, canvasWidth.value / 2, 887 + 42, canvasWidth.value)
   ctx.fillText(category.value, canvasWidth.value / 2, 887 + 42, canvasWidth.value)
 
-  ctx.drawImage(imageLogoGSPS, 16, 17)
+  // ctx.drawImage(imageLogoGSPS, 16, 17)
 
-  ctx.drawImage(imageLogoFoundation, 16, 734 - 17)
+  // ctx.drawImage(imageLogoFoundation, 16, 734 - 17)
+
+  if (money.value > 0) {
+    // we collected 24 bold
+    ctx.textAlign = 'left'
+    let weCollected = 'aktualnie zebraliśmy'
+    ctx.lineWidth = 5
+    ctx.font = 'normal normal 600 24px Saira Condensed'
+    ctx.strokeText(weCollected, 87, 187 + 24 + 4, canvasWidth.value)
+    ctx.fillText(weCollected, 87, 187 + 24 + 4, canvasWidth.value)
+
+    let moneyText = money.value.toLocaleString('pl-PL') + ' PLN'
+    // money 42 ultra bold
+    ctx.lineWidth = 5
+    ctx.font = 'normal normal 800 77px Saira Condensed'
+    ctx.textAlign = 'center'
+    ctx.fillStyle = '#ffbd16'
+    ctx.strokeText(moneyText, (368 - 16) / 2, 200 + 77 + 10, canvasWidth.value)
+    ctx.fillText(moneyText, (368 - 16) / 2, 200 + 77 + 10, canvasWidth.value)
+  }
 }
 
 function getFullTitle(): string {
@@ -199,6 +220,10 @@ if (route.query.category && typeof route.query.category === 'string') {
   initialCategory.value = route.query.category
 }
 
+if (route.query.money && typeof route.query.money === 'string') {
+  initialMoney.value = Number(route.query.money)
+}
+
 onMounted(() => {
   redrawThumbnail()
 })
@@ -233,10 +258,13 @@ onMounted(() => {
       @updateTitle="(t) => (title = t)"
       @updateSubtitle="(s) => (subtitle = s)"
       @updateCategory="(c) => (category = c)"
+      @updateMoney="(m) => (money = m)"
       :runner="initialRunner"
       :title="initialTitle"
       :subtitle="initialSubtitle"
       :category="initialCategory"
+      :money="initialMoney"
+      initialMoney
     />
   </div>
 </template>
