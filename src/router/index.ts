@@ -14,11 +14,11 @@ const router = createRouter({
       name: 'runner',
       component: () => import('../views/RunnerView.vue')
     },
-    {
-      path: '/milestone',
-      name: 'milestone',
-      component: () => import('../views/MilestoneView.vue')
-    },
+    // {
+    //   path: '/milestone',
+    //   name: 'milestone',
+    //   component: () => import('../views/MilestoneView.vue')
+    // },
     {
       path: '/photo',
       name: 'photo',

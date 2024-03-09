@@ -101,10 +101,10 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped>
+<!-- <style scoped>
 #mainCanvas {
   max-width: 75vw;
   max-height: 70vh;
   border: 1px solid black;
 }
-</style>
+</style> -->

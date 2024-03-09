@@ -106,6 +106,7 @@ function updateMoney() {
         name="runner"
         id="runner"
         placeholder="Runner"
+        size="42"
         required
       />
     </div>
@@ -117,6 +118,7 @@ function updateMoney() {
         name="title"
         id="title"
         placeholder="Tytuł"
+        size="42"
         required
       />
     </div>
@@ -127,6 +129,7 @@ function updateMoney() {
         type="text"
         name="subtitle"
         id="subtitle"
+        size="42"
         placeholder="Podtytuł (opcjonalne)"
       />
     </div>
@@ -138,12 +141,21 @@ function updateMoney() {
         name="category"
         id="category"
         placeholder="Kategoria"
+        size="42"
         required
       />
     </div>
     <div>
       <label for="money">Uzbierano:</label>
-      <input v-model="inputMoney" type="number" name="money" id="money" placeholder="0" required />
+      <input
+        v-model="inputMoney"
+        type="number"
+        name="money"
+        id="money"
+        placeholder="0"
+        size="10"
+        required
+      />
       <!-- TODO update from the internet -->
       <button type="button" @click.prevent="updateMoney">Aktualizuj</button>
     </div>
