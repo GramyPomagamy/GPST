@@ -9,6 +9,7 @@ const inputRunner = ref('')
 const inputTitle = ref('')
 const inputSubtitle = ref('')
 const inputCategory = ref('')
+const inputTime = ref('')
 const inputMoney = ref(0)
 
 const props = defineProps<{
@@ -16,7 +17,10 @@ const props = defineProps<{
   title: string
   subtitle: string
   category: string
-  money: number
+  enableTime?: boolean
+  time?: string
+  enableMoney?: boolean
+  money?: number
 }>()
 
 const emit = defineEmits<{
@@ -25,6 +29,7 @@ const emit = defineEmits<{
   updateTitle: [t: string]
   updateSubtitle: [s: string]
   updateCategory: [c: string]
+  updateTime: [t: string]
   updateMoney: [m: number]
 }>()
 
@@ -43,6 +48,10 @@ if (props.subtitle) {
 if (props.category) {
   inputCategory.value = props.category
   emit('updateCategory', props.category)
+}
+if (props.time) {
+  inputTime.value = props.time
+  emit('updateTime', props.time)
 }
 if (props.money) {
   inputMoney.value = props.money
@@ -73,6 +82,9 @@ watch(inputSubtitle, () => {
 })
 watch(inputCategory, () => {
   emit('updateCategory', inputCategory.value.trim())
+})
+watch(inputTime, () => {
+  emit('updateTime', inputTime.value.trim())
 })
 watch(inputMoney, () => {
   emit('updateMoney', inputMoney.value)
@@ -145,7 +157,20 @@ function updateMoney() {
         required
       />
     </div>
-    <div>
+
+    <div v-if="enableTime">
+      <label for="time">Czas:</label>
+      <input
+        v-model="inputTime"
+        type="text"
+        name="time"
+        id="time"
+        placeholder="12:34"
+        size="12"
+        required
+      />
+    </div>
+    <div v-if="enableMoney">
       <label for="money">Uzbierano:</label>
       <input
         v-model="inputMoney"

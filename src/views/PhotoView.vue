@@ -284,6 +284,7 @@ onMounted(() => {
       :title="initialTitle"
       :subtitle="initialSubtitle"
       :category="initialCategory"
+      :enable-money="true"
       :money="initialMoney"
     />
   </div>
