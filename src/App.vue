@@ -12,7 +12,6 @@ import { RouterLink, RouterView } from 'vue-router'
     <div>
       <nav>
         <RouterLink to="/">Runnerzy</RouterLink>
-        <!-- <RouterLink to="/milestone">Kamień Milowy</RouterLink> -->
         <RouterLink to="/photo">Zdjęcie</RouterLink>
         <RouterLink to="/youtube">Youtube</RouterLink>
       </nav>
