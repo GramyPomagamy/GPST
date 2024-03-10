@@ -55,7 +55,7 @@ if (props.time) {
 }
 if (props.money) {
   inputMoney.value = props.money
-  emit('updateMoney', props.money)
+  emit('updateMoney', Math.round(props.money))
 }
 
 // if (inputMoney.value <= 0) {
@@ -87,7 +87,7 @@ watch(inputTime, () => {
   emit('updateTime', inputTime.value.trim())
 })
 watch(inputMoney, () => {
-  emit('updateMoney', inputMoney.value)
+  emit('updateMoney', Math.round(inputMoney.value))
 })
 
 function updateMoney() {
