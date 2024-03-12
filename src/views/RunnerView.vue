@@ -137,12 +137,11 @@ function redrawThumbnail() {
 
   if (money.value > 0) {
     // we collected 24 bold
-    ctx.textAlign = 'left'
-    let weCollected = 'aktualnie zebraliśmy'
+    let weCollected = 'zebraliśmy już'
     ctx.lineWidth = 5
     ctx.font = 'normal normal 600 24px Saira Condensed'
-    ctx.strokeText(weCollected, 87, 187 + 24 + 4, canvasWidth.value)
-    ctx.fillText(weCollected, 87, 187 + 24 + 4, canvasWidth.value)
+    ctx.strokeText(weCollected, 175, 187 + 24 + 4, canvasWidth.value)
+    ctx.fillText(weCollected, 175, 187 + 24 + 4, canvasWidth.value)
 
     let moneyText = money.value.toLocaleString('pl-PL') + ' PLN'
     // money 42 ultra bold
