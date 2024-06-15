@@ -91,9 +91,15 @@ watch(inputMoney, () => {
 })
 
 function updateMoney() {
-  axios.get('https://gsps.pl/donacje/index/gspsdzieciom2024?json=gpst').then((resp) => {
-    inputMoney.value = Number(resp.data.agg.amount)
-  })
+  axios
+    .get(
+      import.meta.env.VITE_DONATION_TRACKER_BASE_URL +
+        import.meta.env.VITE_DONATION_TRACKER_SLUG +
+        '?json=gpst'
+    )
+    .then((resp) => {
+      inputMoney.value = Number(resp.data.agg.amount)
+    })
 }
 </script>
 

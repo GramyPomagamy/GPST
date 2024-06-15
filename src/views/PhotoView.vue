@@ -6,8 +6,12 @@ import CanvasItem from '../components/CanvasItem.vue'
 import RunnerItem from '../components/RunnerItem.vue'
 import { useRoute } from 'vue-router'
 
-import imageBannerData from '../assets/banner_milestone.png'
-import imageGradientData from '../assets/gradient.png'
+const imageBannerData = new URL(
+  '../' + import.meta.env.VITE_IMAGES_BANNER_MILESTONE_OLD,
+  import.meta.url
+).href
+const imageGradientData = new URL('../' + import.meta.env.VITE_IMAGES_GRADIENT, import.meta.url)
+  .href
 // import imageLogoGSPSData from '../assets/logo_gsps/dzieciom2024.png'
 // import imageLogoFoundationData from '../assets/logo_fundacja/na_ratunek.png'
 

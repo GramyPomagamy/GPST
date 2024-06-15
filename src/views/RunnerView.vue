@@ -6,10 +6,13 @@ import CanvasItem from '../components/CanvasItem.vue'
 import RunnerItem from '../components/RunnerItem.vue'
 import { useRoute } from 'vue-router'
 
-import imageBannerData from '../assets/banner_runner.png'
-import imageGradientData from '../assets/gradient.png'
-// import imageLogoGSPSData from '../assets/logo_gsps/dzieciom2024.png'
-// import imageLogoFoundationData from '../assets/logo_fundacja/na_ratunek.png'
+const imageBannerData = new URL('../' + import.meta.env.VITE_IMAGES_BANNER_RUNNER, import.meta.url)
+  .href
+const imageGradientData = new URL('../' + import.meta.env.VITE_IMAGES_GRADIENT, import.meta.url)
+  .href
+const imageLogoGSPSData = new URL('../' + import.meta.env.VITE_LOGO_FIRST, import.meta.url).href
+const imageLogoFoundationData = new URL('../' + import.meta.env.VITE_LOGO_SECOND, import.meta.url)
+  .href
 
 const route = useRoute()
 const canvasWidth = ref(1500)
@@ -55,13 +58,13 @@ var imageGradient = new Image()
 imageGradient.onload = () => redrawThumbnail()
 imageGradient.src = imageGradientData
 
-// var imageLogoGSPS = new Image()
-// imageLogoGSPS.onload = () => redrawThumbnail()
-// imageLogoGSPS.src = imageLogoGSPSData
+var imageLogoGSPS = new Image()
+imageLogoGSPS.onload = () => redrawThumbnail()
+imageLogoGSPS.src = imageLogoGSPSData
 
-// var imageLogoFoundation = new Image()
-// imageLogoFoundation.onload = () => redrawThumbnail()
-// imageLogoFoundation.src = imageLogoFoundationData
+var imageLogoFoundation = new Image()
+imageLogoFoundation.onload = () => redrawThumbnail()
+imageLogoFoundation.src = imageLogoFoundationData
 
 function redrawThumbnail() {
   // TODO: add a check to see if the canvas is already loaded
@@ -131,9 +134,9 @@ function redrawThumbnail() {
   ctx.strokeText(category.value, canvasWidth.value / 2, 887 + 42, canvasWidth.value)
   ctx.fillText(category.value, canvasWidth.value / 2, 887 + 42, canvasWidth.value)
 
-  // ctx.drawImage(imageLogoGSPS, 16, 17)
+  ctx.drawImage(imageLogoGSPS, 16, 17)
 
-  // ctx.drawImage(imageLogoFoundation, 16, 734 - 17)
+  ctx.drawImage(imageLogoFoundation, 16, 734 - 17)
 
   if (money.value > 0) {
     // we collected 24 bold
