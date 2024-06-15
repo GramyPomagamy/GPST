@@ -1,6 +1,19 @@
 {
   "name": "gpst",
-  "version": "0.0.1",
+  "description": "Generator Piekielnie Szybkich Thumbnailsów ",
+  "version": "0.0.3",
+  "author": {
+    "name": "Piotr \"Halamix2\" Halama",
+    "email": "skrzynka@halamix2.pl",
+    "url": "https://halamix2.pl"
+  },
+  "bugs": {
+    "url": "https://github.com/halamix2/GPST/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/halamix2/GPST"
+  },
   "private": true,
   "type": "module",
   "scripts": {
