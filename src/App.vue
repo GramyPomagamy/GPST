@@ -1,94 +1,25 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView } from 'vue-router'
 // import HeaderItem from './components/HeaderItem.vue'
 </script>
 
 <template>
-  <header>
-    <div>
-      <img alt="Logo GPST" class="logo" src="@/assets/favicon.ico" width="32" height="32" />
-      GPST - Generator Piekielnie Szybkich Thumbnailsów
-    </div>
-    <div>
-      <nav>
-        <RouterLink to="/">Runnerzy</RouterLink>
-        <RouterLink to="/photo">Zdjęcie</RouterLink>
-        <RouterLink to="/youtube">Youtube</RouterLink>
-      </nav>
-    </div>
-    <!-- jeśli podepniesz horaro to tutaj dane z Horaro-->
-    <!-- Dane: 11.03.2024 13:01
-    <button>Odśwież</button> -->
-  </header>
+  <v-app>
+    <v-app-bar :elevation="2">
+      <!--<v-app-bar-nav-icon />-->
+      <v-app-bar-title>GPST – Generator Piekielnie Szybkich Thumbnailsów</v-app-bar-title>
+      <v-btn stacked prepend-icon="person" to="/">Runnerzy</v-btn>
+      <v-btn stacked prepend-icon="photo_camera" to="/photo">Zdjęcia</v-btn>
+      <v-btn stacked prepend-icon="play_circle" to="/youtube">Youtube</v-btn>
+    </v-app-bar>
 
-  <RouterView />
+    <!--<v-navigation-drawer> </v-navigation-drawer>-->
 
-  <footer>
-    By Halamix2 &#9874; 2024 - {{ new Date().getFullYear() }}. Halamix nie potrafi we frontend, a
-    jednak to zrobił; what's your excuse?
-  </footer>
+    <RouterView />
+
+    <v-footer class="d-flex flex-column">
+      By Halamix2 &#9874; 2024 - {{ new Date().getFullYear() }}. Halamix nie potrafi we frontend, a
+      jednak to zrobił; what's your excuse?
+    </v-footer>
+  </v-app>
 </template>
-
-<!-- <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
-</style> -->

@@ -2,7 +2,7 @@
 
 Generator Piekielnie Szybkich Thumbnailsów
 
-This tools aimt to help generating Twitter/Youtube thumbnails
+This tools aims to help generating Twitter/Youtube thumbnails
 
 # URL parameters
 

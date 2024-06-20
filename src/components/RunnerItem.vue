@@ -106,19 +106,21 @@ function updateMoney() {
 <template>
   <div>
     <div>
-      <label for="background">Tło:</label>
-      <input
+      <v-file-input
         ref="inputBackground"
         @change="onNewBackground"
+        label="Tło"
         type="file"
         name="background"
         id="background"
         accept="image/png, image/jpeg, image/bmp"
+        prepend-icon="photo_camera"
       />
     </div>
     <div>
-      <label for="runner">Runner:</label>
-      <input
+      <!-- TODO clearable is broken -->
+      <v-text-field
+        clearable
         v-model="inputRunner"
         type="text"
         name="runner"
@@ -126,11 +128,12 @@ function updateMoney() {
         placeholder="Runner"
         size="42"
         required
+        prepend-icon="person"
       />
     </div>
     <div>
-      <label for="title">Tytuł:</label>
-      <input
+      <v-text-field
+        clearable
         v-model="inputTitle"
         type="text"
         name="title"
@@ -138,22 +141,24 @@ function updateMoney() {
         placeholder="Tytuł"
         size="42"
         required
+        prepend-icon="uppercase"
       />
     </div>
     <div>
-      <label for="subtitle">Podtytuł:</label>
-      <input
+      <v-text-field
+        clearable
         v-model="inputSubtitle"
         type="text"
         name="subtitle"
         id="subtitle"
         size="42"
         placeholder="Podtytuł (opcjonalne)"
+        prepend-icon="lowercase"
       />
     </div>
     <div>
-      <label for="category">Kategoria:</label>
-      <input
+      <v-text-field
+        clearable
         v-model="inputCategory"
         type="text"
         name="category"
@@ -161,34 +166,39 @@ function updateMoney() {
         placeholder="Kategoria"
         size="42"
         required
+        prepend-icon="category"
       />
     </div>
 
     <div v-if="enableTime">
-      <label for="time">Czas:</label>
-      <input
+      <v-text-field
+        clearable
         v-model="inputTime"
         type="text"
         name="time"
+        label="Czas"
         id="time"
         placeholder="12:34"
         size="12"
         required
+        prepend-icon="schedule"
       />
     </div>
     <div v-if="enableMoney">
-      <label for="money">Uzbierano:</label>
-      <input
+      <v-number-input
+        clearable
         v-model="inputMoney"
         type="number"
         name="money"
+        label="Uzbierano"
         id="money"
         placeholder="0"
         size="10"
         required
+        prepend-icon="paid"
       />
       <!-- TODO update from the internet -->
-      <button type="button" @click.prevent="updateMoney">Aktualizuj</button>
+      <v-btn @click.prevent="updateMoney">Aktualizuj</v-btn>
     </div>
   </div>
 </template>

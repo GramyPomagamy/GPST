@@ -45,6 +45,8 @@ function canvasWheel(e: WheelEvent) {
 function canvasMouseDown(e: MouseEvent) {
   if ((e.buttons & 1) == 1) {
     canvasDragged.value = true
+    canvasModel.value!.classList.add('cursor-grabbing')
+    canvasModel.value!.classList.remove('cursor-grab')
   }
   // wheel button
   if (((e.buttons >> 2) & 1) == 1) {
@@ -57,6 +59,8 @@ function windowMouseUp(e: MouseEvent) {
     canvasDragged.value = false
     sumX.value = 0
     sumY.value = 0
+    canvasModel.value!.classList.remove('cursor-grabbing')
+    canvasModel.value!.classList.add('cursor-grab')
   }
 }
 
@@ -87,6 +91,7 @@ onMounted(() => {
 <template>
   <div>
     <canvas
+      :class="`cursor-grab`"
       @drop.prevent="canvasDrop"
       @wheel.prevent="canvasWheel"
       @mousedown.prevent="canvasMouseDown"
@@ -97,7 +102,7 @@ onMounted(() => {
     >
       Nie pójdzie bez JS. Co jest zadziwiające jak w ogóle byłeś w stanie zobaczyć tę wiadomość?
     </canvas>
-    <button @click.prevent="savePNG">Zapisz PNG</button>
+    <v-btn variant="tonal" prepend-icon="download" @click.prevent="savePNG">Zapisz PNG</v-btn>
   </div>
 </template>
 
