@@ -1,7 +1,7 @@
 {
   "name": "gpst",
   "description": "Generator Piekielnie Szybkich Thumbnailsów ",
-  "version": "0.0.3",
+  "version": "0.2.0-dev",
   "author": {
     "name": "Piotr \"Halamix2\" Halama",
     "email": "skrzynka@halamix2.pl",
@@ -30,7 +30,7 @@
     "file-saver": "^2.0.5",
     "pinia": "^2.1.7",
     "vite-plugin-vuetify": "^2.0.3",
-    "vue": "^3.4.29",
+    "vue": "^3.4.30",
     "vue-router": "^4.4.0",
     "vuetify": "^3.6.10"
   },
@@ -38,7 +38,7 @@
     "@rushstack/eslint-patch": "^1.10.3",
     "@tsconfig/node18": "^18.2.4",
     "@types/file-saver": "^2.0.7",
-    "@types/node": "^20.14.7",
+    "@types/node": "^20.14.8",
     "@vitejs/plugin-vue": "^5.0.5",
     "@vue/eslint-config-prettier": "^9.0.0",
     "@vue/eslint-config-typescript": "^13.0.0",
@@ -49,6 +49,6 @@
     "prettier": "^3.3.2",
     "typescript": "~5.5.2",
     "vite": "^5.3.1",
-    "vue-tsc": "^2.0.21"
+    "vue-tsc": "^2.0.22"
   }
 }
