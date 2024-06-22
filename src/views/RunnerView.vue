@@ -6,13 +6,7 @@ import CanvasItem from '../components/CanvasItem.vue'
 import RunnerItem from '../components/RunnerItem.vue'
 import { useRoute } from 'vue-router'
 
-const imageBannerData = new URL('../' + import.meta.env.VITE_IMAGES_BANNER_RUNNER, import.meta.url)
-  .href
-const imageGradientData = new URL('../' + import.meta.env.VITE_IMAGES_GRADIENT, import.meta.url)
-  .href
-const imageLogoGSPSData = new URL('../' + import.meta.env.VITE_LOGO_FIRST, import.meta.url).href
-const imageLogoFoundationData = new URL('../' + import.meta.env.VITE_LOGO_SECOND, import.meta.url)
-  .href
+import { loadImage } from '../utils/loadImage'
 
 const route = useRoute()
 const canvasWidth = ref(1500)
@@ -50,21 +44,27 @@ const initialSubtitle = ref('')
 const initialCategory = ref('')
 const initialMoney = ref(0)
 
-var imageBanner = new Image()
-imageBanner.onload = () => redrawThumbnail()
-imageBanner.src = imageBannerData
+var imageBanner = await loadImage(
+  new URL('../' + import.meta.env.VITE_IMAGES_BANNER_RUNNER, import.meta.url),
+  redrawThumbnail
+)
 
-var imageGradient = new Image()
-imageGradient.onload = () => redrawThumbnail()
-imageGradient.src = imageGradientData
+// imageBanner.src = imageBannerData
 
-var imageLogoGSPS = new Image()
-imageLogoGSPS.onload = () => redrawThumbnail()
-imageLogoGSPS.src = imageLogoGSPSData
+var imageGradient = await loadImage(
+  new URL('../' + import.meta.env.VITE_IMAGES_GRADIENT, import.meta.url),
+  redrawThumbnail
+)
 
-var imageLogoFoundation = new Image()
-imageLogoFoundation.onload = () => redrawThumbnail()
-imageLogoFoundation.src = imageLogoFoundationData
+var imageLogoGSPS = await loadImage(
+  new URL('../' + import.meta.env.VITE_LOGO_FIRST, import.meta.url),
+  redrawThumbnail
+)
+
+var imageLogoFoundation = await loadImage(
+  new URL('../' + import.meta.env.VITE_LOGO_SECOND, import.meta.url),
+  redrawThumbnail
+)
 
 function redrawThumbnail() {
   // TODO: add a check to see if the canvas is already loaded
@@ -134,7 +134,8 @@ function redrawThumbnail() {
   ctx.strokeText(category.value, canvasWidth.value / 2, 887 + 42, canvasWidth.value)
   ctx.fillText(category.value, canvasWidth.value / 2, 887 + 42, canvasWidth.value)
 
-  ctx.drawImage(imageLogoGSPS, 16, 17)
+  // TODO: separate drawRescaled or sth func
+  ctx.drawImage(imageLogoGSPS, 16, 17, 317, 113)
 
   ctx.drawImage(imageLogoFoundation, 16, 734 - 17)
 

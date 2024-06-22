@@ -55,7 +55,7 @@ function canvasMouseDown(e: MouseEvent) {
 }
 
 function windowMouseUp(e: MouseEvent) {
-  if ((e.buttons & 1) == 0) {
+  if (canvasModel.value != null && (e.buttons & 1) == 0) {
     canvasDragged.value = false
     sumX.value = 0
     sumY.value = 0

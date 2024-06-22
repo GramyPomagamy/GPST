@@ -113,8 +113,9 @@ function updateMoney() {
         type="file"
         name="background"
         id="background"
-        accept="image/png, image/jpeg, image/bmp"
-        prepend-icon="photo_camera"
+        accept="image/*"
+        prepend-inner-icon="photo_camera"
+        prepend-icon=""
       />
     </div>
     <div>
@@ -125,10 +126,10 @@ function updateMoney() {
         type="text"
         name="runner"
         id="runner"
-        placeholder="Runner"
+        label="Runner"
         size="42"
         required
-        prepend-icon="person"
+        prepend-inner-icon="person"
       />
     </div>
     <div>
@@ -138,10 +139,10 @@ function updateMoney() {
         type="text"
         name="title"
         id="title"
-        placeholder="Tytuł"
+        label="Tytuł"
         size="42"
         required
-        prepend-icon="uppercase"
+        prepend-inner-icon="uppercase"
       />
     </div>
     <div>
@@ -152,8 +153,8 @@ function updateMoney() {
         name="subtitle"
         id="subtitle"
         size="42"
-        placeholder="Podtytuł (opcjonalne)"
-        prepend-icon="lowercase"
+        label="Podtytuł (opcjonalne)"
+        prepend-inner-icon="lowercase"
       />
     </div>
     <div>
@@ -163,10 +164,10 @@ function updateMoney() {
         type="text"
         name="category"
         id="category"
-        placeholder="Kategoria"
+        label="Kategoria"
         size="42"
         required
-        prepend-icon="category"
+        prepend-inner-icon="category"
       />
     </div>
 
@@ -181,7 +182,7 @@ function updateMoney() {
         placeholder="12:34"
         size="12"
         required
-        prepend-icon="schedule"
+        prepend-inner-icon="schedule"
       />
     </div>
     <div v-if="enableMoney">
@@ -195,7 +196,7 @@ function updateMoney() {
         placeholder="0"
         size="10"
         required
-        prepend-icon="paid"
+        prepend-inner-icon="paid"
       />
       <!-- TODO update from the internet -->
       <v-btn @click.prevent="updateMoney">Aktualizuj</v-btn>
