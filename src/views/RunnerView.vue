@@ -7,6 +7,7 @@ import RunnerItem from '../components/RunnerItem.vue'
 import { useRoute } from 'vue-router'
 
 import { loadImage } from '../utils/loadImage'
+import { renderShadowText } from '@/utils/renderText'
 
 const route = useRoute()
 const canvasWidth = ref(1500)
@@ -112,8 +113,7 @@ function redrawThumbnail() {
   ctx.textAlign = 'center'
   let jzc = 'Już za chwilę...'
   // 1500 - ((1500 - 912) / 2)
-  ctx.strokeText(jzc, 1206, 99, canvasWidth.value - 912)
-  ctx.fillText(jzc, 1206, 99, canvasWidth.value - 912)
+  renderShadowText(ctx, jzc, 1206, 99, canvasWidth.value - 912)
 
   var runnerPosition = 648 + 83
   var titlePosition = 740 + 113
@@ -124,35 +124,30 @@ function redrawThumbnail() {
 
   // runner 83medium
   ctx.font = 'normal normal 500 83px Barlow Condensed'
-  ctx.strokeText(runner.value, canvasWidth.value / 2, runnerPosition, canvasWidth.value)
-  ctx.fillText(runner.value, canvasWidth.value / 2, runnerPosition, canvasWidth.value)
+  renderShadowText(ctx, runner.value, canvasWidth.value / 2, runnerPosition, canvasWidth.value)
 
   // title, 113 semi-bold
   ctx.font = 'normal normal 600 113px Barlow Condensed'
-  ctx.strokeText(title.value, canvasWidth.value / 2, titlePosition, canvasWidth.value)
-  ctx.fillText(title.value, canvasWidth.value / 2, titlePosition, canvasWidth.value)
+  renderShadowText(ctx, title.value, canvasWidth.value / 2, titlePosition, canvasWidth.value)
 
   if (subtitle.value) {
     // podtytuł 90 semi-bld
     ctx.font = 'normal normal 600 90px Barlow Condensed'
 
-    ctx.strokeText(subtitle.value, canvasWidth.value / 2, 786 + 90, canvasWidth.value)
-    ctx.fillText(subtitle.value, canvasWidth.value / 2, 786 + 90, canvasWidth.value)
+    renderShadowText(ctx, subtitle.value, canvasWidth.value / 2, 786 + 90, canvasWidth.value)
   }
 
   // kategoria 42 light
   ctx.lineWidth = 5
   ctx.font = 'normal normal 300 42px Barlow Condensed'
-  ctx.strokeText(category.value, canvasWidth.value / 2, 887 + 42, canvasWidth.value)
-  ctx.fillText(category.value, canvasWidth.value / 2, 887 + 42, canvasWidth.value)
+  renderShadowText(ctx, category.value, canvasWidth.value / 2, 887 + 42, canvasWidth.value)
 
   if (money.value > 0) {
     // we collected 24 bold
     let weCollected = 'zebraliśmy już'
     ctx.lineWidth = 5
     ctx.font = 'normal normal 600 24px Saira Condensed'
-    ctx.strokeText(weCollected, 175, 170, canvasWidth.value)
-    ctx.fillText(weCollected, 175, 170, canvasWidth.value)
+    renderShadowText(ctx, weCollected, 175, 170, canvasWidth.value)
 
     let moneyText = money.value.toLocaleString('pl-PL') + ' PLN'
     // money 42 ultra bold

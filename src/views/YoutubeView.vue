@@ -7,6 +7,7 @@ import RunnerItem from '../components/RunnerItem.vue'
 import { useRoute } from 'vue-router'
 
 import { loadImage } from '../utils/loadImage'
+import { renderShadowText } from '@/utils/renderText'
 
 const route = useRoute()
 const canvasWidth = ref(1280)
@@ -113,26 +114,22 @@ function redrawThumbnail() {
 
   // runner 83 PT Sans Narrow Bold Condensed
   ctx.font = 'normal normal 700 70px PT Sans Narrow'
-  ctx.strokeText(runner.value, rightSide, runnerPosition + 70, canvasWidth.value)
-  ctx.fillText(runner.value, rightSide, runnerPosition + 70, canvasWidth.value)
+  renderShadowText(ctx, runner.value, rightSide, runnerPosition + 70, canvasWidth.value)
 
   // title,  PT Sans Narrow Bold Condensed
   ctx.font = 'normal normal 700 ' + titleSize.toString() + 'px PT Sans Narrow'
-  ctx.strokeText(title.value, rightSide, titlePosition + titleSize, canvasWidth.value)
-  ctx.fillText(title.value, rightSide, titlePosition + titleSize, canvasWidth.value)
+  renderShadowText(ctx, title.value, rightSide, titlePosition + titleSize, canvasWidth.value)
 
   if (subtitle.value) {
     // podtytuł 77 PT Sans Narrow Bold Condensed
     ctx.font = 'normal normal 700 77px PT Sans Narrow'
 
-    ctx.strokeText(subtitle.value, rightSide, subtitlePosition + 77, canvasWidth.value)
-    ctx.fillText(subtitle.value, rightSide, subtitlePosition + 77, canvasWidth.value)
+    renderShadowText(ctx, subtitle.value, rightSide, subtitlePosition + 77, canvasWidth.value)
   }
 
   // kategoria 62 Saira Condensed, Semi-Bold Condensed
   ctx.font = 'normal normal 600 62px Saira Condensed'
-  ctx.strokeText(category.value, rightSide, categoryPosition + 62, canvasWidth.value)
-  ctx.fillText(category.value, rightSide, categoryPosition + 62, canvasWidth.value)
+  renderShadowText(ctx, category.value, rightSide, categoryPosition + 62, canvasWidth.value)
 
   // time 158 Saira Condensed, Ultra-Bold Condensed
   ctx.font = 'normal normal 800 158px Saira Condensed'

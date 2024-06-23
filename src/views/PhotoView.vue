@@ -7,6 +7,7 @@ import RunnerItem from '../components/RunnerItem.vue'
 import { useRoute } from 'vue-router'
 
 import { loadImage } from '../utils/loadImage'
+import { renderShadowText } from '@/utils/renderText'
 
 const route = useRoute()
 const canvasWidth = ref(1500)
@@ -113,8 +114,7 @@ function redrawThumbnail() {
   // runner 83medium
   let runnerPosition = 208 + 101
   ctx.font = 'normal normal 600 101px Saira Condensed'
-  ctx.strokeText(runner.value, canvasWidth.value / 2, runnerPosition, canvasWidth.value)
-  ctx.fillText(runner.value, canvasWidth.value / 2, runnerPosition, canvasWidth.value)
+  renderShadowText(ctx, runner.value, canvasWidth.value / 2, runnerPosition, canvasWidth.value)
 
   // fdbc16
   let titleFontSize = 340
@@ -147,23 +147,21 @@ function redrawThumbnail() {
   //var titlePosition = 100
 
   // ctx.font = 'normal normal 600 113px Barlow Condensed'
-  ctx.strokeText(title.value + ' ', titlePosition, titleHeight, canvasWidth.value)
-  ctx.fillText(title.value + ' ', titlePosition, titleHeight, canvasWidth.value)
+  renderShadowText(ctx, title.value + ' ', titlePosition, titleHeight, canvasWidth.value)
 
   if (subtitle.value) {
     // // podtytuł 90 semi-bld
     // ctx.font = 'normal normal 600 90px Barlow Condensed'
     ctx.fillStyle = '#ffbd16'
 
-    ctx.strokeText(subtitle.value, subtitlePosition, titleHeight, canvasWidth.value)
-    ctx.fillText(subtitle.value, subtitlePosition, titleHeight, canvasWidth.value)
+    renderShadowText(ctx, subtitle.value, subtitlePosition, titleHeight, canvasWidth.value)
   }
 
   // kategoria 42 light
   ctx.lineWidth = 5
+  ctx.fillStyle = 'white'
   ctx.font = 'normal normal 300 42px Barlow Condensed'
-  ctx.strokeText(category.value, canvasWidth.value / 2, 887 + 42, canvasWidth.value)
-  ctx.fillText(category.value, canvasWidth.value / 2, 887 + 42, canvasWidth.value)
+  renderShadowText(ctx, category.value, canvasWidth.value / 2, 887 + 42, canvasWidth.value)
 
   if (money.value > 0) {
     // we collected 24 bold
@@ -171,8 +169,7 @@ function redrawThumbnail() {
     ctx.lineWidth = 5
     ctx.font = 'normal normal 600 24px Saira Condensed'
     ctx.fillStyle = 'white'
-    ctx.strokeText(weCollected, 203, 185 + 24 + 5, canvasWidth.value)
-    ctx.fillText(weCollected, 203, 185 + 24 + 5, canvasWidth.value)
+    renderShadowText(ctx, weCollected, 203, 185 + 24 + 5, canvasWidth.value)
 
     let moneyText = money.value.toLocaleString('pl-PL') + ' PLN'
     // money 42 ultra bold
@@ -180,8 +177,7 @@ function redrawThumbnail() {
     ctx.font = 'normal normal 800 77px Saira Condensed'
     ctx.textAlign = 'center'
     ctx.fillStyle = '#ffbd16'
-    ctx.strokeText(moneyText, 160 + 43, 200 + 77 + 10, canvasWidth.value)
-    ctx.fillText(moneyText, 160 + 43, 200 + 77 + 10, canvasWidth.value)
+    renderShadowText(ctx, moneyText, 160 + 43, 200 + 77 + 10, canvasWidth.value)
   }
 }
 
