@@ -9,15 +9,15 @@ import { useRoute } from 'vue-router'
 import { loadImage } from '../utils/loadImage'
 import { renderShadowText } from '@/utils/renderText'
 
-const route = useRoute()
-const canvasWidth = ref(1500)
-const canvasHeight = ref(1000)
-const backgroundImage: Ref<HTMLImageElement> = ref(new Image())
+const route = useRoute(),
+  canvasWidth = ref(1500),
+  canvasHeight = ref(1000),
+  backgroundImage: Ref<HTMLImageElement> = ref(new Image())
 backgroundImage.value.onload = () => {
   photoLoaded.value = true
-  // set default scale to fill the image
-  let scaleX = canvasWidth.value / backgroundImage.value.width
-  let scaleY = canvasHeight.value / backgroundImage.value.height
+  // Set default scale to fill the image
+  let scaleX = canvasWidth.value / backgroundImage.value.width,
+    scaleY = canvasHeight.value / backgroundImage.value.height
   if (scaleX < scaleY) {
     scaleX = scaleY
   }
@@ -25,60 +25,56 @@ backgroundImage.value.onload = () => {
   redrawThumbnail()
 }
 
-const mainCanvas: Ref<HTMLCanvasElement | null> = ref(null)
-const photo = ref('')
-const photoScale = ref(1.0)
-const photoLeft = ref(0)
-const photoTop = ref(0)
-const photoRotation = ref(0)
-const photoLoaded = ref(false)
+const mainCanvas: Ref<HTMLCanvasElement | null> = ref(null),
+  photo = ref(''),
+  photoScale = ref(1.0),
+  photoLeft = ref(0),
+  photoTop = ref(0),
+  photoRotation = ref(0),
+  photoLoaded = ref(false),
+  runner = ref(''),
+  title = ref(''),
+  subtitle = ref(''),
+  category = ref(''),
+  money = ref(0),
+  initialRunner = ref(''),
+  initialTitle = ref(''),
+  initialSubtitle = ref(''),
+  initialCategory = ref(''),
+  initialMoney = ref(0),
+  imageBanner = await loadImage(
+    new URL(`../${import.meta.env.VITE_IMAGES_BANNER_RUNNER}`, import.meta.url),
+    redrawThumbnail
+  ),
+  // ImageBanner.src = imageBannerData
 
-const runner = ref('')
-const title = ref('')
-const subtitle = ref('')
-const category = ref('')
-const money = ref(0)
-
-const initialRunner = ref('')
-const initialTitle = ref('')
-const initialSubtitle = ref('')
-const initialCategory = ref('')
-const initialMoney = ref(0)
-
-var imageBanner = await loadImage(
-  new URL('../' + import.meta.env.VITE_IMAGES_BANNER_RUNNER, import.meta.url),
-  redrawThumbnail
-)
-
-// imageBanner.src = imageBannerData
-
-var imageGradient = await loadImage(
-  new URL('../' + import.meta.env.VITE_IMAGES_GRADIENT, import.meta.url),
-  redrawThumbnail
-)
-
-var imageLogoGSPS = await loadImage(
-  new URL('../' + import.meta.env.VITE_LOGO_FIRST, import.meta.url),
-  redrawThumbnail
-)
-
-var imageLogoFoundation = await loadImage(
-  new URL('../' + import.meta.env.VITE_LOGO_SECOND, import.meta.url),
-  redrawThumbnail
-)
+  imageGradient = await loadImage(
+    new URL(`../${import.meta.env.VITE_IMAGES_GRADIENT}`, import.meta.url),
+    redrawThumbnail
+  ),
+  imageLogoGSPS = await loadImage(
+    new URL(`../${import.meta.env.VITE_LOGO_FIRST}`, import.meta.url),
+    redrawThumbnail
+  ),
+  imageLogoFoundation = await loadImage(
+    new URL(`../${import.meta.env.VITE_LOGO_SECOND}`, import.meta.url),
+    redrawThumbnail
+  )
 
 function redrawThumbnail() {
   // TODO: add a check to see if the canvas is already loaded
-  if (mainCanvas.value == null) {
+  if (mainCanvas.value === null) {
     console.error('canvas not found,doing ugly retry in 0.1s')
     setTimeout(redrawThumbnail, 100)
     return
   }
   const ctx = mainCanvas.value.getContext('2d')!
-  // ctx.clearRect(0, 0, canvasWidth.value, canvasHeight.value)
-  // ctx.fillStyle = 'rgb(54,25,127)'
-  // ctx.rect(0, 0, canvasWidth.value, canvasHeight.value)
-  // ctx.fill()
+  /*
+   * Ctx.clearRect(0, 0, canvasWidth.value, canvasHeight.value)
+   * ctx.fillStyle = 'rgb(54,25,127)'
+   * ctx.rect(0, 0, canvasWidth.value, canvasHeight.value)
+   * ctx.fill()
+   */
   ctx.drawImage(imageGradient, 0, 0)
 
   ctx.drawImage(
@@ -111,46 +107,46 @@ function redrawThumbnail() {
   ctx.lineWidth = 8
   ctx.font = 'normal normal 500 99px Barlow Condensed'
   ctx.textAlign = 'center'
-  let jzc = 'Już za chwilę...'
+  const jzc = 'Już za chwilę...'
   // 1500 - ((1500 - 912) / 2)
   renderShadowText(ctx, jzc, 1206, 99, canvasWidth.value - 912)
 
-  var runnerPosition = 648 + 83
-  var titlePosition = 740 + 113
+  let runnerPosition = 648 + 83,
+    titlePosition = 740 + 113
   if (subtitle.value) {
     runnerPosition = 587 + 83
     titlePosition = 668 + 113
   }
 
-  // runner 83medium
+  // Runner 83medium
   ctx.font = 'normal normal 500 83px Barlow Condensed'
   renderShadowText(ctx, runner.value, canvasWidth.value / 2, runnerPosition, canvasWidth.value)
 
-  // title, 113 semi-bold
+  // Title, 113 semi-bold
   ctx.font = 'normal normal 600 113px Barlow Condensed'
   renderShadowText(ctx, title.value, canvasWidth.value / 2, titlePosition, canvasWidth.value)
 
   if (subtitle.value) {
-    // podtytuł 90 semi-bld
+    // Podtytuł 90 semi-bld
     ctx.font = 'normal normal 600 90px Barlow Condensed'
 
     renderShadowText(ctx, subtitle.value, canvasWidth.value / 2, 786 + 90, canvasWidth.value)
   }
 
-  // kategoria 42 light
+  // Kategoria 42 light
   ctx.lineWidth = 5
   ctx.font = 'normal normal 300 42px Barlow Condensed'
   renderShadowText(ctx, category.value, canvasWidth.value / 2, 887 + 42, canvasWidth.value)
 
   if (money.value > 0) {
-    // we collected 24 bold
-    let weCollected = 'zebraliśmy już'
+    // We collected 24 bold
+    const weCollected = 'zebraliśmy już'
     ctx.lineWidth = 5
     ctx.font = 'normal normal 600 24px Saira Condensed'
     renderShadowText(ctx, weCollected, 175, 170, canvasWidth.value)
 
-    let moneyText = money.value.toLocaleString('pl-PL') + ' PLN'
-    // money 42 ultra bold
+    const moneyText = `${money.value.toLocaleString('pl-PL')} PLN`
+    // Money 42 ultra bold
     ctx.lineWidth = 5
     ctx.font = 'normal normal 800 77px Saira Condensed'
     ctx.textAlign = 'center'
@@ -165,9 +161,9 @@ function getFullTitle(): string {
     return 'Stunt GP'
   }
 
-  var fullTitle = title.value
+  let fullTitle = title.value
   if (subtitle.value) {
-    fullTitle += ' ' + subtitle.value
+    fullTitle += ` ${subtitle.value}`
   }
   return fullTitle
 }
@@ -190,17 +186,17 @@ watch(photoLeft, redrawThumbnail)
 watch(photoTop, redrawThumbnail)
 watch(money, redrawThumbnail)
 
-// rotate image once before using it
+// Rotate image once before using it
 watch(photoRotation, async () => {
-  // skip on image load
+  // Skip on image load
   if (photoLoaded.value === false) {
     return
   }
 
-  let tmpCanvas = document.createElement('canvas')
+  const tmpCanvas = document.createElement('canvas')
   tmpCanvas.width = backgroundImage.value.height
   tmpCanvas.height = backgroundImage.value.width
-  // the image is on its side
+  // The image is on its side
   const ctx = tmpCanvas.getContext('2d')!
   ctx.translate(tmpCanvas.width / 2, tmpCanvas.height / 2)
   ctx.rotate((90 * Math.PI) / 180)

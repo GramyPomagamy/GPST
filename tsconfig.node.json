@@ -17,6 +17,10 @@
     "moduleResolution": "Bundler",
     "types": ["node"],
     "resolveJsonModule": true,
-    "strict": true
+    "strict": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true
   }
 }

@@ -9,58 +9,41 @@ import { useRoute } from 'vue-router'
 import { loadImage } from '../utils/loadImage'
 import { renderShadowText } from '@/utils/renderText'
 
-const route = useRoute()
-const canvasWidth = ref(1280)
-const canvasHeight = ref(720)
-const backgroundImage: Ref<HTMLImageElement> = ref(new Image())
-backgroundImage.value.onload = () => {
-  photoLoaded.value = true
-  // set default scale to fill the image
-  let scaleX = canvasWidth.value / backgroundImage.value.width
-  let scaleY = canvasHeight.value / backgroundImage.value.height
-  if (scaleX < scaleY) {
-    scaleX = scaleY
-  }
-  photoScale.value = Math.round(scaleX * 100) / 100
-  redrawThumbnail()
-}
+const route = useRoute(),
+  canvasWidth = ref(1280),
+  canvasHeight = ref(720),
+  backgroundImage: Ref<HTMLImageElement> = ref(new Image()),
+  mainCanvas: Ref<HTMLCanvasElement | null> = ref(null),
+  photo = ref(''),
+  photoScale = ref(1.0),
+  photoLeft = ref(0),
+  photoTop = ref(0),
+  photoRotation = ref(0),
+  photoLoaded = ref(false),
+  runner = ref(''),
+  title = ref(''),
+  subtitle = ref(''),
+  category = ref(''),
+  time = ref(''),
+  initialRunner = ref(''),
+  initialTitle = ref(''),
+  initialSubtitle = ref(''),
+  initialCategory = ref(''),
+  initialTime = ref(''),
+  imageBanner = await loadImage(
+    new URL(`../${import.meta.env.VITE_IMAGES_BANNER_YOUTUBE}`, import.meta.url),
+    redrawThumbnail
+  ),
+  // ImageBanner.src = imageBannerData
 
-const mainCanvas: Ref<HTMLCanvasElement | null> = ref(null)
-const photo = ref('')
-const photoScale = ref(1.0)
-const photoLeft = ref(0)
-const photoTop = ref(0)
-const photoRotation = ref(0)
-const photoLoaded = ref(false)
-
-const runner = ref('')
-const title = ref('')
-const subtitle = ref('')
-const category = ref('')
-const time = ref('')
-
-const initialRunner = ref('')
-const initialTitle = ref('')
-const initialSubtitle = ref('')
-const initialCategory = ref('')
-const initialTime = ref('')
-
-var imageBanner = await loadImage(
-  new URL('../' + import.meta.env.VITE_IMAGES_BANNER_YOUTUBE, import.meta.url),
-  redrawThumbnail
-)
-
-// imageBanner.src = imageBannerData
-
-var imageGradient = await loadImage(
-  new URL('../' + import.meta.env.VITE_IMAGES_GRADIENT, import.meta.url),
-  redrawThumbnail
-)
-
-var imageLogoGSPS = await loadImage(
-  new URL('../' + import.meta.env.VITE_LOGO_FIRST, import.meta.url),
-  redrawThumbnail
-)
+  imageGradient = await loadImage(
+    new URL(`../${import.meta.env.VITE_IMAGES_GRADIENT}`, import.meta.url),
+    redrawThumbnail
+  ),
+  imageLogoGSPS = await loadImage(
+    new URL(`../${import.meta.env.VITE_LOGO_FIRST}`, import.meta.url),
+    redrawThumbnail
+  )
 
 function redrawThumbnail() {
   // TODO: add a check to see if the canvas is already loaded
@@ -70,10 +53,12 @@ function redrawThumbnail() {
     return
   }
   const ctx = mainCanvas.value.getContext('2d')!
-  // ctx.clearRect(0, 0, canvasWidth.value, canvasHeight.value)
-  // ctx.fillStyle = 'rgb(54,25,127)'
-  // ctx.rect(0, 0, canvasWidth.value, canvasHeight.value)
-  // ctx.fill()
+  /*
+   * Ctx.clearRect(0, 0, canvasWidth.value, canvasHeight.value)
+   * ctx.fillStyle = 'rgb(54,25,127)'
+   * ctx.rect(0, 0, canvasWidth.value, canvasHeight.value)
+   * ctx.fill()
+   */
   ctx.drawImage(imageGradient, 0, 0)
 
   ctx.drawImage(
@@ -99,43 +84,55 @@ function redrawThumbnail() {
   ctx.font = 'normal normal 700 99px PT Sans Narrow'
   ctx.textAlign = 'right'
 
-  let runnerPosition = 456
-  let timePosition = 285
-  let categoryPosition = 241
-  let titlePosition = 31
-  let subtitlePosition = 130
-  let titleSize = 150
+  const categoryPosition = 241,
+    runnerPosition = 456,
+    timePosition = 285
+  let subtitlePosition = 130,
+    titlePosition = 31,
+    titleSize = 150
   if (subtitle.value) {
     titlePosition = 0
     titleSize = 114
   }
 
-  let rightSide = canvasWidth.value - 3
+  const rightSide = canvasWidth.value - 3
 
-  // runner 83 PT Sans Narrow Bold Condensed
+  // Runner 83 PT Sans Narrow Bold Condensed
   ctx.font = 'normal normal 700 70px PT Sans Narrow'
   renderShadowText(ctx, runner.value, rightSide, runnerPosition + 70, canvasWidth.value)
 
-  // title,  PT Sans Narrow Bold Condensed
-  ctx.font = 'normal normal 700 ' + titleSize.toString() + 'px PT Sans Narrow'
+  // Title,  PT Sans Narrow Bold Condensed
+  ctx.font = `normal normal 700 ${titleSize.toString()}px PT Sans Narrow`
   renderShadowText(ctx, title.value, rightSide, titlePosition + titleSize, canvasWidth.value)
 
   if (subtitle.value) {
-    // podtytuł 77 PT Sans Narrow Bold Condensed
+    // Podtytuł 77 PT Sans Narrow Bold Condensed
     ctx.font = 'normal normal 700 77px PT Sans Narrow'
 
     renderShadowText(ctx, subtitle.value, rightSide, subtitlePosition + 77, canvasWidth.value)
   }
 
-  // kategoria 62 Saira Condensed, Semi-Bold Condensed
+  // Kategoria 62 Saira Condensed, Semi-Bold Condensed
   ctx.font = 'normal normal 600 62px Saira Condensed'
   renderShadowText(ctx, category.value, rightSide, categoryPosition + 62, canvasWidth.value)
 
-  // time 158 Saira Condensed, Ultra-Bold Condensed
+  // Time 158 Saira Condensed, Ultra-Bold Condensed
   ctx.font = 'normal normal 800 158px Saira Condensed'
   ctx.fillStyle = '#ffbd16'
   ctx.strokeText(time.value, rightSide, timePosition + 158, canvasWidth.value)
   ctx.fillText(time.value, rightSide, timePosition + 158, canvasWidth.value)
+}
+
+backgroundImage.value.onload = () => {
+  photoLoaded.value = true
+  // Set default scale to fill the image
+  let scaleX = canvasWidth.value / backgroundImage.value.width,
+    scaleY = canvasHeight.value / backgroundImage.value.height
+  if (scaleX < scaleY) {
+    scaleX = scaleY
+  }
+  photoScale.value = Math.round(scaleX * 100) / 100
+  redrawThumbnail()
 }
 
 function getFullTitle(): string {
@@ -143,9 +140,9 @@ function getFullTitle(): string {
     return 'Stunt GP'
   }
 
-  var fullTitle = title.value
+  let fullTitle = title.value
   if (subtitle.value) {
-    fullTitle += ' ' + subtitle.value
+    fullTitle += ` ${subtitle.value}`
   }
   return fullTitle
 }
@@ -168,17 +165,17 @@ watch(photoLeft, redrawThumbnail)
 watch(photoTop, redrawThumbnail)
 watch(time, redrawThumbnail)
 
-// rotate image once before using it
+// Rotate image once before using it
 watch(photoRotation, async () => {
-  // skip on image load
+  // Skip on image load
   if (photoLoaded.value === false) {
     return
   }
 
-  let tmpCanvas = document.createElement('canvas')
+  const tmpCanvas = document.createElement('canvas')
   tmpCanvas.width = backgroundImage.value.height
   tmpCanvas.height = backgroundImage.value.width
-  // the image is on its side
+  // The image is on its side
   const ctx = tmpCanvas.getContext('2d')!
   ctx.translate(tmpCanvas.width / 2, tmpCanvas.height / 2)
   ctx.rotate((90 * Math.PI) / 180)

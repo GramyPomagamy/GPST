@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import { mount } from '@vue/test-utils'
 
@@ -10,15 +10,15 @@ const vuetify = defaultVuetify()
 
 describe('CanvasItem', () => {
   it('renders props.msg when passed', () => {
-    const width = 800
-    const height = 600
-    const title = 'title'
-    const wrapper = mount(CanvasItem, {
-      props: { canvasWidth: width, canvasHeight: height, title: title },
+    const width = 800,
+     height = 600,
+     title = 'title',
+     wrapper = mount(CanvasItem, {
+      props: { canvasWidth: width, canvasHeight: height, title },
       global: {
         plugins: [vuetify]
       }
     })
-    //expect(wrapper.text()).
+    //Expect(wrapper.text()).
   })
 })

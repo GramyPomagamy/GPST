@@ -4,34 +4,32 @@ import type { Ref } from 'vue'
 
 import axios from 'axios'
 
-const inputBackground: Ref<HTMLInputElement | null> = ref(null)
-const inputRunner = ref('')
-const inputTitle = ref('')
-const inputSubtitle = ref('')
-const inputCategory = ref('')
-const inputTime = ref('')
-const inputMoney = ref(0)
-
-const props = defineProps<{
-  runner: string
-  title: string
-  subtitle: string
-  category: string
-  enableTime?: boolean
-  time?: string
-  enableMoney?: boolean
-  money?: number
-}>()
-
-const emit = defineEmits<{
-  updateBackground: [b: string]
-  updateRunner: [r: string]
-  updateTitle: [t: string]
-  updateSubtitle: [s: string]
-  updateCategory: [c: string]
-  updateTime: [t: string]
-  updateMoney: [m: number]
-}>()
+const inputBackground: Ref<HTMLInputElement | null> = ref(null),
+  inputRunner = ref(''),
+  inputTitle = ref(''),
+  inputSubtitle = ref(''),
+  inputCategory = ref(''),
+  inputTime = ref(''),
+  inputMoney = ref(0),
+  props = defineProps<{
+    runner: string
+    title: string
+    subtitle: string
+    category: string
+    enableTime?: boolean
+    time?: string
+    enableMoney?: boolean
+    money?: number
+  }>(),
+  emit = defineEmits<{
+    updateBackground: [b: string]
+    updateRunner: [r: string]
+    updateTitle: [t: string]
+    updateSubtitle: [s: string]
+    updateCategory: [c: string]
+    updateTime: [t: string]
+    updateMoney: [m: number]
+  }>()
 
 if (props.runner) {
   inputRunner.value = props.runner
@@ -58,18 +56,32 @@ if (props.money) {
   emit('updateMoney', Math.round(props.money))
 }
 
-// if (inputMoney.value <= 0) {
-//   updateMoney()
-// }
+/*
+ * If (inputMoney.value <= 0) {
+ *   updateMoney()
+ * }
+ */
 
-function onNewBackground() {
-  console.log(inputBackground.value!.files![0])
-  let reader = new FileReader()
-  reader.onloadend = function () {
-    emit('updateBackground', reader.result as string)
+var onNewBackground = function () {
+    console.log(inputBackground.value!.files![0])
+    const reader = new FileReader()
+    reader.onloadend = function () {
+      emit('updateBackground', reader.result as string)
+    }
+    reader.readAsDataURL(inputBackground.value!.files![0])
+  },
+  updateMoney = function () {
+    axios
+      .get(
+        `${
+          import.meta.env.VITE_DONATION_TRACKER_BASE_URL +
+          import.meta.env.VITE_DONATION_TRACKER_SLUG
+        }?json=gpst`
+      )
+      .then((resp) => {
+        inputMoney.value = Number(resp.data.agg.amount)
+      })
   }
-  reader.readAsDataURL(inputBackground.value!.files![0])
-}
 
 watch(inputRunner, () => {
   emit('updateRunner', inputRunner.value.trim())
@@ -89,18 +101,6 @@ watch(inputTime, () => {
 watch(inputMoney, () => {
   emit('updateMoney', Math.round(inputMoney.value))
 })
-
-function updateMoney() {
-  axios
-    .get(
-      import.meta.env.VITE_DONATION_TRACKER_BASE_URL +
-        import.meta.env.VITE_DONATION_TRACKER_SLUG +
-        '?json=gpst'
-    )
-    .then((resp) => {
-      inputMoney.value = Number(resp.data.agg.amount)
-    })
-}
 </script>
 
 <template>

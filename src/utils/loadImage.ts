@@ -1,5 +1,5 @@
 // TODO: accept string instead of URL
-export function loadImage(url: URL, onloadFunc: () => void): Promise<HTMLImageElement> {
+export const loadImage = function (url: URL, onloadFunc: () => void): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const image = new Image()
     image.onload = onloadFunc

@@ -5,7 +5,7 @@ import { defineConfig, devices } from '@playwright/test'
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-// require('dotenv').config();
+// Require('dotenv').config();
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -22,7 +22,7 @@ export default defineConfig({
     timeout: 5000
   },
   /* Fail the build on CI if you accidentally left test.only in the source code. */
-  forbidOnly: !!process.env.CI,
+  forbidOnly: Boolean(process.env.CI),
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
@@ -40,7 +40,7 @@ export default defineConfig({
     trace: 'on-first-retry',
 
     /* Only on CI systems run the tests headless */
-    headless: !!process.env.CI
+    headless: Boolean(process.env.CI)
   },
 
   /* Configure projects for major browsers */
@@ -57,44 +57,50 @@ export default defineConfig({
         ...devices['Desktop Firefox']
       }
     }
-    // {
-    //   name: 'webkit',
-    //   use: {
-    //     ...devices['Desktop Safari']
-    //   }
-    // }
+    /*
+     * {
+     *   name: 'webkit',
+     *   use: {
+     *     ...devices['Desktop Safari']
+     *   }
+     * }
+     */
 
     /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: {
-    //     ...devices['Pixel 5'],
-    //   },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: {
-    //     ...devices['iPhone 12'],
-    //   },
-    // },
+    /*
+     * {
+     *   name: 'Mobile Chrome',
+     *   use: {
+     *     ...devices['Pixel 5'],
+     *   },
+     * },
+     * {
+     *   name: 'Mobile Safari',
+     *   use: {
+     *     ...devices['iPhone 12'],
+     *   },
+     * },
+     */
 
     /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: {
-    //     channel: 'msedge',
-    //   },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: {
-    //     channel: 'chrome',
-    //   },
-    // },
+    /*
+     * {
+     *   name: 'Microsoft Edge',
+     *   use: {
+     *     channel: 'msedge',
+     *   },
+     * },
+     * {
+     *   name: 'Google Chrome',
+     *   use: {
+     *     channel: 'chrome',
+     *   },
+     * },
+     */
   ],
 
   /* Folder for test artifacts such as screenshots, videos, traces, etc. */
-  // outputDir: 'test-results/',
+  // OutputDir: 'test-results/',
 
   /* Run your local dev server before starting the tests */
   webServer: {

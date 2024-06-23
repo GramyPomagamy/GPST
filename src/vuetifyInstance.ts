@@ -1,8 +1,8 @@
 import { createVuetify } from 'vuetify'
 import { aliases, md } from 'vuetify/iconsets/md'
-import { pl, en } from 'vuetify/locale'
+import { en, pl } from 'vuetify/locale'
 
-export function defaultVuetify() {
+export const defaultVuetify = function () {
   return createVuetify({
     theme: {
       defaultTheme: 'dark'

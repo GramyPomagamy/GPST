@@ -1,4 +1,4 @@
-export function renderShadowText(
+export const renderShadowText = function (
   ctx: CanvasRenderingContext2D,
   text: string,
   x: number,

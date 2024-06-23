@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-// import HeaderItem from './components/HeaderItem.vue'
+// Import HeaderItem from './components/HeaderItem.vue'
 const appVersion = import.meta.env.PACKAGE_VERSION
 </script>
 
