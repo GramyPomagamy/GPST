@@ -5,30 +5,13 @@ import { createApp } from 'vue'
 
 // Vuetify
 import 'vuetify/styles'
-import { createVuetify } from 'vuetify'
-import { aliases, md } from 'vuetify/iconsets/md'
-import { pl, en } from 'vuetify/locale'
+
+import { defaultVuetify } from '@/vuetifyInstance'
 
 import App from './App.vue'
 import router from './router'
 
-const vuetify = createVuetify({
-  theme: {
-    defaultTheme: 'dark'
-  },
-  locale: {
-    locale: 'pl',
-    fallback: 'en',
-    messages: { pl, en }
-  },
-  icons: {
-    defaultSet: 'md',
-    aliases,
-    sets: {
-      md
-    }
-  }
-})
+const vuetify = defaultVuetify()
 
 const app = createApp(App)
 
