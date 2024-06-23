@@ -99,8 +99,8 @@ function redrawThumbnail() {
 
   ctx.drawImage(
     imageLogoFoundation,
-    -28,
-    865,
+    320,
+    0,
     323,
     323 * (imageLogoFoundation.height / imageLogoFoundation.width)
   )
@@ -151,8 +151,8 @@ function redrawThumbnail() {
     let weCollected = 'zebraliśmy już'
     ctx.lineWidth = 5
     ctx.font = 'normal normal 600 24px Saira Condensed'
-    ctx.strokeText(weCollected, 175, 187 + 24 + 4, canvasWidth.value)
-    ctx.fillText(weCollected, 175, 187 + 24 + 4, canvasWidth.value)
+    ctx.strokeText(weCollected, 175, 170, canvasWidth.value)
+    ctx.fillText(weCollected, 175, 170, canvasWidth.value)
 
     let moneyText = money.value.toLocaleString('pl-PL') + ' PLN'
     // money 42 ultra bold
@@ -160,8 +160,8 @@ function redrawThumbnail() {
     ctx.font = 'normal normal 800 77px Saira Condensed'
     ctx.textAlign = 'center'
     ctx.fillStyle = '#ffbd16'
-    ctx.strokeText(moneyText, (368 - 16) / 2, 200 + 77 + 10, canvasWidth.value)
-    ctx.fillText(moneyText, (368 - 16) / 2, 200 + 77 + 10, canvasWidth.value)
+    ctx.strokeText(moneyText, (368 - 16) / 2, 242, canvasWidth.value)
+    ctx.fillText(moneyText, (368 - 16) / 2, 242, canvasWidth.value)
   }
 }
 
