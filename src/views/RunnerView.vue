@@ -93,6 +93,18 @@ function redrawThumbnail() {
   ctx.globalAlpha = 1
   ctx.drawImage(imageBanner, 0, 0)
 
+  ctx.imageSmoothingQuality = 'high'
+  ctx.imageSmoothingEnabled = true
+  ctx.drawImage(imageLogoGSPS, 16, 15, 316, 316 * (imageLogoGSPS.height / imageLogoGSPS.width))
+
+  ctx.drawImage(
+    imageLogoFoundation,
+    -28,
+    865,
+    323,
+    323 * (imageLogoFoundation.height / imageLogoFoundation.width)
+  )
+
   ctx.fillStyle = 'white'
   ctx.strokeStyle = 'black'
   ctx.lineWidth = 8
@@ -133,11 +145,6 @@ function redrawThumbnail() {
   ctx.font = 'normal normal 300 42px Barlow Condensed'
   ctx.strokeText(category.value, canvasWidth.value / 2, 887 + 42, canvasWidth.value)
   ctx.fillText(category.value, canvasWidth.value / 2, 887 + 42, canvasWidth.value)
-
-  // TODO: separate drawRescaled or sth func
-  ctx.drawImage(imageLogoGSPS, 16, 17, 317, 113)
-
-  ctx.drawImage(imageLogoFoundation, 16, 734 - 17)
 
   if (money.value > 0) {
     // we collected 24 bold

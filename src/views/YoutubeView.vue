@@ -61,11 +61,6 @@ var imageLogoGSPS = await loadImage(
   redrawThumbnail
 )
 
-var imageLogoFoundation = await loadImage(
-  new URL('../' + import.meta.env.VITE_LOGO_SECOND, import.meta.url),
-  redrawThumbnail
-)
-
 function redrawThumbnail() {
   // TODO: add a check to see if the canvas is already loaded
   if (mainCanvas.value == null) {
@@ -92,6 +87,10 @@ function redrawThumbnail() {
   ctx.drawImage(imageGradient, 0, 0)
   ctx.globalAlpha = 1
   ctx.drawImage(imageBanner, 0, 0)
+
+  ctx.imageSmoothingQuality = 'high'
+  ctx.imageSmoothingEnabled = true
+  ctx.drawImage(imageLogoGSPS, 0, 570, 404, 404 * (imageLogoGSPS.height / imageLogoGSPS.width))
 
   ctx.fillStyle = '#e1e1e1'
   ctx.strokeStyle = 'black'
@@ -134,10 +133,6 @@ function redrawThumbnail() {
   ctx.font = 'normal normal 600 62px Saira Condensed'
   ctx.strokeText(category.value, rightSide, categoryPosition + 62, canvasWidth.value)
   ctx.fillText(category.value, rightSide, categoryPosition + 62, canvasWidth.value)
-
-  ctx.drawImage(imageLogoGSPS, 16, 17)
-
-  ctx.drawImage(imageLogoFoundation, 16, 734 - 17)
 
   // time 158 Saira Condensed, Ultra-Bold Condensed
   ctx.font = 'normal normal 800 158px Saira Condensed'
