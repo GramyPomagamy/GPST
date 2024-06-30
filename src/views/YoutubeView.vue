@@ -8,6 +8,7 @@ import { useRoute } from 'vue-router'
 
 import { loadImage } from '../utils/loadImage'
 import { renderShadowText } from '@/utils/renderText'
+import { getFullTitle, drawBackground } from '@/utils/misc'
 
 const route = useRoute(),
   canvasWidth = ref(1280),
@@ -31,103 +32,100 @@ const route = useRoute(),
   initialCategory = ref(''),
   initialTime = ref(''),
   imageBanner = await loadImage(
-    new URL(`../${import.meta.env.VITE_IMAGES_BANNER_YOUTUBE}`, import.meta.url),
-    redrawThumbnail
+    new URL(`../${import.meta.env.VITE_IMAGES_BANNER_YOUTUBE}`, import.meta.url)
   ),
-  // ImageBanner.src = imageBannerData
-
   imageGradient = await loadImage(
-    new URL(`../${import.meta.env.VITE_IMAGES_GRADIENT}`, import.meta.url),
-    redrawThumbnail
+    new URL(`../${import.meta.env.VITE_IMAGES_GRADIENT}`, import.meta.url)
   ),
   imageLogoGSPS = await loadImage(
-    new URL(`../${import.meta.env.VITE_LOGO_FIRST}`, import.meta.url),
-    redrawThumbnail
-  )
+    new URL(`../${import.meta.env.VITE_LOGO_FIRST}`, import.meta.url)
+  ),
+  redrawThumbnail = function () {
+    // TODO: add a check to see if the canvas is already loaded
+    if (mainCanvas.value === null) {
+      console.error('canvas not found,doing ugly retry in 0.1s')
+      setTimeout(redrawThumbnail, 100)
+      return
+    }
+    const ctx = mainCanvas.value.getContext('2d')!,
+      categoryPosition = 241,
+      runnerPosition = 456,
+      timePosition = 285,
+      rightSide = canvasWidth.value - 3,
+      subtitlePosition = 130
+    /*
+     * Ctx.clearRect(0, 0, canvasWidth.value, canvasHeight.value)
+     * ctx.fillStyle = 'rgb(54,25,127)'
+     * ctx.rect(0, 0, canvasWidth.value, canvasHeight.value)
+     * ctx.fill()
+     */
+    ctx.drawImage(imageGradient, 0, 0)
 
-function redrawThumbnail() {
-  // TODO: add a check to see if the canvas is already loaded
-  if (mainCanvas.value == null) {
-    console.error('canvas not found,doing ugly retry in 0.1s')
-    setTimeout(redrawThumbnail, 100)
-    return
+    ctx.drawImage(
+      backgroundImage.value,
+      canvasWidth.value / 2 -
+        (backgroundImage.value.width / 2) * photoScale.value +
+        photoLeft.value,
+      canvasHeight.value / 2 -
+        (backgroundImage.value.height / 2) * photoScale.value +
+        photoTop.value,
+      backgroundImage.value.width * photoScale.value,
+      backgroundImage.value.height * photoScale.value
+    )
+
+    ctx.globalAlpha = 0.12
+    ctx.drawImage(imageGradient, 0, 0)
+    ctx.globalAlpha = 1
+    ctx.drawImage(imageBanner, 0, 0)
+
+    ctx.imageSmoothingQuality = 'high'
+    ctx.imageSmoothingEnabled = true
+    ctx.drawImage(imageLogoGSPS, 0, 570, 404, 404 * (imageLogoGSPS.height / imageLogoGSPS.width))
+
+    ctx.fillStyle = '#e1e1e1'
+    ctx.strokeStyle = 'black'
+    ctx.lineWidth = 8
+    ctx.font = 'normal normal 700 99px PT Sans Narrow'
+    ctx.textAlign = 'right'
+
+    let titlePosition = 31,
+      titleSize = 150
+    if (subtitle.value) {
+      titlePosition = 0
+      titleSize = 114
+    }
+
+    // Runner 83 PT Sans Narrow Bold Condensed
+    ctx.font = 'normal normal 700 70px PT Sans Narrow'
+    renderShadowText(ctx, runner.value, rightSide, runnerPosition + 70, canvasWidth.value)
+
+    // Title,  PT Sans Narrow Bold Condensed
+    ctx.font = `normal normal 700 ${titleSize.toString()}px PT Sans Narrow`
+    renderShadowText(ctx, title.value, rightSide, titlePosition + titleSize, canvasWidth.value)
+
+    if (subtitle.value) {
+      // Podtytuł 77 PT Sans Narrow Bold Condensed
+      ctx.font = 'normal normal 700 77px PT Sans Narrow'
+
+      renderShadowText(ctx, subtitle.value, rightSide, subtitlePosition + 77, canvasWidth.value)
+    }
+
+    // Kategoria 62 Saira Condensed, Semi-Bold Condensed
+    ctx.font = 'normal normal 600 62px Saira Condensed'
+    renderShadowText(ctx, category.value, rightSide, categoryPosition + 62, canvasWidth.value)
+
+    // Time 158 Saira Condensed, Ultra-Bold Condensed
+    ctx.font = 'normal normal 800 158px Saira Condensed'
+    ctx.fillStyle = '#ffbd16'
+    ctx.strokeText(time.value, rightSide, timePosition + 158, canvasWidth.value)
+    ctx.fillText(time.value, rightSide, timePosition + 158, canvasWidth.value)
   }
-  const ctx = mainCanvas.value.getContext('2d')!
-  /*
-   * Ctx.clearRect(0, 0, canvasWidth.value, canvasHeight.value)
-   * ctx.fillStyle = 'rgb(54,25,127)'
-   * ctx.rect(0, 0, canvasWidth.value, canvasHeight.value)
-   * ctx.fill()
-   */
-  ctx.drawImage(imageGradient, 0, 0)
-
-  ctx.drawImage(
-    backgroundImage.value,
-    canvasWidth.value / 2 - (backgroundImage.value.width / 2) * photoScale.value + photoLeft.value,
-    canvasHeight.value / 2 - (backgroundImage.value.height / 2) * photoScale.value + photoTop.value,
-    backgroundImage.value.width * photoScale.value,
-    backgroundImage.value.height * photoScale.value
-  )
-
-  ctx.globalAlpha = 0.12
-  ctx.drawImage(imageGradient, 0, 0)
-  ctx.globalAlpha = 1
-  ctx.drawImage(imageBanner, 0, 0)
-
-  ctx.imageSmoothingQuality = 'high'
-  ctx.imageSmoothingEnabled = true
-  ctx.drawImage(imageLogoGSPS, 0, 570, 404, 404 * (imageLogoGSPS.height / imageLogoGSPS.width))
-
-  ctx.fillStyle = '#e1e1e1'
-  ctx.strokeStyle = 'black'
-  ctx.lineWidth = 8
-  ctx.font = 'normal normal 700 99px PT Sans Narrow'
-  ctx.textAlign = 'right'
-
-  const categoryPosition = 241,
-    runnerPosition = 456,
-    timePosition = 285
-  let subtitlePosition = 130,
-    titlePosition = 31,
-    titleSize = 150
-  if (subtitle.value) {
-    titlePosition = 0
-    titleSize = 114
-  }
-
-  const rightSide = canvasWidth.value - 3
-
-  // Runner 83 PT Sans Narrow Bold Condensed
-  ctx.font = 'normal normal 700 70px PT Sans Narrow'
-  renderShadowText(ctx, runner.value, rightSide, runnerPosition + 70, canvasWidth.value)
-
-  // Title,  PT Sans Narrow Bold Condensed
-  ctx.font = `normal normal 700 ${titleSize.toString()}px PT Sans Narrow`
-  renderShadowText(ctx, title.value, rightSide, titlePosition + titleSize, canvasWidth.value)
-
-  if (subtitle.value) {
-    // Podtytuł 77 PT Sans Narrow Bold Condensed
-    ctx.font = 'normal normal 700 77px PT Sans Narrow'
-
-    renderShadowText(ctx, subtitle.value, rightSide, subtitlePosition + 77, canvasWidth.value)
-  }
-
-  // Kategoria 62 Saira Condensed, Semi-Bold Condensed
-  ctx.font = 'normal normal 600 62px Saira Condensed'
-  renderShadowText(ctx, category.value, rightSide, categoryPosition + 62, canvasWidth.value)
-
-  // Time 158 Saira Condensed, Ultra-Bold Condensed
-  ctx.font = 'normal normal 800 158px Saira Condensed'
-  ctx.fillStyle = '#ffbd16'
-  ctx.strokeText(time.value, rightSide, timePosition + 158, canvasWidth.value)
-  ctx.fillText(time.value, rightSide, timePosition + 158, canvasWidth.value)
-}
 
 backgroundImage.value.onload = () => {
   photoLoaded.value = true
   // Set default scale to fill the image
-  let scaleX = canvasWidth.value / backgroundImage.value.width,
-    scaleY = canvasHeight.value / backgroundImage.value.height
+  let scaleX = canvasWidth.value / backgroundImage.value.width
+  const scaleY = canvasHeight.value / backgroundImage.value.height
   if (scaleX < scaleY) {
     scaleX = scaleY
   }
@@ -135,26 +133,18 @@ backgroundImage.value.onload = () => {
   redrawThumbnail()
 }
 
-function getFullTitle(): string {
-  if (!title.value && !subtitle.value) {
-    return 'Stunt GP'
-  }
+imageGradient.onload = redrawThumbnail
+imageLogoGSPS.onload = redrawThumbnail
+imageBanner.onload = redrawThumbnail
 
-  let fullTitle = title.value
-  if (subtitle.value) {
-    fullTitle += ` ${subtitle.value}`
-  }
-  return fullTitle
-}
-
-watch(photo, (photo: string) => {
+watch(photo, (newPhoto: string) => {
   photoLeft.value = 0
   photoTop.value = 0
   photoScale.value = 1.0
   photoRotation.value = 0
   photoLoaded.value = false
 
-  backgroundImage.value.src = photo
+  backgroundImage.value.src = newPhoto
 })
 document.fonts.onloadingdone = redrawThumbnail
 watch(runner, redrawThumbnail)
@@ -172,19 +162,17 @@ watch(photoRotation, async () => {
     return
   }
 
-  const tmpCanvas = document.createElement('canvas')
+  const tmpCanvas = document.createElement('canvas'),
+    ctx = tmpCanvas.getContext('2d')!
   tmpCanvas.width = backgroundImage.value.height
   tmpCanvas.height = backgroundImage.value.width
-  // The image is on its side
-  const ctx = tmpCanvas.getContext('2d')!
   ctx.translate(tmpCanvas.width / 2, tmpCanvas.height / 2)
   ctx.rotate((90 * Math.PI) / 180)
 
   ctx.drawImage(backgroundImage.value, -tmpCanvas.height / 2, -tmpCanvas.width / 2)
 
-  const data = tmpCanvas.toDataURL('image/png')
   photoLoaded.value = false
-  backgroundImage.value.src = data
+  backgroundImage.value.src = tmpCanvas.toDataURL('image/png')
 })
 watch(photoScale, redrawThumbnail)
 
@@ -216,7 +204,7 @@ onMounted(() => {
     <CanvasItem
       :canvasWidth="canvasWidth"
       :canvasHeight="canvasHeight"
-      :title="getFullTitle()"
+      :title="getFullTitle(title, subtitle)"
       @canvasContext="(can) => (mainCanvas = can)"
       @updateBackground="(b) => (photo = b)"
       @updateScale="
