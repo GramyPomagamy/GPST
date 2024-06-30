@@ -31,20 +31,12 @@ const routeQuery = useRoute().query,
   initialSubtitle = ref(''),
   initialCategory = ref(''),
   initialMoney = ref(0),
-  imageBanner = await loadImage(
-    new URL(`../${import.meta.env.VITE_IMAGES_BANNER_MILESTONE}`, import.meta.url)
-  ),
+  imageBanner = await loadImage(`../${import.meta.env.VITE_IMAGES_BANNER_MILESTONE}`),
   // ImageBanner.src = imageBannerData
 
-  imageGradient = await loadImage(
-    new URL(`../${import.meta.env.VITE_IMAGES_GRADIENT}`, import.meta.url)
-  ),
-  imageLogoGSPS = await loadImage(
-    new URL(`../${import.meta.env.VITE_LOGO_FIRST}`, import.meta.url)
-  ),
-  imageLogoFoundation = await loadImage(
-    new URL(`../${import.meta.env.VITE_LOGO_SECOND}`, import.meta.url)
-  ),
+  imageGradient = await loadImage(`../${import.meta.env.VITE_IMAGES_GRADIENT}`),
+  imageLogoGSPS = await loadImage(`../${import.meta.env.VITE_LOGO_FIRST}`),
+  imageLogoFoundation = await loadImage(`../${import.meta.env.VITE_LOGO_SECOND}`),
   redrawThumbnail = function () {
     // TODO: add a check to see if the canvas is already loaded
     if (mainCanvas.value === null) {

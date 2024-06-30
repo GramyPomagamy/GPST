@@ -18,18 +18,10 @@ const mainCanvas: Ref<HTMLCanvasElement | null> = ref(null),
   photoLeft = ref(0),
   photoTop = ref(0),
   photoRotation = ref(0),
-  imageGradient = await loadImage(
-    new URL(`../${import.meta.env.VITE_IMAGES_GRADIENT}`, import.meta.url)
-  ),
-  imageLogoGSPS = await loadImage(
-    new URL(`../${import.meta.env.VITE_LOGO_FIRST}`, import.meta.url)
-  ),
-  imageLogoFoundation = await loadImage(
-    new URL(`../${import.meta.env.VITE_LOGO_SECOND}`, import.meta.url)
-  ),
-  imageBanner = await loadImage(
-    new URL(`../${import.meta.env.VITE_IMAGES_BANNER_RUNNER}`, import.meta.url)
-  ),
+  imageGradient = await loadImage(`../${import.meta.env.VITE_IMAGES_GRADIENT}`),
+  imageLogoGSPS = await loadImage(`../${import.meta.env.VITE_LOGO_FIRST}`),
+  imageLogoFoundation = await loadImage(`../${import.meta.env.VITE_LOGO_SECOND}`),
+  imageBanner = await loadImage(`../${import.meta.env.VITE_IMAGES_BANNER_RUNNER}`),
   photo = ref(''),
   photoLoaded = ref(false),
   runner = ref(''),

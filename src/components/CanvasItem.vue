@@ -16,9 +16,6 @@ const props = defineProps<{
   }>(),
   canvasDragged = ref(false),
   canvasModel: Ref<HTMLCanvasElement | null> = ref(null),
-  // TODO: remove after testing
-  sumX = ref(0),
-  sumY = ref(0),
   canvasDrop = function (e: DragEvent) {
     if (e.dataTransfer!.items && e.dataTransfer!.items.length === 1) {
       //Emit('string', e.dataTransfer!.items[0])
@@ -50,16 +47,12 @@ const props = defineProps<{
   windowMouseUp = function (e: MouseEvent) {
     if (canvasModel.value !== null && (e.buttons & 1) === 0) {
       canvasDragged.value = false
-      sumX.value = 0
-      sumY.value = 0
       canvasModel.value!.classList.remove('cursor-grabbing')
       canvasModel.value!.classList.add('cursor-grab')
     }
   },
   windowMouseMove = function (e: MouseEvent) {
     if (canvasDragged.value) {
-      sumX.value += e.movementX
-      sumY.value += e.movementY
       emit('updatePos', e.movementX, e.movementY)
     }
   },
@@ -72,7 +65,6 @@ const props = defineProps<{
     console.info(`Zapis do pliku${props.title}.png`)
   }
 
-// TODO this might break if the button is lifted outside of a browser window, oh well
 onMounted(() => {
   window.addEventListener('mousemove', windowMouseMove)
   window.addEventListener('mouseup', windowMouseUp)
