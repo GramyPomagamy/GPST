@@ -53,25 +53,10 @@ const routeQuery = useRoute().query,
       timePosition = 285,
       rightSide = canvasWidth.value - 3,
       subtitlePosition = 130
-    /*
-     * Ctx.clearRect(0, 0, canvasWidth.value, canvasHeight.value)
-     * ctx.fillStyle = 'rgb(54,25,127)'
-     * ctx.rect(0, 0, canvasWidth.value, canvasHeight.value)
-     * ctx.fill()
-     */
+
     ctx.drawImage(imageGradient, 0, 0)
 
-    ctx.drawImage(
-      backgroundImage.value,
-      canvasWidth.value / 2 -
-        (backgroundImage.value.width / 2) * photoScale.value +
-        photoLeft.value,
-      canvasHeight.value / 2 -
-        (backgroundImage.value.height / 2) * photoScale.value +
-        photoTop.value,
-      backgroundImage.value.width * photoScale.value,
-      backgroundImage.value.height * photoScale.value
-    )
+    drawBackground(ctx, backgroundImage.value, photoScale.value, photoLeft.value, photoTop.value)
 
     ctx.globalAlpha = 0.12
     ctx.drawImage(imageGradient, 0, 0)
@@ -106,7 +91,6 @@ const routeQuery = useRoute().query,
     if (subtitle.value) {
       // Podtytuł 77 PT Sans Narrow Bold Condensed
       ctx.font = 'normal normal 700 77px PT Sans Narrow'
-
       renderShadowText(ctx, subtitle.value, rightSide, subtitlePosition + 77, canvasWidth.value)
     }
 

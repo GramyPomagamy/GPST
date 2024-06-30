@@ -59,25 +59,10 @@ const routeQuery = useRoute().query,
       titlesDiff = Math.abs(titleLength - subtitleLength),
       titleMiddle = canvasWidth.value / 2,
       fullTitle = `${title.value} ${subtitle.value}`
-    /*
-     * Ctx.clearRect(0, 0, canvasWidth.value, canvasHeight.value)
-     * ctx.fillStyle = 'rgb(54,25,127)'
-     * ctx.rect(0, 0, canvasWidth.value, canvasHeight.value)
-     * ctx.fill()
-     */
+
     ctx.drawImage(imageGradient, 0, 0)
 
-    ctx.drawImage(
-      backgroundImage.value,
-      canvasWidth.value / 2 -
-        (backgroundImage.value.width / 2) * photoScale.value +
-        photoLeft.value,
-      canvasHeight.value / 2 -
-        (backgroundImage.value.height / 2) * photoScale.value +
-        photoTop.value,
-      backgroundImage.value.width * photoScale.value,
-      backgroundImage.value.height * photoScale.value
-    )
+    drawBackground(ctx, backgroundImage.value, photoScale.value, photoLeft.value, photoTop.value)
 
     ctx.globalAlpha = 0.12
     ctx.drawImage(imageGradient, 0, 0)
@@ -132,7 +117,6 @@ const routeQuery = useRoute().query,
     if (subtitle.value) {
       // // podtytuł 90 semi-bld
       ctx.fillStyle = '#ffbd16'
-
       renderShadowText(ctx, subtitle.value, subtitlePosition, titleHeight, canvasWidth.value)
     }
 
