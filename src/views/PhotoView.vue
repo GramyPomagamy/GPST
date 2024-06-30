@@ -10,7 +10,7 @@ import { loadImage } from '../utils/loadImage'
 import { renderShadowText } from '@/utils/renderText'
 import { getFullTitle, drawBackground } from '@/utils/misc'
 
-const route = useRoute(),
+const routeQuery = useRoute().query,
   canvasWidth = ref(1500),
   canvasHeight = ref(1000),
   backgroundImage: Ref<HTMLImageElement> = ref(new Image()),
@@ -220,21 +220,21 @@ watch(photoRotation, async () => {
 })
 watch(photoScale, redrawThumbnail)
 
-if (route.query.runner && typeof route.query.runner === 'string') {
-  initialRunner.value = route.query.runner
+if (routeQuery.runner && typeof routeQuery.runner === 'string') {
+  initialRunner.value = routeQuery.runner
 }
-if (route.query.title && typeof route.query.title === 'string') {
-  initialTitle.value = route.query.title
+if (routeQuery.title && typeof routeQuery.title === 'string') {
+  initialTitle.value = routeQuery.title
 }
-if (route.query.subtitle && typeof route.query.subtitle === 'string') {
-  initialSubtitle.value = route.query.subtitle
+if (routeQuery.subtitle && typeof routeQuery.subtitle === 'string') {
+  initialSubtitle.value = routeQuery.subtitle
 }
-if (route.query.category && typeof route.query.category === 'string') {
-  initialCategory.value = route.query.category
+if (routeQuery.category && typeof routeQuery.category === 'string') {
+  initialCategory.value = routeQuery.category
 }
 
-if (route.query.money && typeof route.query.money === 'string') {
-  initialMoney.value = Number(route.query.money)
+if (routeQuery.money && typeof routeQuery.money === 'string') {
+  initialMoney.value = Number(routeQuery.money)
 }
 
 onMounted(() => {
