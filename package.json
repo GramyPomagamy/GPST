@@ -37,7 +37,7 @@
     "vuetify": "^3.6.10"
   },
   "devDependencies": {
-    "@playwright/test": "^1.44.1",
+    "@playwright/test": "^1.45.1",
     "@rushstack/eslint-patch": "^1.10.3",
     "@tsconfig/node18": "^18.2.4",
     "@tsconfig/node20": "^20.1.4",
