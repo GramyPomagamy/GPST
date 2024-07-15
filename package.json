@@ -34,7 +34,7 @@
     "vite-plugin-vuetify": "^2.0.3",
     "vue": "^3.4.31",
     "vue-router": "^4.4.0",
-    "vuetify": "^3.6.10"
+    "vuetify": "^3.6.12"
   },
   "devDependencies": {
     "@playwright/test": "^1.45.1",
