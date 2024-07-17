@@ -30,7 +30,7 @@ jobs:
       - name: get deps
         run: npm ci
       - name: build
-        run: npm run build
+        run: npm run build -- -- --base /GPST
       - uses: actions/upload-pages-artifact@v3
         with:
           path: './dist'
