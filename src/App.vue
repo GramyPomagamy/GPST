@@ -10,16 +10,16 @@ const appVersion = import.meta.env.PACKAGE_VERSION
       <!--<template #prepend>
         <v-app-bar-nav-icon v-if="$vuetify.display.smAndDown" /> </template
       >-->
-      <v-img class="ms-6" src="favicon.ico" max-width="50" />
+      <v-img class="mx-6" src="favicon.ico" max-width="50" />
       <!--<v-app-bar-nav-icon />-->
 
-      <v-btn class="px-6" size="x-large" height="100%" prepend-icon="person" to="/"
+      <v-btn class="px-8" size="x-large" height="100%" prepend-icon="person" to="/"
         ><template v-if="$vuetify.display.mdAndUp">Runnerzy</template></v-btn
       >
-      <v-btn class="px-6" size="x-large" height="100%" prepend-icon="photo_camera" to="/photo">
+      <v-btn class="px-8" size="x-large" height="100%" prepend-icon="photo_camera" to="/photo">
         <template v-if="$vuetify.display.mdAndUp"> Zdjęcia podczas wydarzenia </template>
       </v-btn>
-      <v-btn class="px-6" size="x-large" height="100%" prepend-icon="mdi:mdi-youtube" to="/youtube"
+      <v-btn class="px-8" size="x-large" height="100%" prepend-icon="mdi:mdi-youtube" to="/youtube"
         ><template v-if="$vuetify.display.mdAndUp">Youtube</template></v-btn
       >
 
@@ -27,9 +27,9 @@ const appVersion = import.meta.env.PACKAGE_VERSION
       <v-app-bar-title v-if="$vuetify.display.smAndDown && !$vuetify.display.xs"
         >GPST</v-app-bar-title
       >-->
-      <v-app-bar-title v-if="$vuetify.display.lgAndUp"
+      <!--<v-app-bar-title v-if="$vuetify.display.lgAndUp"
         >GPST – Generator Piekielnie Szybkich Thumbnailsów</v-app-bar-title
-      >
+      >-->
     </v-app-bar>
 
     <!--<v-navigation-drawer> </v-navigation-drawer>-->
