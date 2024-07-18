@@ -1,5 +1,6 @@
 import { createVuetify } from 'vuetify'
 import { aliases, md } from 'vuetify/iconsets/md'
+import { mdi } from 'vuetify/iconsets/mdi'
 import { en, pl } from 'vuetify/locale'
 
 export const defaultVuetify = function () {
@@ -16,7 +17,8 @@ export const defaultVuetify = function () {
       defaultSet: 'md',
       aliases,
       sets: {
-        md
+        md,
+        mdi
       }
     }
   })
