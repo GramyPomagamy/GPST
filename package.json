@@ -32,7 +32,7 @@
     "pinia": "^2.1.7",
     "twemoji": "^14.0.2",
     "vite-plugin-vuetify": "^2.0.3",
-    "vue": "^3.4.32",
+    "vue": "^3.4.35",
     "vue-router": "^4.4.0",
     "vuetify": "^3.6.13"
   },
