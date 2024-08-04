@@ -2,8 +2,6 @@
 import { ref, watch } from 'vue'
 import type { Ref } from 'vue'
 
-import axios from 'axios'
-
 const inputBackground: Ref<HTMLInputElement | null> = ref(null),
   inputRunner = ref(''),
   inputTitle = ref(''),
@@ -71,15 +69,12 @@ var onNewBackground = function () {
     reader.readAsDataURL(inputBackground.value!.files![0])
   },
   updateMoney = function () {
-    axios
-      .get(
-        `${
-          import.meta.env.VITE_DONATION_TRACKER_BASE_URL +
-          import.meta.env.VITE_DONATION_TRACKER_SLUG
-        }?json=gpst`
-      )
+    fetch(
+      `${import.meta.env.VITE_DONATION_TRACKER_BASE_URL + import.meta.env.VITE_DONATION_TRACKER_SLUG}?json=gpst`
+    )
+      .then((response) => response.json())
       .then((resp) => {
-        inputMoney.value = Number(resp.data.agg.amount)
+        inputMoney.value = Number(resp.agg.amount)
       })
   }
 
