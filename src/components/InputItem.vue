@@ -152,7 +152,7 @@ watch(inputMoney, () => {
       label="Tytuł"
       size="42"
       required
-      prepend-inner-icon="mdso:uppercase"
+      prepend-inner-icon="uppercase"
     />
     <v-text-field
       clearable
@@ -162,7 +162,7 @@ watch(inputMoney, () => {
       id="subtitle"
       size="42"
       label="Podtytuł (opcjonalne)"
-      prepend-inner-icon="mdso:lowercase"
+      prepend-inner-icon="lowercase"
     />
     <v-text-field
       clearable
