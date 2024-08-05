@@ -71,8 +71,8 @@ onMounted(() => {
       @mousedown.prevent="canvasMouseDown"
       ref="canvasModel"
       id="mainCanvas"
-      :width="canvasWidth"
-      :height="canvasHeight"
+      :width="props.canvasWidth"
+      :height="props.canvasHeight"
     >
       Nie pójdzie bez JS. Co jest zadziwiające jak w ogóle byłeś w stanie zobaczyć tę wiadomość?
     </canvas>
