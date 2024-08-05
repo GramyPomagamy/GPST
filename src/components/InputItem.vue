@@ -114,111 +114,112 @@ watch(inputMoney, () => {
 </script>
 
 <template>
-  <div class="align-center">
-    <div>
-      <v-file-input
-        class="d-none"
-        ref="inputBackground"
-        @change="onNewBackground"
-        label="Tło"
-        type="file"
-        name="background"
-        id="background"
-        accept="image/*"
-        prepend-inner-icon="photo_camera"
-        prepend-icon=""
-      />
-      <v-btn class="bg-secondary" @click.prevent="chooseBackground"> Dodaj zdjęcie </v-btn>
-    </div>
-    <div>
-      <!-- TODO clearable is broken -->
-      <v-text-field
-        clearable
-        v-model="inputRunner"
-        type="text"
-        name="runner"
-        id="runner"
-        label="Runner"
-        size="42"
-        required
-        prepend-inner-icon="person"
-      />
-    </div>
-    <div>
-      <v-text-field
-        clearable
-        v-model="inputTitle"
-        type="text"
-        name="title"
-        id="title"
-        label="Tytuł"
-        size="42"
-        required
-        prepend-inner-icon="uppercase"
-      />
-    </div>
-    <div>
-      <v-text-field
-        clearable
-        v-model="inputSubtitle"
-        type="text"
-        name="subtitle"
-        id="subtitle"
-        size="42"
-        label="Podtytuł (opcjonalne)"
-        prepend-inner-icon="lowercase"
-      />
-    </div>
-    <div>
-      <v-text-field
-        clearable
-        v-model="inputCategory"
-        type="text"
-        name="category"
-        id="category"
-        label="Kategoria"
-        size="42"
-        required
-        prepend-inner-icon="category"
-      />
-    </div>
+  <div class="d-flex flex-column justify-center">
+    <v-file-input
+      class="d-none"
+      ref="inputBackground"
+      @change="onNewBackground"
+      label="Tło"
+      type="file"
+      name="background"
+      id="background"
+      accept="image/*"
+      prepend-inner-icon="photo_camera"
+      prepend-icon=""
+    />
+    <v-btn class="bg-secondary" prepend-icon="photo_camera" @click.prevent="chooseBackground">
+      Dodaj zdjęcie
+    </v-btn>
 
-    <div v-if="enableTime">
-      <v-text-field
-        clearable
-        v-model="inputTime"
-        type="text"
-        name="time"
-        label="Czas"
-        id="time"
-        placeholder="12:34"
-        size="12"
-        required
-        prepend-inner-icon="schedule"
-      />
-    </div>
-    <div v-if="enableMoney">
-      <v-number-input
-        clearable
-        v-model="inputMoney"
-        type="number"
-        name="money"
-        label="Uzbierano"
-        id="money"
-        placeholder="0"
-        size="10"
-        required
-        prepend-inner-icon="paid"
-      />
-    </div>
+    <!-- TODO clearable is broken -->
+    <v-text-field
+      clearable
+      v-model="inputRunner"
+      type="text"
+      name="runner"
+      id="runner"
+      label="Runner"
+      size="42"
+      required
+      prepend-inner-icon="person"
+    />
+    <v-text-field
+      clearable
+      v-model="inputTitle"
+      type="text"
+      name="title"
+      id="title"
+      label="Tytuł"
+      size="42"
+      required
+      prepend-inner-icon="uppercase"
+    />
+    <v-text-field
+      clearable
+      v-model="inputSubtitle"
+      type="text"
+      name="subtitle"
+      id="subtitle"
+      size="42"
+      label="Podtytuł (opcjonalne)"
+      prepend-inner-icon="lowercase"
+    />
+    <v-text-field
+      clearable
+      v-model="inputCategory"
+      type="text"
+      name="category"
+      id="category"
+      label="Kategoria"
+      size="42"
+      required
+      prepend-inner-icon="category"
+    />
+
+    <v-text-field
+      v-if="enableTime"
+      clearable
+      v-model="inputTime"
+      type="text"
+      name="time"
+      label="Czas"
+      id="time"
+      placeholder="12:34"
+      size="12"
+      required
+      prepend-inner-icon="schedule"
+    />
+    <v-number-input
+      v-if="enableMoney"
+      clearable
+      v-model="inputMoney"
+      hint="Ta sekcja jest pisana dla pieniędzy! (pzdr fani republiki)"
+      type="number"
+      name="money"
+      label="Uzbierano"
+      id="money"
+      placeholder="0"
+      size="10"
+      required
+      prepend-inner-icon="paid"
+    />
     <v-container fluid>
       <v-row>
         <v-col v-if="enableMoney">
-          <v-btn class="bg-secondary" @click.prevent="updateMoney">Aktualizuj kwotę</v-btn>
+          <v-btn
+            class="bg-secondary w-100"
+            prepend-icon="currency_exchange"
+            @click.prevent="updateMoney"
+            >Aktualizuj kwotę</v-btn
+          >
         </v-col>
         <v-col v-if="!enableMoney"> </v-col>
         <v-col>
-          <v-btn class="bg-primary" variant="tonal" prepend-icon="download" @click.prevent="savePNG"
+          <v-btn
+            class="bg-primary w-100"
+            variant="tonal"
+            prepend-icon="download"
+            @click.prevent="savePNG"
             >Pobierz .PNG</v-btn
           >
         </v-col>
