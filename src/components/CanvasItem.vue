@@ -5,7 +5,6 @@ import type { Ref } from 'vue'
 const props = defineProps<{
     canvasWidth: number
     canvasHeight: number
-    title: string
   }>(),
   emit = defineEmits<{
     canvasContext: [canvas: HTMLCanvasElement]
@@ -55,14 +54,6 @@ const props = defineProps<{
     if (canvasDragged.value) {
       emit('updatePos', e.movementX, e.movementY)
     }
-  },
-  savePNG = function () {
-    const data = canvasModel.value!.toDataURL('image/png'),
-      a = document.createElement('a')
-    a.download = `${props.title}.png`
-    a.href = data
-    a.click()
-    console.info(`Zapis do pliku${props.title}.png`)
   }
 
 onMounted(() => {
@@ -85,7 +76,6 @@ onMounted(() => {
     >
       Nie pójdzie bez JS. Co jest zadziwiające jak w ogóle byłeś w stanie zobaczyć tę wiadomość?
     </canvas>
-    <v-btn variant="tonal" prepend-icon="download" @click.prevent="savePNG">Zapisz PNG</v-btn>
   </div>
 </template>
 

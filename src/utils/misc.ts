@@ -1,5 +1,10 @@
 const getFullTitle = function (title: string, ...subtitle: string[]): string {
-    if (!title && !subtitle) {
+    if (
+      title.length === 0 &&
+      subtitle.every((e) => {
+        return e.length === 0
+      })
+    ) {
       return 'Stunt GP'
     }
 

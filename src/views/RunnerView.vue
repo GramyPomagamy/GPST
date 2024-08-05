@@ -8,7 +8,7 @@ import { useRoute } from 'vue-router'
 
 import { loadImage } from '../utils/loadImage'
 import { renderShadowText } from '@/utils/renderText'
-import { getFullTitle, drawBackground } from '@/utils/misc'
+import { drawBackground } from '@/utils/misc'
 
 const mainCanvas: Ref<HTMLCanvasElement | null> = ref(null),
   canvasWidth = ref(1500),
@@ -203,43 +203,49 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="main">
-    <h1>Miniaturka runnera na Twittera</h1>
-    <CanvasItem
-      :canvasWidth="canvasWidth"
-      :canvasHeight="canvasHeight"
-      :title="getFullTitle(title, subtitle)"
-      @canvasContext="(can) => (mainCanvas = can)"
-      @updateBackground="(b) => (photo = b)"
-      @updateScale="
-        (s) => {
-          photoScale += s
-          photoScale = Math.max(photoScale, 0.01)
-        }
-      "
-      @updatePos="
-        (l, t) => {
-          photoLeft += l
-          photoTop += t
-        }
-      "
-      @updateRotation="(r) => (photoRotation = (photoRotation + r) % 360)"
-    />
-    <RunnerItem
-      @updateBackground="(b) => (photo = b)"
-      @updateRunner="(r) => (runner = r)"
-      @updateTitle="(t) => (title = t)"
-      @updateSubtitle="(s) => (subtitle = s)"
-      @updateCategory="(c) => (category = c)"
-      @updateMoney="(m) => (money = m)"
-      :runner="initialRunner"
-      :title="initialTitle"
-      :subtitle="initialSubtitle"
-      :category="initialCategory"
-      :enable-money="true"
-      :money="initialMoney"
-    />
-  </div>
+  <v-container class="main">
+    <v-row>
+      <h1>Miniaturka runnera na Twittera</h1>
+    </v-row>
+    <v-row>
+      <CanvasItem
+        :canvasWidth="canvasWidth"
+        :canvasHeight="canvasHeight"
+        @canvasContext="(can) => (mainCanvas = can)"
+        @updateBackground="(b) => (photo = b)"
+        @updateScale="
+          (s) => {
+            photoScale += s
+            photoScale = Math.max(photoScale, 0.01)
+          }
+        "
+        @updatePos="
+          (l, t) => {
+            photoLeft += l
+            photoTop += t
+          }
+        "
+        @updateRotation="(r) => (photoRotation = (photoRotation + r) % 360)"
+      />
+    </v-row>
+    <v-row>
+      <RunnerItem
+        @updateBackground="(b) => (photo = b)"
+        @updateRunner="(r) => (runner = r)"
+        @updateTitle="(t) => (title = t)"
+        @updateSubtitle="(s) => (subtitle = s)"
+        @updateCategory="(c) => (category = c)"
+        @updateMoney="(m) => (money = m)"
+        :runner="initialRunner"
+        :title="initialTitle"
+        :subtitle="initialSubtitle"
+        :category="initialCategory"
+        :enable-money="true"
+        :money="initialMoney"
+        :canvasModel="mainCanvas"
+      />
+    </v-row>
+  </v-container>
 </template>
 
 <!-- <style>

@@ -182,7 +182,6 @@ onMounted(() => {
     <CanvasItem
       :canvasWidth="canvasWidth"
       :canvasHeight="canvasHeight"
-      :title="getFullTitle(title, subtitle)"
       @canvasContext="(can) => (mainCanvas = can)"
       @updateBackground="(b) => (photo = b)"
       @updateScale="
@@ -212,6 +211,7 @@ onMounted(() => {
       :category="initialCategory"
       :enable-time="true"
       :time="initialTime"
+      :canvasModel="mainCanvas"
     />
   </div>
 </template>

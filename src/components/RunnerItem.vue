@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import type { Ref } from 'vue'
+import { getFullTitle } from '@/utils/misc'
 
 const inputBackground: Ref<HTMLInputElement | null> = ref(null),
   inputRunner = ref(''),
@@ -18,6 +19,7 @@ const inputBackground: Ref<HTMLInputElement | null> = ref(null),
     time?: string
     enableMoney?: boolean
     money?: number
+    canvasModel: HTMLCanvasElement | null
   }>(),
   emit = defineEmits<{
     updateBackground: [b: string]
@@ -76,6 +78,14 @@ var onNewBackground = function () {
       .then((resp) => {
         inputMoney.value = Number(resp.agg.amount)
       })
+  },
+  savePNG = function () {
+    const data = props.canvasModel!.toDataURL('image/png'),
+      a = document.createElement('a')
+    a.download = `${getFullTitle(inputTitle.value, inputSubtitle.value)}.png`
+    a.href = data
+    a.click()
+    console.info(`Zapis do pliku ${getFullTitle(inputTitle.value, inputSubtitle.value)}.png`)
   }
 
 watch(inputRunner, () => {
@@ -196,5 +206,6 @@ watch(inputMoney, () => {
       <!-- TODO update from the internet -->
       <v-btn @click.prevent="updateMoney">Aktualizuj</v-btn>
     </div>
+    <v-btn variant="tonal" prepend-icon="download" @click.prevent="savePNG">Zapisz PNG</v-btn>
   </div>
 </template>
