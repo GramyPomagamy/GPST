@@ -30,6 +30,7 @@ const appVersion = import.meta.env.PACKAGE_VERSION
           height="100%"
           prepend-icon="mdi:mdi-github"
           href="https://github.com/gramyPomagamy/GPST"
+          variant="tonal"
           ><template v-if="$vuetify.display.mdAndUp">Github</template></v-btn
         >
       </template>
