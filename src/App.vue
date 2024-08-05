@@ -23,6 +23,17 @@ const appVersion = import.meta.env.PACKAGE_VERSION
         ><template v-if="$vuetify.display.mdAndUp">Youtube</template></v-btn
       >
 
+      <template v-slot:append>
+        <v-btn
+          class="px-8"
+          size="x-large"
+          height="100%"
+          prepend-icon="mdi:mdi-github"
+          to="https://github.com/gramyPomagamy/GPST"
+          ><template v-if="$vuetify.display.mdAndUp">Github</template></v-btn
+        >
+      </template>
+
       <!--
       <v-app-bar-title v-if="$vuetify.display.smAndDown && !$vuetify.display.xs"
         >GPST</v-app-bar-title
