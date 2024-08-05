@@ -86,6 +86,11 @@ var onNewBackground = function () {
     a.href = data
     a.click()
     console.info(`Zapis do pliku ${getFullTitle(inputTitle.value, inputSubtitle.value)}.png`)
+  },
+  chooseBackground = function () {
+    if (inputBackground.value) {
+      inputBackground.value.click()
+    }
   }
 
 watch(inputRunner, () => {
@@ -109,9 +114,10 @@ watch(inputMoney, () => {
 </script>
 
 <template>
-  <div>
+  <div class="align-center">
     <div>
       <v-file-input
+        class="d-none"
         ref="inputBackground"
         @change="onNewBackground"
         label="Tło"
@@ -122,6 +128,7 @@ watch(inputMoney, () => {
         prepend-inner-icon="photo_camera"
         prepend-icon=""
       />
+      <v-btn class="bg-secondary" @click.prevent="chooseBackground"> Dodaj zdjęcie </v-btn>
     </div>
     <div>
       <!-- TODO clearable is broken -->
@@ -203,9 +210,19 @@ watch(inputMoney, () => {
         required
         prepend-inner-icon="paid"
       />
-      <!-- TODO update from the internet -->
-      <v-btn @click.prevent="updateMoney">Aktualizuj</v-btn>
     </div>
-    <v-btn variant="tonal" prepend-icon="download" @click.prevent="savePNG">Zapisz PNG</v-btn>
+    <v-container fluid>
+      <v-row>
+        <v-col v-if="enableMoney">
+          <v-btn class="bg-secondary" @click.prevent="updateMoney">Aktualizuj kwotę</v-btn>
+        </v-col>
+        <v-col v-if="!enableMoney"> </v-col>
+        <v-col>
+          <v-btn class="bg-primary" variant="tonal" prepend-icon="download" @click.prevent="savePNG"
+            >Pobierz .PNG</v-btn
+          >
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>

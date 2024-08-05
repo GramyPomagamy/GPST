@@ -78,11 +78,3 @@ onMounted(() => {
     </canvas>
   </div>
 </template>
-
-<!-- <style scoped>
-#mainCanvas {
-  max-width: 75vw;
-  max-height: 70vh;
-  border: 1px solid black;
-}
-</style> -->
