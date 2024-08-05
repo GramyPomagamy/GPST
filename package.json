@@ -1,7 +1,7 @@
 {
   "name": "gpst",
   "description": "Generator Piekielnie Szybkich Thumbnailsów ",
-  "version": "0.2.0",
+  "version": "0.3.0-dev",
   "author": {
     "name": "Piotr \"Halamix2\" Halama",
     "email": "skrzynka@halamix2.pl",
