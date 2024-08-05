@@ -199,12 +199,12 @@ onMounted(() => {
       @updateRotation="(r) => (photoRotation = (photoRotation + r) % 360)"
     />
     <InputItem
-      @updateBackground="(b) => (photo = b)"
-      @updateRunner="(r) => (runner = r)"
-      @updateTitle="(t) => (title = t)"
-      @updateSubtitle="(s) => (subtitle = s)"
-      @updateCategory="(c) => (category = c)"
-      @updateTime="(t) => (time = t)"
+      @updateBackground="(b: string) => (photo = b)"
+      @updateRunner="(r: string) => (runner = r)"
+      @updateTitle="(t: string) => (title = t)"
+      @updateSubtitle="(s: string) => (subtitle = s)"
+      @updateCategory="(c: string) => (category = c)"
+      @updateTime="(t: string) => (time = t)"
       :runner="initialRunner"
       :title="initialTitle"
       :subtitle="initialSubtitle"
