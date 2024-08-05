@@ -177,43 +177,53 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="main">
-    <h1>Miniaturka runnera na Twittera</h1>
-    <CanvasItem
-      :canvasWidth="canvasWidth"
-      :canvasHeight="canvasHeight"
-      @canvasContext="(can) => (mainCanvas = can)"
-      @updateBackground="(b) => (photo = b)"
-      @updateScale="
-        (s) => {
-          photoScale += s
-          photoScale = Math.max(photoScale, 0.01)
-        }
-      "
-      @updatePos="
-        (l, t) => {
-          photoLeft += l
-          photoTop += t
-        }
-      "
-      @updateRotation="(r) => (photoRotation = (photoRotation + r) % 360)"
-    />
-    <InputItem
-      @updateBackground="(b: string) => (photo = b)"
-      @updateRunner="(r: string) => (runner = r)"
-      @updateTitle="(t: string) => (title = t)"
-      @updateSubtitle="(s: string) => (subtitle = s)"
-      @updateCategory="(c: string) => (category = c)"
-      @updateTime="(t: string) => (time = t)"
-      :runner="initialRunner"
-      :title="initialTitle"
-      :subtitle="initialSubtitle"
-      :category="initialCategory"
-      :enable-time="true"
-      :time="initialTime"
-      :canvasModel="mainCanvas"
-    />
-  </div>
+  <v-container fluid class="main bg-surface">
+    <v-row>
+      <v-col>
+        <h1>Miniaturka runnera na Twittera</h1>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <CanvasItem
+          :canvasWidth="canvasWidth"
+          :canvasHeight="canvasHeight"
+          @canvasContext="(can) => (mainCanvas = can)"
+          @updateBackground="(b) => (photo = b)"
+          @updateScale="
+            (s) => {
+              photoScale += s
+              photoScale = Math.max(photoScale, 0.01)
+            }
+          "
+          @updatePos="
+            (l, t) => {
+              photoLeft += l
+              photoTop += t
+            }
+          "
+          @updateRotation="(r) => (photoRotation = (photoRotation + r) % 360)"
+        />
+      </v-col>
+      <v-col cols="12" md="4">
+        <InputItem
+          @updateBackground="(b: string) => (photo = b)"
+          @updateRunner="(r: string) => (runner = r)"
+          @updateTitle="(t: string) => (title = t)"
+          @updateSubtitle="(s: string) => (subtitle = s)"
+          @updateCategory="(c: string) => (category = c)"
+          @updateTime="(t: string) => (time = t)"
+          :runner="initialRunner"
+          :title="initialTitle"
+          :subtitle="initialSubtitle"
+          :category="initialCategory"
+          :enable-time="true"
+          :time="initialTime"
+          :canvasModel="mainCanvas"
+        />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <!-- <style>

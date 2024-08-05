@@ -38,7 +38,7 @@ const appVersion = import.meta.env.PACKAGE_VERSION
       <RouterView />
     </v-main>
 
-    <v-footer class="d-flex flex-column">
+    <v-footer class="d-flex flex-column bg-surface-variant">
       By Halamix2 &#9874; 2024 - {{ new Date().getFullYear() }}, wersja {{ appVersion }}. Halamix
       nie potrafi we frontend, a jednak to zrobił; what's your excuse?
     </v-footer>

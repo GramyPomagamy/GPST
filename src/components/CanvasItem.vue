@@ -65,7 +65,7 @@ onMounted(() => {
 <template>
   <div>
     <canvas
-      :class="`cursor-grab`"
+      :class="`cursor-grab h-100 w-100`"
       @drop.prevent="canvasDrop"
       @wheel.prevent="canvasWheel"
       @mousedown.prevent="canvasMouseDown"
