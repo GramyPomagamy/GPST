@@ -178,11 +178,11 @@ onMounted(() => {
 
 <template>
   <v-container fluid class="main bg-surface">
-    <v-row>
+    <!--<v-row>
       <v-col>
         <h1>Miniaturka runnera na Twittera</h1>
       </v-col>
-    </v-row>
+    </v-row>-->
     <v-row>
       <v-col>
         <CanvasItem
