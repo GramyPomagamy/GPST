@@ -3,12 +3,12 @@ import { onMounted, ref, watch } from 'vue'
 import type { Ref } from 'vue'
 
 import CanvasItem from '../components/CanvasItem.vue'
-import RunnerItem from '../components/RunnerItem.vue'
+import InputItem from '../components/InputItem.vue'
 import { useRoute } from 'vue-router'
 
 import { loadImage } from '../utils/loadImage'
 import { renderShadowText } from '@/utils/renderText'
-import { getFullTitle, drawBackground } from '@/utils/misc'
+import { drawBackground } from '@/utils/misc'
 
 const routeQuery = useRoute().query,
   canvasWidth = ref(1500),
@@ -240,7 +240,7 @@ onMounted(() => {
       "
       @updateRotation="(r) => (photoRotation = (photoRotation + r) % 360)"
     />
-    <RunnerItem
+    <InputItem
       @updateBackground="(b) => (photo = b)"
       @updateRunner="(r) => (runner = r)"
       @updateTitle="(t) => (title = t)"
