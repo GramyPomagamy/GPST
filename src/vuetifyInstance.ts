@@ -33,7 +33,7 @@ const mdso: IconSet = {
         messages: { pl, en }
       },
       icons: {
-        defaultSet: 'md',
+        defaultSet: 'mdso',
         aliases,
         sets: {
           md,
