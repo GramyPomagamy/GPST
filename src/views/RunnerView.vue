@@ -231,6 +231,19 @@ onMounted(() => {
           "
           @updateRotation="(r) => (photoRotation = (photoRotation + r) % 360)"
         />
+        <v-row>
+          <v-col>
+            <p class="text-center">
+              Hej! Brak pewności czy Twoja miniaturka wygląda dobrze?
+              <a
+                class="font-weight-medium text-white"
+                href="https://twitter.com/search?q=from%3A%40GramyPomagamy+%23gspsdzieciom24&f=live"
+                >Spójrz tu</a
+              >
+              na inne przykłady.
+            </p>
+          </v-col>
+        </v-row>
       </v-col>
       <v-col cols="12" md="4">
         <InputItem
