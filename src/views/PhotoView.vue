@@ -46,10 +46,6 @@ const routeQuery = useRoute().query,
     }
     const ctx = mainCanvas.value.getContext('2d')!,
       runnerPosition = 208 + 101,
-      titleLength = ctx.measureText(title.value).width,
-      subtitleLength = ctx.measureText(subtitle.value).width,
-      titlesDiff = Math.abs(titleLength - subtitleLength),
-      titleMiddle = canvasWidth.value / 2,
       fullTitle = `${title.value} ${subtitle.value}`
 
     ctx.drawImage(imageGradient, 0, 0)
@@ -93,7 +89,11 @@ const routeQuery = useRoute().query,
       ctx.font = `normal normal 600 ${titleFontSize.toString()}px Saira Condensed`
     }
 
-    const titleHeight = 442 + titleFontSize / 2
+    const titleHeight = 442 + titleFontSize / 2,
+      titleLength = ctx.measureText(title.value).width,
+      subtitleLength = ctx.measureText(subtitle.value).width,
+      titlesDiff = Math.abs(titleLength - subtitleLength),
+      titleMiddle = canvasWidth.value / 2
 
     let titlePosition = titleMiddle - titleLength / 2 + titlesDiff / 2,
       subtitlePosition = titleMiddle + subtitleLength / 2 + titlesDiff / 2
