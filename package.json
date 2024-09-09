@@ -28,7 +28,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "pinia": "^2.2.0",
+    "pinia": "^2.2.2",
     "twemoji": "^14.0.2",
     "vite-plugin-vuetify": "^2.0.4",
     "vue": "^3.4.35",
