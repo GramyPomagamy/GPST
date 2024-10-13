@@ -8,9 +8,17 @@ updates:
       interval: "monthly"
     commit-message:
       prefix: "npm"
+    groups:
+      all:
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "monthly"
     commit-message:
       prefix: "actions"
+    groups:
+      all:
+        patterns:
+          - "*"
