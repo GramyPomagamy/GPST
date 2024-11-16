@@ -18,6 +18,7 @@ test-results
 
 /cypress/videos/
 /cypress/screenshots/
+playwright-report/
 
 # Editor directories and files
 .vscode/*
