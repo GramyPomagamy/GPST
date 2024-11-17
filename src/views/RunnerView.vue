@@ -17,9 +17,6 @@ const store = useGenericStore(),
   canvasWidth = ref(1500),
   canvasHeight = ref(1000),
   backgroundImage: Ref<HTMLImageElement> = ref(new Image()),
-  photoScale = ref(1.0),
-  photoLeft = ref(0),
-  photoTop = ref(0),
   photoRotation = ref(0),
   imageGradient = await loadImage(`${import.meta.env.VITE_IMAGES_GRADIENT}`),
   imageLogoGSPS = await loadImage(`${import.meta.env.VITE_LOGO_FIRST}`),
@@ -38,7 +35,7 @@ const store = useGenericStore(),
 
     ctx.drawImage(imageGradient, 0, 0)
 
-    drawBackground(ctx, backgroundImage.value, photoScale.value, photoLeft.value, photoTop.value)
+    drawBackground(ctx, backgroundImage.value, store.photoScale, store.photoLeft, store.photoTop)
 
     ctx.globalAlpha = 0.12
     ctx.drawImage(imageGradient, 0, 0)
@@ -124,7 +121,7 @@ backgroundImage.value.onload = () => {
   if (scaleX < scaleY) {
     scaleX = scaleY
   }
-  photoScale.value = Math.round(scaleX * 100) / 100
+  store.photoScale = Math.round(scaleX * 100) / 100
   redrawThumbnail()
 }
 
@@ -134,9 +131,9 @@ imageLogoFoundation.onload = redrawThumbnail
 imageBanner.onload = redrawThumbnail
 
 watch(photo, (newPhoto: string) => {
-  photoLeft.value = 0
-  photoTop.value = 0
-  photoScale.value = 1.0
+  store.photoLeft = 0
+  store.photoTop = 0
+  store.photoScale = 1.0
   photoRotation.value = 0
   photoLoaded.value = false
 
@@ -144,8 +141,6 @@ watch(photo, (newPhoto: string) => {
 })
 document.fonts.onloadingdone = redrawThumbnail
 
-watch(photoLeft, redrawThumbnail)
-watch(photoTop, redrawThumbnail)
 watch(mainCanvas, redrawThumbnail)
 
 // Rotate image once before using it
@@ -168,7 +163,6 @@ watch(photoRotation, async () => {
   photoLoaded.value = false
   backgroundImage.value.src = tmpCanvas.toDataURL('image/png')
 })
-watch(photoScale, redrawThumbnail)
 
 if (routeQuery.runner && typeof routeQuery.runner === 'string') {
   store.runner = routeQuery.runner
@@ -205,21 +199,9 @@ onMounted(() => {
           :class="`h-auto w-auto`"
           :canvasWidth="canvasWidth"
           :canvasHeight="canvasHeight"
-          @canvasElement="(can) => (mainCanvas = can)"
-          @updateBackground="(b) => (photo = b)"
-          @updateScale="
-            (s) => {
-              photoScale += s
-              photoScale = Math.max(photoScale, 0.01)
-            }
-          "
-          @updatePos="
-            (l, t) => {
-              photoLeft += l
-              photoTop += t
-            }
-          "
-          @updateRotation="(r) => (photoRotation = (photoRotation + r) % 360)"
+          @canvasElement="(can: HTMLElement) => (mainCanvas = can)"
+          @updateBackground="(b: string) => (photo = b)"
+          @updateRotation="(r: number) => (photoRotation = (photoRotation + r) % 360)"
         />
         <v-row>
           <v-col>

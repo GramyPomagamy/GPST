@@ -19,9 +19,6 @@ const store = useGenericStore(),
   backgroundImage: Ref<HTMLImageElement> = ref(new Image()),
   mainCanvas: Ref<HTMLCanvasElement | null> = ref(null),
   photo = ref(''),
-  photoScale = ref(1.0),
-  photoLeft = ref(0),
-  photoTop = ref(0),
   photoRotation = ref(0),
   photoLoaded = ref(false),
   imageBanner = await loadImage(`${import.meta.env.VITE_IMAGES_BANNER_MILESTONE}`),
@@ -43,7 +40,7 @@ const store = useGenericStore(),
 
     ctx.drawImage(imageGradient, 0, 0)
 
-    drawBackground(ctx, backgroundImage.value, photoScale.value, photoLeft.value, photoTop.value)
+    drawBackground(ctx, backgroundImage.value, store.photoScale, store.photoLeft, store.photoTop)
 
     ctx.globalAlpha = 0.12
     ctx.drawImage(imageGradient, 0, 0)
@@ -141,7 +138,7 @@ backgroundImage.value.onload = () => {
   if (scaleX < scaleY) {
     scaleX = scaleY
   }
-  photoScale.value = Math.round(scaleX * 100) / 100
+  store.photoScale = Math.round(scaleX * 100) / 100
   redrawThumbnail()
 }
 
@@ -151,17 +148,15 @@ imageLogoFoundation.onload = redrawThumbnail
 imageBanner.onload = redrawThumbnail
 
 watch(photo, (newPhoto: string) => {
-  photoLeft.value = 0
-  photoTop.value = 0
-  photoScale.value = 1.0
+  store.photoLeft = 0
+  store.photoTop = 0
+  store.photoScale = 1.0
   photoRotation.value = 0
   photoLoaded.value = false
 
   backgroundImage.value.src = newPhoto
 })
 document.fonts.onloadingdone = redrawThumbnail
-watch(photoLeft, redrawThumbnail)
-watch(photoTop, redrawThumbnail)
 
 // Rotate image once before using it
 watch(photoRotation, async () => {
@@ -182,7 +177,6 @@ watch(photoRotation, async () => {
   photoLoaded.value = false
   backgroundImage.value.src = tmpCanvas.toDataURL('image/png')
 })
-watch(photoScale, redrawThumbnail)
 
 if (routeQuery.runner && typeof routeQuery.runner === 'string') {
   store.runner = routeQuery.runner
@@ -223,21 +217,9 @@ onMounted(() => {
         <CanvasItem
           :canvasWidth="canvasWidth"
           :canvasHeight="canvasHeight"
-          @canvasElement="(can) => (mainCanvas = can)"
-          @updateBackground="(b) => (photo = b)"
-          @updateScale="
-            (s) => {
-              photoScale += s
-              photoScale = Math.max(photoScale, 0.01)
-            }
-          "
-          @updatePos="
-            (l, t) => {
-              photoLeft += l
-              photoTop += t
-            }
-          "
-          @updateRotation="(r) => (photoRotation = (photoRotation + r) % 360)"
+          @canvasElement="(can: HTMLElement) => (mainCanvas = can)"
+          @updateBackground="(b: string) => (photo = b)"
+          @updateRotation="(r: number) => (photoRotation = (photoRotation + r) % 360)"
         />
       </v-col>
       <v-col cols="12" md="4">

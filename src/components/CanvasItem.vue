@@ -2,15 +2,16 @@
 import { onMounted, ref } from 'vue'
 import type { Ref } from 'vue'
 
-const props = defineProps<{
+import { useGenericStore } from '@/stores/generic'
+
+const store = useGenericStore(),
+  props = defineProps<{
     canvasWidth: number
     canvasHeight: number
   }>(),
   emit = defineEmits<{
     canvasElement: [canvas: HTMLCanvasElement]
     updateBackground: [file: string]
-    updateScale: [scale: number]
-    updatePos: [left: number, top: number]
     updateRotation: [rotation: number]
   }>(),
   canvasDragged = ref(false),
@@ -27,9 +28,9 @@ const props = defineProps<{
   },
   canvasWheel = function (e: WheelEvent) {
     if (e.deltaY > 0) {
-      emit('updateScale', -0.02)
+      store.photoScale -= 0.02
     } else {
-      emit('updateScale', 0.02)
+      store.photoScale += 0.02
     }
   },
   canvasMouseDown = function (e: MouseEvent) {
@@ -52,7 +53,8 @@ const props = defineProps<{
   },
   windowMouseMove = function (e: MouseEvent) {
     if (canvasDragged.value) {
-      emit('updatePos', e.movementX, e.movementY)
+      store.photoLeft += e.movementX
+      store.photoTop += e.movementY
     }
   }
 
