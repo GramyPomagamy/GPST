@@ -21,9 +21,9 @@ const store = useGenericStore(),
   photo = ref(''),
   photoRotation = ref(0),
   photoLoaded = ref(false),
-  imageBanner = await loadImage(`${import.meta.env.VITE_IMAGES_BANNER_YOUTUBE}`),
-  imageGradient = await loadImage(`${import.meta.env.VITE_IMAGES_GRADIENT}`),
-  imageLogoGSPS = await loadImage(`${import.meta.env.VITE_LOGO_FIRST}`),
+  imageGradient: Ref<HTMLImageElement | null> = ref(null),
+  imageLogoGSPS: Ref<HTMLImageElement | null> = ref(null),
+  imageBanner: Ref<HTMLImageElement | null> = ref(null),
   redrawThumbnail = function () {
     // TODO: add a check to see if the canvas is already loaded
     if (mainCanvas.value === null) {
@@ -38,18 +38,32 @@ const store = useGenericStore(),
       rightSide = canvasWidth.value - 3,
       subtitlePosition = 130
 
-    ctx.drawImage(imageGradient, 0, 0)
+    if (imageGradient.value) {
+      ctx.drawImage(imageGradient.value, 0, 0)
+    }
 
     drawBackground(ctx, backgroundImage.value, store.photoScale, store.photoLeft, store.photoTop)
 
-    ctx.globalAlpha = 0.12
-    ctx.drawImage(imageGradient, 0, 0)
+    if (imageGradient.value) {
+      ctx.globalAlpha = 0.12
+      ctx.drawImage(imageGradient.value, 0, 0)
+    }
     ctx.globalAlpha = 1
-    ctx.drawImage(imageBanner, 0, 0)
+    if (imageBanner.value) {
+      ctx.drawImage(imageBanner.value, 0, 0)
+    }
 
     ctx.imageSmoothingQuality = 'high'
     ctx.imageSmoothingEnabled = true
-    ctx.drawImage(imageLogoGSPS, 0, 570, 404, 404 * (imageLogoGSPS.height / imageLogoGSPS.width))
+    if (imageLogoGSPS.value) {
+      ctx.drawImage(
+        imageLogoGSPS.value,
+        0,
+        570,
+        404,
+        404 * (imageLogoGSPS.value.height / imageLogoGSPS.value.width)
+      )
+    }
 
     ctx.fillStyle = '#e1e1e1'
     ctx.strokeStyle = 'black'
@@ -101,10 +115,6 @@ backgroundImage.value.onload = () => {
   redrawThumbnail()
 }
 
-imageGradient.onload = redrawThumbnail
-imageLogoGSPS.onload = redrawThumbnail
-imageBanner.onload = redrawThumbnail
-
 watch(photo, (newPhoto: string) => {
   store.photoLeft = 0
   store.photoTop = 0
@@ -153,7 +163,14 @@ if (routeQuery.time && typeof routeQuery.time === 'string') {
   store.time = routeQuery.time
 }
 
-onMounted(() => {
+onMounted(async () => {
+  imageGradient.value = await loadImage(`${import.meta.env.VITE_IMAGES_GRADIENT}`)
+  imageGradient.value.onload = redrawThumbnail
+  imageLogoGSPS.value = await loadImage(`${import.meta.env.VITE_LOGO_FIRST}`)
+  imageLogoGSPS.value.onload = redrawThumbnail
+  imageBanner.value = await loadImage(`${import.meta.env.VITE_IMAGES_BANNER_YOUTUBE}`)
+  imageBanner.value.onload = redrawThumbnail
+
   store.$subscribe((mutation, state) => {
     // TODO: maybe limti scope here? Do we want to redraw on ANY change in the store?
     // console.log('store updated:', mutation, state)

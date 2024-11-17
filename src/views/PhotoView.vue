@@ -21,12 +21,10 @@ const store = useGenericStore(),
   photo = ref(''),
   photoRotation = ref(0),
   photoLoaded = ref(false),
-  imageBanner = await loadImage(`${import.meta.env.VITE_IMAGES_BANNER_MILESTONE}`),
-  // ImageBanner.src = imageBannerData
-
-  imageGradient = await loadImage(`${import.meta.env.VITE_IMAGES_GRADIENT}`),
-  imageLogoGSPS = await loadImage(`${import.meta.env.VITE_LOGO_FIRST}`),
-  imageLogoFoundation = await loadImage(`${import.meta.env.VITE_LOGO_SECOND}`),
+  imageGradient: Ref<HTMLImageElement | null> = ref(null),
+  imageLogoGSPS: Ref<HTMLImageElement | null> = ref(null),
+  imageLogoFoundation: Ref<HTMLImageElement | null> = ref(null),
+  imageBanner: Ref<HTMLImageElement | null> = ref(null),
   redrawThumbnail = function () {
     // TODO: add a check to see if the canvas is already loaded
     if (mainCanvas.value === null) {
@@ -38,26 +36,42 @@ const store = useGenericStore(),
       runnerPosition = 208 + 101,
       fullTitle = `${store.title} ${store.subtitle}`
 
-    ctx.drawImage(imageGradient, 0, 0)
+    if (imageGradient.value) {
+      ctx.drawImage(imageGradient.value, 0, 0)
+    }
 
     drawBackground(ctx, backgroundImage.value, store.photoScale, store.photoLeft, store.photoTop)
 
-    ctx.globalAlpha = 0.12
-    ctx.drawImage(imageGradient, 0, 0)
+    if (imageGradient.value) {
+      ctx.globalAlpha = 0.12
+      ctx.drawImage(imageGradient.value, 0, 0)
+    }
     ctx.globalAlpha = 1
-    ctx.drawImage(imageBanner, 0, 0)
+    if (imageBanner.value) {
+      ctx.drawImage(imageBanner.value, 0, 0)
+    }
 
     ctx.imageSmoothingQuality = 'high'
     ctx.imageSmoothingEnabled = true
-    ctx.drawImage(imageLogoGSPS, 1110, 849, 360, 360 * (imageLogoGSPS.height / imageLogoGSPS.width))
+    if (imageLogoGSPS.value) {
+      ctx.drawImage(
+        imageLogoGSPS.value,
+        1110,
+        849,
+        360,
+        360 * (imageLogoGSPS.value.height / imageLogoGSPS.value.width)
+      )
+    }
 
-    ctx.drawImage(
-      imageLogoFoundation,
-      0,
-      0,
-      350,
-      350 * (imageLogoFoundation.height / imageLogoFoundation.width)
-    )
+    if (imageLogoFoundation.value) {
+      ctx.drawImage(
+        imageLogoFoundation.value,
+        0,
+        0,
+        350,
+        350 * (imageLogoFoundation.value.height / imageLogoFoundation.value.width)
+      )
+    }
 
     ctx.fillStyle = 'white'
     ctx.strokeStyle = 'black'
@@ -142,11 +156,6 @@ backgroundImage.value.onload = () => {
   redrawThumbnail()
 }
 
-imageGradient.onload = redrawThumbnail
-imageLogoGSPS.onload = redrawThumbnail
-imageLogoFoundation.onload = redrawThumbnail
-imageBanner.onload = redrawThumbnail
-
 watch(photo, (newPhoto: string) => {
   store.photoLeft = 0
   store.photoTop = 0
@@ -195,7 +204,16 @@ if (routeQuery.money && typeof routeQuery.money === 'string') {
   store.money = Number(routeQuery.money)
 }
 
-onMounted(() => {
+onMounted(async () => {
+  imageGradient.value = await loadImage(`${import.meta.env.VITE_IMAGES_GRADIENT}`)
+  imageGradient.value.onload = redrawThumbnail
+  imageLogoGSPS.value = await loadImage(`${import.meta.env.VITE_LOGO_FIRST}`)
+  imageLogoGSPS.value.onload = redrawThumbnail
+  imageLogoFoundation.value = await loadImage(`${import.meta.env.VITE_LOGO_SECOND}`)
+  imageLogoFoundation.value.onload = redrawThumbnail
+  imageBanner.value = await loadImage(`${import.meta.env.VITE_IMAGES_BANNER_MILESTONE}`)
+  imageBanner.value.onload = redrawThumbnail
+
   store.$subscribe((mutation, state) => {
     // TODO: maybe limti scope here? Do we want to redraw on ANY change in the store?
     // console.log('store updated:', mutation, state)
@@ -207,11 +225,6 @@ onMounted(() => {
 
 <template>
   <v-container fluid class="main bg-surface">
-    <!---<v-row>
-      <v-col>
-        <h1>Miniaturka runnera na Twittera</h1>
-      </v-col>
-    </v-row>-->
     <v-row>
       <v-col>
         <CanvasItem

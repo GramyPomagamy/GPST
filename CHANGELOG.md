@@ -3,7 +3,8 @@
 ## WIP
 
 - Show help when hovering over the thumbnail
-- refactor code
+- Input fields values are now transferrable between views
+- Refactor code
 
 ## 0.2.2
 
