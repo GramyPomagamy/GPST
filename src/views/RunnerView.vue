@@ -10,13 +10,13 @@ import { loadImage } from '../utils/loadImage'
 import { renderShadowText } from '@/utils/renderText'
 import { drawBackground } from '@/utils/misc'
 
-const mainCanvas: Ref<HTMLCanvasElement | null> = ref(null),
+import { useGenericStore } from '@/stores/generic'
+
+const store = useGenericStore(),
+  mainCanvas: Ref<HTMLCanvasElement | null> = ref(null),
   canvasWidth = ref(1500),
   canvasHeight = ref(1000),
   backgroundImage: Ref<HTMLImageElement> = ref(new Image()),
-  photoScale = ref(1.0),
-  photoLeft = ref(0),
-  photoTop = ref(0),
   photoRotation = ref(0),
   imageGradient = await loadImage(`${import.meta.env.VITE_IMAGES_GRADIENT}`),
   imageLogoGSPS = await loadImage(`${import.meta.env.VITE_LOGO_FIRST}`),
@@ -24,28 +24,18 @@ const mainCanvas: Ref<HTMLCanvasElement | null> = ref(null),
   imageBanner = await loadImage(`${import.meta.env.VITE_IMAGES_BANNER_RUNNER}`),
   photo = ref(''),
   photoLoaded = ref(false),
-  runner = ref(''),
-  title = ref(''),
-  subtitle = ref(''),
-  category = ref(''),
-  money = ref(0),
-  initialRunner = ref(''),
-  initialTitle = ref(''),
-  initialSubtitle = ref(''),
-  initialCategory = ref(''),
-  initialMoney = ref(0),
   redrawThumbnail = function () {
     // TODO: add a check to see if the canvas is already loaded
     if (mainCanvas.value === null) {
       console.error('canvas not found,doing ugly retry in 0.1s')
-      setTimeout(redrawThumbnail, 100)
+      // setTimeout(redrawThumbnail, 100)
       return
     }
     const ctx = mainCanvas.value.getContext('2d')!
 
     ctx.drawImage(imageGradient, 0, 0)
 
-    drawBackground(ctx, backgroundImage.value, photoScale.value, photoLeft.value, photoTop.value)
+    drawBackground(ctx, backgroundImage.value, store.photoScale, store.photoLeft, store.photoTop)
 
     ctx.globalAlpha = 0.12
     ctx.drawImage(imageGradient, 0, 0)
@@ -74,32 +64,32 @@ const mainCanvas: Ref<HTMLCanvasElement | null> = ref(null),
 
     let runnerPosition = 648 + 83,
       titlePosition = 740 + 113
-    if (subtitle.value) {
+    if (store.subtitle) {
       runnerPosition = 587 + 83
       titlePosition = 668 + 113
     }
 
     // Runner 83medium
     ctx.font = 'normal normal 500 83px Barlow Condensed'
-    renderShadowText(ctx, runner.value, canvasWidth.value / 2, runnerPosition, canvasWidth.value)
+    renderShadowText(ctx, store.runner, canvasWidth.value / 2, runnerPosition, canvasWidth.value)
 
     // Title, 113 semi-bold
     ctx.font = 'normal normal 600 113px Barlow Condensed'
-    renderShadowText(ctx, title.value, canvasWidth.value / 2, titlePosition, canvasWidth.value)
+    renderShadowText(ctx, store.title, canvasWidth.value / 2, titlePosition, canvasWidth.value)
 
-    if (subtitle.value) {
+    if (store.subtitle) {
       // Podtytuł 90 semi-bld
       ctx.font = 'normal normal 600 90px Barlow Condensed'
 
-      renderShadowText(ctx, subtitle.value, canvasWidth.value / 2, 786 + 90, canvasWidth.value)
+      renderShadowText(ctx, store.subtitle, canvasWidth.value / 2, 786 + 90, canvasWidth.value)
     }
 
     // Kategoria 42 light
     ctx.lineWidth = 5
     ctx.font = 'normal normal 300 42px Barlow Condensed'
-    renderShadowText(ctx, category.value, canvasWidth.value / 2, 887 + 42, canvasWidth.value)
+    renderShadowText(ctx, store.category, canvasWidth.value / 2, 887 + 42, canvasWidth.value)
 
-    if (money.value > 0) {
+    if (store.money > 0) {
       // We collected 24 bold
       ctx.lineWidth = 5
       ctx.font = 'normal normal 600 24px Saira Condensed'
@@ -112,7 +102,7 @@ const mainCanvas: Ref<HTMLCanvasElement | null> = ref(null),
       ctx.fillStyle = '#ffbd16'
       renderShadowText(
         ctx,
-        `${money.value.toLocaleString('pl-PL')} PLN`,
+        `${Math.round(store.money).toLocaleString('pl-PL')} PLN`,
         (368 - 16) / 2,
         242,
         canvasWidth.value
@@ -131,7 +121,7 @@ backgroundImage.value.onload = () => {
   if (scaleX < scaleY) {
     scaleX = scaleY
   }
-  photoScale.value = Math.round(scaleX * 100) / 100
+  store.photoScale = Math.round(scaleX * 100) / 100
   redrawThumbnail()
 }
 
@@ -141,22 +131,17 @@ imageLogoFoundation.onload = redrawThumbnail
 imageBanner.onload = redrawThumbnail
 
 watch(photo, (newPhoto: string) => {
-  photoLeft.value = 0
-  photoTop.value = 0
-  photoScale.value = 1.0
+  store.photoLeft = 0
+  store.photoTop = 0
+  store.photoScale = 1.0
   photoRotation.value = 0
   photoLoaded.value = false
 
   backgroundImage.value.src = newPhoto
 })
 document.fonts.onloadingdone = redrawThumbnail
-watch(runner, redrawThumbnail)
-watch(title, redrawThumbnail)
-watch(subtitle, redrawThumbnail)
-watch(category, redrawThumbnail)
-watch(photoLeft, redrawThumbnail)
-watch(photoTop, redrawThumbnail)
-watch(money, redrawThumbnail)
+
+watch(mainCanvas, redrawThumbnail)
 
 // Rotate image once before using it
 watch(photoRotation, async () => {
@@ -178,58 +163,45 @@ watch(photoRotation, async () => {
   photoLoaded.value = false
   backgroundImage.value.src = tmpCanvas.toDataURL('image/png')
 })
-watch(photoScale, redrawThumbnail)
 
 if (routeQuery.runner && typeof routeQuery.runner === 'string') {
-  initialRunner.value = routeQuery.runner
+  store.runner = routeQuery.runner
 }
 if (routeQuery.title && typeof routeQuery.title === 'string') {
-  initialTitle.value = routeQuery.title
+  store.title = routeQuery.title
 }
 if (routeQuery.subtitle && typeof routeQuery.subtitle === 'string') {
-  initialSubtitle.value = routeQuery.subtitle
+  store.subtitle = routeQuery.subtitle
 }
 if (routeQuery.category && typeof routeQuery.category === 'string') {
-  initialCategory.value = routeQuery.category
+  store.category = routeQuery.category
 }
 
 if (routeQuery.money && typeof routeQuery.money === 'string') {
-  initialMoney.value = Number(routeQuery.money)
+  store.money = Number(routeQuery.money)
 }
 
 onMounted(() => {
+  store.$subscribe((mutation, state) => {
+    // TODO: maybe limti scope here? Do we want to redraw on ANY change in the store?
+    // console.log('store updated:', mutation, state)
+    redrawThumbnail()
+  })
   redrawThumbnail()
 })
 </script>
 
 <template>
   <v-container fluid class="main bg-surface">
-    <!--<v-row>
-      <v-col>
-        <h2>Miniaturka runnera na Twittera</h2>
-      </v-col>
-    </v-row>-->
     <v-row>
       <v-col>
         <CanvasItem
           :class="`h-auto w-auto`"
           :canvasWidth="canvasWidth"
           :canvasHeight="canvasHeight"
-          @canvasContext="(can) => (mainCanvas = can)"
-          @updateBackground="(b) => (photo = b)"
-          @updateScale="
-            (s) => {
-              photoScale += s
-              photoScale = Math.max(photoScale, 0.01)
-            }
-          "
-          @updatePos="
-            (l, t) => {
-              photoLeft += l
-              photoTop += t
-            }
-          "
-          @updateRotation="(r) => (photoRotation = (photoRotation + r) % 360)"
+          @canvasElement="(can: HTMLCanvasElement) => (mainCanvas = can)"
+          @updateBackground="(b: string) => (photo = b)"
+          @updateRotation="(r: number) => (photoRotation = (photoRotation + r) % 360)"
         />
         <v-row>
           <v-col>
@@ -248,17 +220,7 @@ onMounted(() => {
       <v-col cols="12" md="4">
         <InputItem
           @updateBackground="(b: string) => (photo = b)"
-          @updateRunner="(r: string) => (runner = r)"
-          @updateTitle="(t: string) => (title = t)"
-          @updateSubtitle="(s: string) => (subtitle = s)"
-          @updateCategory="(c: string) => (category = c)"
-          @updateMoney="(m: number) => (money = m)"
-          :runner="initialRunner"
-          :title="initialTitle"
-          :subtitle="initialSubtitle"
-          :category="initialCategory"
           :enable-money="true"
-          :money="initialMoney"
           :canvasModel="mainCanvas"
         />
       </v-col>

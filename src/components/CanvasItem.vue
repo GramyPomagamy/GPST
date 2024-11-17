@@ -2,19 +2,20 @@
 import { onMounted, ref } from 'vue'
 import type { Ref } from 'vue'
 
-const props = defineProps<{
+import { useGenericStore } from '@/stores/generic'
+
+const store = useGenericStore(),
+  props = defineProps<{
     canvasWidth: number
     canvasHeight: number
   }>(),
   emit = defineEmits<{
-    canvasContext: [canvas: HTMLCanvasElement]
+    canvasElement: [canvas: HTMLCanvasElement]
     updateBackground: [file: string]
-    updateScale: [scale: number]
-    updatePos: [left: number, top: number]
     updateRotation: [rotation: number]
   }>(),
   canvasDragged = ref(false),
-  canvasModel: Ref<HTMLCanvasElement | null> = ref(null),
+  canvasElement: Ref<HTMLCanvasElement | null> = ref(null),
   canvasDrop = function (e: DragEvent) {
     if (e.dataTransfer!.items && e.dataTransfer!.items.length === 1) {
       //Emit('string', e.dataTransfer!.items[0])
@@ -27,16 +28,16 @@ const props = defineProps<{
   },
   canvasWheel = function (e: WheelEvent) {
     if (e.deltaY > 0) {
-      emit('updateScale', -0.02)
+      store.photoScale -= 0.02
     } else {
-      emit('updateScale', 0.02)
+      store.photoScale += 0.02
     }
   },
   canvasMouseDown = function (e: MouseEvent) {
     if ((e.buttons & 1) === 1) {
       canvasDragged.value = true
-      canvasModel.value!.classList.add('cursor-grabbing')
-      canvasModel.value!.classList.remove('cursor-grab')
+      canvasElement.value!.classList.add('cursor-grabbing')
+      canvasElement.value!.classList.remove('cursor-grab')
     }
     // Wheel button
     if (((e.buttons >> 2) & 1) === 1) {
@@ -44,22 +45,23 @@ const props = defineProps<{
     }
   },
   windowMouseUp = function (e: MouseEvent) {
-    if (canvasModel.value !== null && (e.buttons & 1) === 0) {
+    if (canvasElement.value !== null && (e.buttons & 1) === 0) {
       canvasDragged.value = false
-      canvasModel.value!.classList.remove('cursor-grabbing')
-      canvasModel.value!.classList.add('cursor-grab')
+      canvasElement.value!.classList.remove('cursor-grabbing')
+      canvasElement.value!.classList.add('cursor-grab')
     }
   },
   windowMouseMove = function (e: MouseEvent) {
     if (canvasDragged.value) {
-      emit('updatePos', e.movementX, e.movementY)
+      store.photoLeft += e.movementX
+      store.photoTop += e.movementY
     }
   }
 
 onMounted(() => {
   window.addEventListener('mousemove', windowMouseMove)
   window.addEventListener('mouseup', windowMouseUp)
-  emit('canvasContext', canvasModel.value!)
+  emit('canvasElement', canvasElement.value!)
 })
 </script>
 <template>
@@ -69,11 +71,18 @@ onMounted(() => {
       @drop.prevent="canvasDrop"
       @wheel.prevent="canvasWheel"
       @mousedown.prevent="canvasMouseDown"
-      ref="canvasModel"
+      ref="canvasElement"
       id="mainCanvas"
       :width="props.canvasWidth"
       :height="props.canvasHeight"
     >
+      <v-tooltip activator="parent" :transition="{}">
+        <v-list lines="two">
+          <v-list-item title="Przesuwanie" subtitle="Trzymaj lewy przyckisk myszy" />
+          <v-list-item title="Skalowanie" subtitle="Kręć kółkiem" />
+          <v-list-item title="Obrót o 90 stopni w prawo" subtitle="Kliknij kółkiem" />
+        </v-list>
+      </v-tooltip>
       Nie pójdzie bez JS. Co jest zadziwiające jak w ogóle byłeś w stanie zobaczyć tę wiadomość?
     </canvas>
   </div>

@@ -10,27 +10,17 @@ import { loadImage } from '../utils/loadImage'
 import { renderShadowText } from '@/utils/renderText'
 import { drawBackground } from '@/utils/misc'
 
-const routeQuery = useRoute().query,
+import { useGenericStore } from '@/stores/generic'
+
+const store = useGenericStore(),
+  routeQuery = useRoute().query,
   canvasWidth = ref(1500),
   canvasHeight = ref(1000),
   backgroundImage: Ref<HTMLImageElement> = ref(new Image()),
   mainCanvas: Ref<HTMLCanvasElement | null> = ref(null),
   photo = ref(''),
-  photoScale = ref(1.0),
-  photoLeft = ref(0),
-  photoTop = ref(0),
   photoRotation = ref(0),
   photoLoaded = ref(false),
-  runner = ref(''),
-  title = ref(''),
-  subtitle = ref(''),
-  category = ref(''),
-  money = ref(0),
-  initialRunner = ref(''),
-  initialTitle = ref(''),
-  initialSubtitle = ref(''),
-  initialCategory = ref(''),
-  initialMoney = ref(0),
   imageBanner = await loadImage(`${import.meta.env.VITE_IMAGES_BANNER_MILESTONE}`),
   // ImageBanner.src = imageBannerData
 
@@ -46,11 +36,11 @@ const routeQuery = useRoute().query,
     }
     const ctx = mainCanvas.value.getContext('2d')!,
       runnerPosition = 208 + 101,
-      fullTitle = `${title.value} ${subtitle.value}`
+      fullTitle = `${store.title} ${store.subtitle}`
 
     ctx.drawImage(imageGradient, 0, 0)
 
-    drawBackground(ctx, backgroundImage.value, photoScale.value, photoLeft.value, photoTop.value)
+    drawBackground(ctx, backgroundImage.value, store.photoScale, store.photoLeft, store.photoTop)
 
     ctx.globalAlpha = 0.12
     ctx.drawImage(imageGradient, 0, 0)
@@ -76,7 +66,7 @@ const routeQuery = useRoute().query,
 
     // Runner 83medium
     ctx.font = 'normal normal 600 101px Saira Condensed'
-    renderShadowText(ctx, runner.value, canvasWidth.value / 2, runnerPosition, canvasWidth.value)
+    renderShadowText(ctx, store.runner, canvasWidth.value / 2, runnerPosition, canvasWidth.value)
 
     // Fdbc16
     let titleFontSize = 340
@@ -90,8 +80,8 @@ const routeQuery = useRoute().query,
     }
 
     const titleHeight = 442 + titleFontSize / 2,
-      titleLength = ctx.measureText(title.value).width,
-      subtitleLength = ctx.measureText(subtitle.value).width,
+      titleLength = ctx.measureText(store.title).width,
+      subtitleLength = ctx.measureText(store.subtitle).width,
       titlesDiff = Math.abs(titleLength - subtitleLength),
       titleMiddle = canvasWidth.value / 2
 
@@ -104,21 +94,21 @@ const routeQuery = useRoute().query,
     }
 
     // Ctx.font = 'normal normal 600 113px Barlow Condensed'
-    renderShadowText(ctx, `${title.value} `, titlePosition, titleHeight, canvasWidth.value)
+    renderShadowText(ctx, `${store.title} `, titlePosition, titleHeight, canvasWidth.value)
 
-    if (subtitle.value) {
+    if (store.subtitle) {
       // // podtytuł 90 semi-bld
       ctx.fillStyle = '#ffbd16'
-      renderShadowText(ctx, subtitle.value, subtitlePosition, titleHeight, canvasWidth.value)
+      renderShadowText(ctx, store.subtitle, subtitlePosition, titleHeight, canvasWidth.value)
     }
 
     // Kategoria 42 light
     ctx.lineWidth = 5
     ctx.fillStyle = 'white'
     ctx.font = 'normal normal 300 42px Barlow Condensed'
-    renderShadowText(ctx, category.value, canvasWidth.value / 2, 887 + 42, canvasWidth.value)
+    renderShadowText(ctx, store.category, canvasWidth.value / 2, 887 + 42, canvasWidth.value)
 
-    if (money.value > 0) {
+    if (store.money > 0) {
       // We collected 24 bold
       ctx.lineWidth = 5
       ctx.font = 'normal normal 600 24px Saira Condensed'
@@ -132,7 +122,7 @@ const routeQuery = useRoute().query,
       ctx.fillStyle = '#ffbd16'
       renderShadowText(
         ctx,
-        `${money.value.toLocaleString('pl-PL')} PLN`,
+        `${Math.round(store.money).toLocaleString('pl-PL')} PLN`,
         160 + 43,
         200 + 77 + 10,
         canvasWidth.value
@@ -148,7 +138,7 @@ backgroundImage.value.onload = () => {
   if (scaleX < scaleY) {
     scaleX = scaleY
   }
-  photoScale.value = Math.round(scaleX * 100) / 100
+  store.photoScale = Math.round(scaleX * 100) / 100
   redrawThumbnail()
 }
 
@@ -158,22 +148,15 @@ imageLogoFoundation.onload = redrawThumbnail
 imageBanner.onload = redrawThumbnail
 
 watch(photo, (newPhoto: string) => {
-  photoLeft.value = 0
-  photoTop.value = 0
-  photoScale.value = 1.0
+  store.photoLeft = 0
+  store.photoTop = 0
+  store.photoScale = 1.0
   photoRotation.value = 0
   photoLoaded.value = false
 
   backgroundImage.value.src = newPhoto
 })
 document.fonts.onloadingdone = redrawThumbnail
-watch(runner, redrawThumbnail)
-watch(title, redrawThumbnail)
-watch(subtitle, redrawThumbnail)
-watch(category, redrawThumbnail)
-watch(photoLeft, redrawThumbnail)
-watch(photoTop, redrawThumbnail)
-watch(money, redrawThumbnail)
 
 // Rotate image once before using it
 watch(photoRotation, async () => {
@@ -194,26 +177,30 @@ watch(photoRotation, async () => {
   photoLoaded.value = false
   backgroundImage.value.src = tmpCanvas.toDataURL('image/png')
 })
-watch(photoScale, redrawThumbnail)
 
 if (routeQuery.runner && typeof routeQuery.runner === 'string') {
-  initialRunner.value = routeQuery.runner
+  store.runner = routeQuery.runner
 }
 if (routeQuery.title && typeof routeQuery.title === 'string') {
-  initialTitle.value = routeQuery.title
+  store.title = routeQuery.title
 }
 if (routeQuery.subtitle && typeof routeQuery.subtitle === 'string') {
-  initialSubtitle.value = routeQuery.subtitle
+  store.subtitle = routeQuery.subtitle
 }
 if (routeQuery.category && typeof routeQuery.category === 'string') {
-  initialCategory.value = routeQuery.category
+  store.category = routeQuery.category
 }
 
 if (routeQuery.money && typeof routeQuery.money === 'string') {
-  initialMoney.value = Number(routeQuery.money)
+  store.money = Number(routeQuery.money)
 }
 
 onMounted(() => {
+  store.$subscribe((mutation, state) => {
+    // TODO: maybe limti scope here? Do we want to redraw on ANY change in the store?
+    // console.log('store updated:', mutation, state)
+    redrawThumbnail()
+  })
   redrawThumbnail()
 })
 </script>
@@ -230,37 +217,15 @@ onMounted(() => {
         <CanvasItem
           :canvasWidth="canvasWidth"
           :canvasHeight="canvasHeight"
-          @canvasContext="(can) => (mainCanvas = can)"
-          @updateBackground="(b) => (photo = b)"
-          @updateScale="
-            (s) => {
-              photoScale += s
-              photoScale = Math.max(photoScale, 0.01)
-            }
-          "
-          @updatePos="
-            (l, t) => {
-              photoLeft += l
-              photoTop += t
-            }
-          "
-          @updateRotation="(r) => (photoRotation = (photoRotation + r) % 360)"
+          @canvasElement="(can: HTMLCanvasElement) => (mainCanvas = can)"
+          @updateBackground="(b: string) => (photo = b)"
+          @updateRotation="(r: number) => (photoRotation = (photoRotation + r) % 360)"
         />
       </v-col>
       <v-col cols="12" md="4">
         <InputItem
           @updateBackground="(b: string) => (photo = b)"
-          @updateRunner="(r: string) => (runner = r)"
-          @updateTitle="(t: string) => (title = t)"
-          @updateSubtitle="(s: string) => (subtitle = s)"
-          @updateCategory="(c: string) => (category = c)"
-          @updateMoney="(m: number) => (money = m)"
-          :runner="initialRunner"
-          :title="initialTitle"
-          :subtitle="initialSubtitle"
-          :category="initialCategory"
           :enable-money="true"
-          :money="initialMoney"
           :canvasModel="mainCanvas"
         />
       </v-col>
