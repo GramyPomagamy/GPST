@@ -1,5 +1,18 @@
 # Changelog
 
+## WIP
+
+- Show help when hovering over the thumbnail
+- refactor code
+
+## 0.2.2
+
+- fix photo view text position
+
+## 0.2.1
+
+- switch default iconset to material design symbols
+
 ## 0.2.0
 
 - any image format supported by the browser should now be accepted
