@@ -5,18 +5,39 @@ on:
       - main
 
 jobs:
+  type-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci
+      - name: type-check
+        run: npm run type-check
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci
+      - name: unit-test
+        run: npm run test:unit -- --run
+  # playwright requires more initialization: https://playwright.dev/docs/ci-intro#on-pushpull_request
+  # - name: e2e-test
+  #   run: npm run test:e2e
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: get dependencies
-        run: npm install
-      - name: type-check
-        run: npm run type-check
-      - name: unit-test
-        run: npm run test:unit -- --run
-      # playwright requires more initialization: https://playwright.dev/docs/ci-intro#on-pushpull_request
-      # - name: e2e-test
-      #   run: npm run test:e2e
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci
       - name: build
         run: npm run build
