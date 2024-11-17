@@ -76,6 +76,13 @@ onMounted(() => {
       :width="props.canvasWidth"
       :height="props.canvasHeight"
     >
+      <v-tooltip activator="parent" :transition="{}">
+        <v-list lines="two">
+          <v-list-item title="Przesuwanie" subtitle="Trzymaj lewy przyckisk myszy" />
+          <v-list-item title="Skalowanie" subtitle="Kręć kółkiem" />
+          <v-list-item title="Obrót o 90 stopni w prawo" subtitle="Kliknij kółkiem" />
+        </v-list>
+      </v-tooltip>
       Nie pójdzie bez JS. Co jest zadziwiające jak w ogóle byłeś w stanie zobaczyć tę wiadomość?
     </canvas>
   </div>
