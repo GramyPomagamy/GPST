@@ -8,9 +8,12 @@ import { useRoute } from 'vue-router'
 
 import { loadImage } from '../utils/loadImage'
 import { renderShadowText } from '@/utils/renderText'
-import { getFullTitle, drawBackground } from '@/utils/misc'
+import { drawBackground } from '@/utils/misc'
 
-const routeQuery = useRoute().query,
+import { useGenericStore } from '@/stores/generic'
+
+const store = useGenericStore(),
+  routeQuery = useRoute().query,
   canvasWidth = ref(1280),
   canvasHeight = ref(720),
   backgroundImage: Ref<HTMLImageElement> = ref(new Image()),
@@ -21,16 +24,6 @@ const routeQuery = useRoute().query,
   photoTop = ref(0),
   photoRotation = ref(0),
   photoLoaded = ref(false),
-  runner = ref(''),
-  title = ref(''),
-  subtitle = ref(''),
-  category = ref(''),
-  time = ref(''),
-  initialRunner = ref(''),
-  initialTitle = ref(''),
-  initialSubtitle = ref(''),
-  initialCategory = ref(''),
-  initialTime = ref(''),
   imageBanner = await loadImage(`${import.meta.env.VITE_IMAGES_BANNER_YOUTUBE}`),
   imageGradient = await loadImage(`${import.meta.env.VITE_IMAGES_GRADIENT}`),
   imageLogoGSPS = await loadImage(`${import.meta.env.VITE_LOGO_FIRST}`),
@@ -69,34 +62,34 @@ const routeQuery = useRoute().query,
 
     let titlePosition = 31,
       titleSize = 150
-    if (subtitle.value) {
+    if (store.subtitle) {
       titlePosition = 0
       titleSize = 114
     }
 
     // Runner 83 PT Sans Narrow Bold Condensed
     ctx.font = 'normal normal 700 70px PT Sans Narrow'
-    renderShadowText(ctx, runner.value, rightSide, runnerPosition + 70, canvasWidth.value)
+    renderShadowText(ctx, store.runner, rightSide, runnerPosition + 70, canvasWidth.value)
 
     // Title,  PT Sans Narrow Bold Condensed
     ctx.font = `normal normal 700 ${titleSize.toString()}px PT Sans Narrow`
-    renderShadowText(ctx, title.value, rightSide, titlePosition + titleSize, canvasWidth.value)
+    renderShadowText(ctx, store.title, rightSide, titlePosition + titleSize, canvasWidth.value)
 
-    if (subtitle.value) {
+    if (store.subtitle) {
       // Podtytuł 77 PT Sans Narrow Bold Condensed
       ctx.font = 'normal normal 700 77px PT Sans Narrow'
-      renderShadowText(ctx, subtitle.value, rightSide, subtitlePosition + 77, canvasWidth.value)
+      renderShadowText(ctx, store.subtitle, rightSide, subtitlePosition + 77, canvasWidth.value)
     }
 
     // Kategoria 62 Saira Condensed, Semi-Bold Condensed
     ctx.font = 'normal normal 600 62px Saira Condensed'
-    renderShadowText(ctx, category.value, rightSide, categoryPosition + 62, canvasWidth.value)
+    renderShadowText(ctx, store.category, rightSide, categoryPosition + 62, canvasWidth.value)
 
     // Time 158 Saira Condensed, Ultra-Bold Condensed
     ctx.font = 'normal normal 800 158px Saira Condensed'
     ctx.fillStyle = '#ffbd16'
-    ctx.strokeText(time.value, rightSide, timePosition + 158, canvasWidth.value)
-    ctx.fillText(time.value, rightSide, timePosition + 158, canvasWidth.value)
+    ctx.strokeText(store.time, rightSide, timePosition + 158, canvasWidth.value)
+    ctx.fillText(store.time, rightSide, timePosition + 158, canvasWidth.value)
   }
 
 backgroundImage.value.onload = () => {
@@ -125,13 +118,8 @@ watch(photo, (newPhoto: string) => {
   backgroundImage.value.src = newPhoto
 })
 document.fonts.onloadingdone = redrawThumbnail
-watch(runner, redrawThumbnail)
-watch(title, redrawThumbnail)
-watch(subtitle, redrawThumbnail)
-watch(category, redrawThumbnail)
 watch(photoLeft, redrawThumbnail)
 watch(photoTop, redrawThumbnail)
-watch(time, redrawThumbnail)
 
 // Rotate image once before using it
 watch(photoRotation, async () => {
@@ -155,23 +143,28 @@ watch(photoRotation, async () => {
 watch(photoScale, redrawThumbnail)
 
 if (routeQuery.runner && typeof routeQuery.runner === 'string') {
-  initialRunner.value = routeQuery.runner
+  store.runner = routeQuery.runner
 }
 if (routeQuery.title && typeof routeQuery.title === 'string') {
-  initialTitle.value = routeQuery.title
+  store.title = routeQuery.title
 }
 if (routeQuery.subtitle && typeof routeQuery.subtitle === 'string') {
-  initialSubtitle.value = routeQuery.subtitle
+  store.subtitle = routeQuery.subtitle
 }
 if (routeQuery.category && typeof routeQuery.category === 'string') {
-  initialCategory.value = routeQuery.category
+  store.category = routeQuery.category
 }
 
 if (routeQuery.time && typeof routeQuery.time === 'string') {
-  initialTime.value = routeQuery.time
+  store.time = routeQuery.time
 }
 
 onMounted(() => {
+  store.$subscribe((mutation, state) => {
+    // TODO: maybe limti scope here? Do we want to redraw on ANY change in the store?
+    // console.log('store updated:', mutation, state)
+    redrawThumbnail()
+  })
   redrawThumbnail()
 })
 </script>
@@ -188,7 +181,7 @@ onMounted(() => {
         <CanvasItem
           :canvasWidth="canvasWidth"
           :canvasHeight="canvasHeight"
-          @canvasContext="(can) => (mainCanvas = can)"
+          @canvasElement="(can) => (mainCanvas = can)"
           @updateBackground="(b) => (photo = b)"
           @updateScale="
             (s) => {
@@ -208,17 +201,7 @@ onMounted(() => {
       <v-col cols="12" md="4">
         <InputItem
           @updateBackground="(b: string) => (photo = b)"
-          @updateRunner="(r: string) => (runner = r)"
-          @updateTitle="(t: string) => (title = t)"
-          @updateSubtitle="(s: string) => (subtitle = s)"
-          @updateCategory="(c: string) => (category = c)"
-          @updateTime="(t: string) => (time = t)"
-          :runner="initialRunner"
-          :title="initialTitle"
-          :subtitle="initialSubtitle"
-          :category="initialCategory"
           :enable-time="true"
-          :time="initialTime"
           :canvasModel="mainCanvas"
         />
       </v-col>

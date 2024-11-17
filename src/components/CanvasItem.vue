@@ -7,14 +7,14 @@ const props = defineProps<{
     canvasHeight: number
   }>(),
   emit = defineEmits<{
-    canvasContext: [canvas: HTMLCanvasElement]
+    canvasElement: [canvas: HTMLCanvasElement]
     updateBackground: [file: string]
     updateScale: [scale: number]
     updatePos: [left: number, top: number]
     updateRotation: [rotation: number]
   }>(),
   canvasDragged = ref(false),
-  canvasModel: Ref<HTMLCanvasElement | null> = ref(null),
+  canvasElement: Ref<HTMLCanvasElement | null> = ref(null),
   canvasDrop = function (e: DragEvent) {
     if (e.dataTransfer!.items && e.dataTransfer!.items.length === 1) {
       //Emit('string', e.dataTransfer!.items[0])
@@ -35,8 +35,8 @@ const props = defineProps<{
   canvasMouseDown = function (e: MouseEvent) {
     if ((e.buttons & 1) === 1) {
       canvasDragged.value = true
-      canvasModel.value!.classList.add('cursor-grabbing')
-      canvasModel.value!.classList.remove('cursor-grab')
+      canvasElement.value!.classList.add('cursor-grabbing')
+      canvasElement.value!.classList.remove('cursor-grab')
     }
     // Wheel button
     if (((e.buttons >> 2) & 1) === 1) {
@@ -44,10 +44,10 @@ const props = defineProps<{
     }
   },
   windowMouseUp = function (e: MouseEvent) {
-    if (canvasModel.value !== null && (e.buttons & 1) === 0) {
+    if (canvasElement.value !== null && (e.buttons & 1) === 0) {
       canvasDragged.value = false
-      canvasModel.value!.classList.remove('cursor-grabbing')
-      canvasModel.value!.classList.add('cursor-grab')
+      canvasElement.value!.classList.remove('cursor-grabbing')
+      canvasElement.value!.classList.add('cursor-grab')
     }
   },
   windowMouseMove = function (e: MouseEvent) {
@@ -59,7 +59,7 @@ const props = defineProps<{
 onMounted(() => {
   window.addEventListener('mousemove', windowMouseMove)
   window.addEventListener('mouseup', windowMouseUp)
-  emit('canvasContext', canvasModel.value!)
+  emit('canvasElement', canvasElement.value!)
 })
 </script>
 <template>
@@ -69,7 +69,7 @@ onMounted(() => {
       @drop.prevent="canvasDrop"
       @wheel.prevent="canvasWheel"
       @mousedown.prevent="canvasMouseDown"
-      ref="canvasModel"
+      ref="canvasElement"
       id="mainCanvas"
       :width="props.canvasWidth"
       :height="props.canvasHeight"
