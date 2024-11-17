@@ -199,7 +199,7 @@ onMounted(() => {
           :class="`h-auto w-auto`"
           :canvasWidth="canvasWidth"
           :canvasHeight="canvasHeight"
-          @canvasElement="(can: HTMLElement) => (mainCanvas = can)"
+          @canvasElement="(can: HTMLCanvasElement) => (mainCanvas = can)"
           @updateBackground="(b: string) => (photo = b)"
           @updateRotation="(r: number) => (photoRotation = (photoRotation + r) % 360)"
         />
