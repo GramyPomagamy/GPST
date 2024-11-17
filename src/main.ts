@@ -12,8 +12,7 @@ import App from './App.vue'
 import router from './router'
 
 const vuetify = defaultVuetify(),
-
- app = createApp(App)
+  app = createApp(App)
 
 // App.use(createPinia())
 app.use(router)
