@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { Ref } from 'vue'
-import { getFullTitle } from '@/utils/misc'
+import { useRoute } from 'vue-router'
 
+import { getFullTitle } from '@/utils/misc'
 import { useGenericStore } from '@/stores/generic'
 
 const store = useGenericStore(),
+  route = useRoute(),
   inputBackground: Ref<HTMLInputElement | null> = ref(null),
+  linkSnackbar = ref(false),
+  snackbarText = ref(''),
   props = defineProps<{
     enableTime?: boolean
     enableMoney?: boolean
@@ -44,6 +48,30 @@ const onNewBackground = function () {
     if (inputBackground.value) {
       inputBackground.value.click()
     }
+  },
+  generateLink = async function () {
+    const generatedLink = new URL(
+      window.location.origin + (import.meta.env.BASE_URL + route.path).replace('//', '/')
+    )
+    if (store.runner) {
+      generatedLink.searchParams.append('runner', store.runner)
+    }
+    if (store.title) {
+      generatedLink.searchParams.append('title', store.title)
+    }
+    if (store.subtitle) {
+      generatedLink.searchParams.append('subtitle', store.subtitle)
+    }
+    if (store.category) {
+      generatedLink.searchParams.append('category', store.category)
+    }
+    if (store.time) {
+      generatedLink.searchParams.append('time', store.time)
+    }
+
+    await navigator.clipboard.writeText(generatedLink.toString())
+    snackbarText.value = 'Skopiowano link do schowka'
+    linkSnackbar.value = true
   }
 </script>
 
@@ -123,38 +151,53 @@ const onNewBackground = function () {
       required
       prepend-inner-icon="schedule"
     />
-    <v-number-input
-      v-if="enableMoney"
-      clearable
-      v-model="store.money"
-      hint="Ta sekcja jest pisana dla pieniędzy! (pzdr fani republiki)"
-      type="number"
-      name="money"
-      label="Uzbierano"
-      id="money"
-      placeholder="0"
-      size="10"
-      required
-      prepend-inner-icon="paid"
-    />
-    <v-container fluid>
+    <v-container fluid v-if="enableMoney">
       <v-row>
-        <v-col v-if="enableMoney">
+        <v-col>
+          <v-number-input
+            clearable
+            v-model="store.money"
+            hint="Ta sekcja jest pisana dla pieniędzy! (pzdr fani republiki)"
+            type="number"
+            name="money"
+            controlVariant="stacked"
+            label="Uzbierano"
+            id="money"
+            placeholder="0"
+            size="10"
+            required
+            prepend-inner-icon="paid"
+          />
+        </v-col>
+        <v-col cols="1">
           <v-btn
             class="bg-secondary w-100"
-            prepend-icon="currency_exchange"
+            icon="currency_exchange"
             @click.prevent="updateMoney"
-            >Aktualizuj kwotę</v-btn
+          ></v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
+    <v-container fluid>
+      <v-row>
+        <v-col>
+          <v-btn class="bg-secondary w-100" prepend-icon="link" @click.prevent="generateLink"
+            >Kopiuj stały link</v-btn
           >
         </v-col>
-        <v-col v-if="!enableMoney"> </v-col>
+        <v-snackbar v-model="linkSnackbar">
+          {{ snackbarText }}
+          <template v-slot:actions>
+            <v-btn variant="text" @click="linkSnackbar = false"> Zamknij </v-btn>
+          </template>
+        </v-snackbar>
         <v-col>
           <v-btn
             class="bg-primary w-100"
             variant="tonal"
             prepend-icon="download"
             @click.prevent="savePNG"
-            >Pobierz .PNG</v-btn
+            >Pobierz .png</v-btn
           >
         </v-col>
       </v-row>
