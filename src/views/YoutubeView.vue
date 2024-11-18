@@ -166,7 +166,7 @@ if (routeQuery.time && typeof routeQuery.time === 'string') {
 onMounted(async () => {
   imageGradient.value = await loadImage(`${import.meta.env.VITE_IMAGES_GRADIENT}`)
   imageGradient.value.onload = redrawThumbnail
-  imageLogoGSPS.value = await loadImage(`${import.meta.env.VITE_LOGO_FIRST}`)
+  imageLogoGSPS.value = await loadImage(`${import.meta.env.VITE_LOGO_MA}`)
   imageLogoGSPS.value.onload = redrawThumbnail
   imageBanner.value = await loadImage(`${import.meta.env.VITE_IMAGES_BANNER_YOUTUBE}`)
   imageBanner.value.onload = redrawThumbnail
