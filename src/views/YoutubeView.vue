@@ -58,8 +58,8 @@ const store = useGenericStore(),
     if (imageLogoGSPS.value) {
       ctx.drawImage(
         imageLogoGSPS.value,
-        0,
-        570,
+        30,
+        590,
         404,
         404 * (imageLogoGSPS.value.height / imageLogoGSPS.value.width)
       )
