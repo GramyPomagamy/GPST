@@ -2,6 +2,10 @@
 
 ## WIP
 
+- Nothing yet
+
+## 0.3.0
+
 - Input fields values are now transferrable between views
 - Update view
   - Show usage help when hovering over the thumbnail
