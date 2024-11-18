@@ -2,8 +2,11 @@
 
 ## WIP
 
-- Show help when hovering over the thumbnail
 - Input fields values are now transferrable between views
+- Update view
+  - Show usage help when hovering over the thumbnail
+  - move update money button to the right of the input
+  - add "Generate static link" button, which will generate link with runner, title, subtitle etc. data for easy reuse
 - Refactor code
 
 ## 0.2.2
