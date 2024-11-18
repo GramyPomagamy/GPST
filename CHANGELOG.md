@@ -1,7 +1,8 @@
 # Changelog
 
-## WIP
+## 0.3.0
 
+- add Marathon Alliance logo in the Youtube thumbnail generator
 - Input fields values are now transferrable between views
 - Update view
   - Show usage help when hovering over the thumbnail
