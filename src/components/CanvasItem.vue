@@ -77,7 +77,7 @@ onMounted(() => {
       :height="props.canvasHeight"
     >
       <v-tooltip activator="parent" :transition="{}">
-        <v-list lines="two">
+        <v-list lines="three" class="bg-surface-variant">
           <v-list-item title="Przesuwanie" subtitle="Trzymaj lewy przyckisk myszy" />
           <v-list-item title="Skalowanie" subtitle="Kręć kółkiem" />
           <v-list-item title="Obrót o 90 stopni w prawo" subtitle="Kliknij kółkiem" />
