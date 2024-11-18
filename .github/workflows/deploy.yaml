@@ -34,6 +34,8 @@ jobs:
         run: npm ci
       - name: build
         run: npm run build -- -- --base /GPST
+      - name: error hack
+        run: cp ./dist/index.html ./dist/404.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: './dist'
