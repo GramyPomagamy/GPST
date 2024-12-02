@@ -1,3 +1,5 @@
+import { FabricImage, filters } from 'fabric'
+
 const getFullTitle = function (title: string, ...subtitle: string[]): string {
     if (
       title.length === 0 &&
@@ -16,24 +18,14 @@ const getFullTitle = function (title: string, ...subtitle: string[]): string {
     }
     return fullTitle
   },
-  drawBackground = function (
-    ctx: CanvasRenderingContext2D,
-    backgroundImage: HTMLImageElement,
-    scale: number,
-    left: number,
-    top: number
-  ): void {
-    const halfWidth = ctx.canvas.width / 2,
-      halfHeight = ctx.canvas.height / 2,
-      imageWidth = backgroundImage.width,
-      imageHeight = backgroundImage.height
-    ctx.drawImage(
-      backgroundImage,
-      halfWidth - (imageWidth / 2) * scale + left,
-      halfHeight - (imageHeight / 2) * scale + top,
-      imageWidth * scale,
-      imageHeight * scale
-    )
+  newLanczos = function (image: FabricImage): filters.Resize {
+    const scale = image.scaleX
+    return new filters.Resize({
+      scaleX: scale,
+      scaleY: scale,
+      resizeType: 'lanczos',
+      lanczosLobes: 3
+    })
   }
 
-export { getFullTitle, drawBackground }
+export { getFullTitle, newLanczos }
