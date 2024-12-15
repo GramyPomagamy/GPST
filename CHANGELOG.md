@@ -2,7 +2,8 @@
 
 ## WIP
 
-- Nothing yet
+- Refactor code, GPST now uses Fabric.js library
+  - Final render to file applies Lanczos3 filter to the photo
 
 ## 0.3.0
 
