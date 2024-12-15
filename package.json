@@ -28,6 +28,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "fabric": "^6.5.1",
     "pinia": "^2.2.6",
     "twemoji": "^14.0.2",
     "vite-plugin-vuetify": "^2.0.4",
@@ -54,7 +55,7 @@
     "eslint-plugin-playwright": "^2.0.1",
     "eslint-plugin-vue": "^9.31.0",
     "jsdom": "^25.0.1",
-    "npm-run-all": "^4.1.5",
+    "npm-run-all2": "^7.0.1",
     "prettier": "^3.3.3",
     "typescript": "~5.6.3",
     "vite": "^5.4.11",

@@ -3,7 +3,6 @@ import { ref } from 'vue'
 import type { Ref } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { getFullTitle } from '@/utils/misc'
 import { useGenericStore } from '@/stores/generic'
 
 const store = useGenericStore(),
@@ -18,12 +17,14 @@ const store = useGenericStore(),
   }>(),
   emit = defineEmits<{
     updateBackground: [b: string]
+    savePNG: []
   }>()
 const onNewBackground = function () {
     console.log(inputBackground.value!.files![0])
     const reader = new FileReader()
     reader.onloadend = function () {
       emit('updateBackground', reader.result as string)
+      // store.replacePhoto(reader.result as string)
     }
     reader.readAsDataURL(inputBackground.value!.files![0])
   },
@@ -37,12 +38,13 @@ const onNewBackground = function () {
       })
   },
   savePNG = function () {
-    const data = props.canvasModel!.toDataURL('image/png'),
-      a = document.createElement('a')
-    a.download = `${getFullTitle(store.title, store.subtitle)}.png`
-    a.href = data
-    a.click()
-    console.info(`Zapis do pliku ${getFullTitle(store.title, store.subtitle)}.png`)
+    emit('savePNG')
+    // const data = props.canvasModel!.toDataURL('image/png'),
+    //   a = document.createElement('a')
+    // a.download = `${getFullTitle(store.title, store.subtitle)}.png`
+    // a.href = data
+    // a.click()
+    // console.info(`Zapis do pliku ${getFullTitle(store.title, store.subtitle)}.png`)
   },
   chooseBackground = function () {
     if (inputBackground.value) {

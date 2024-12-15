@@ -1,12 +1,13 @@
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
+// import type { FabricImage } from 'fabric'
 
 export const useGenericStore = defineStore('generic', () => {
-  // let canvas = "";
+  // const canvas = ref(new StaticCanvas())
   // let thumbnailWidth = ref(0);
   // let thumbnailHeight = ref(0);
 
-  // const photo = ref('')
+  // const photo: Ref<FabricImage | null> = ref(null)
   const photoScale = ref(1.0)
   const photoLeft = ref(0)
   const photoTop = ref(0)
@@ -26,6 +27,7 @@ export const useGenericStore = defineStore('generic', () => {
   const time = ref('')
 
   return {
+    // canvas,
     // photo,
     photoScale,
     photoLeft,

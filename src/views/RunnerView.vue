@@ -6,173 +6,245 @@ import CanvasItem from '../components/CanvasItem.vue'
 import InputItem from '../components/InputItem.vue'
 import { useRoute } from 'vue-router'
 
-import { loadImage } from '../utils/loadImage'
-import { renderShadowText } from '@/utils/renderText'
-import { drawBackground } from '@/utils/misc'
+import { getFullTitle, newLanczos } from '@/utils/misc'
 
 import { useGenericStore } from '@/stores/generic'
 
+import { StaticCanvas, FabricText, FabricImage, Point } from 'fabric'
+import type { StaticCanvasEvents } from 'fabric'
+
 const store = useGenericStore(),
-  mainCanvas: Ref<HTMLCanvasElement | null> = ref(null),
   canvasWidth = ref(1500),
   canvasHeight = ref(1000),
-  backgroundImage: Ref<HTMLImageElement> = ref(new Image()),
+  canvas: StaticCanvas<StaticCanvasEvents> = new StaticCanvas('', {
+    width: canvasWidth.value,
+    height: canvasHeight.value
+  }),
+  mainCanvas: Ref<HTMLCanvasElement | null> = ref(null),
+  backgroundImage: Ref<FabricImage | null> = ref(null),
   photoRotation = ref(0),
-  imageGradient: Ref<HTMLImageElement | null> = ref(null),
-  imageLogoGSPS: Ref<HTMLImageElement | null> = ref(null),
-  imageLogoFoundation: Ref<HTMLImageElement | null> = ref(null),
-  imageBanner: Ref<HTMLImageElement | null> = ref(null),
+  imageGradientBackground: Ref<FabricImage | null> = ref(null),
+  imageGradient: Ref<FabricImage | null> = ref(null),
+  imageLogoGSPS: Ref<FabricImage | null> = ref(null),
+  imageLogoFoundation: Ref<FabricImage | null> = ref(null),
+  imageBanner: Ref<FabricImage | null> = ref(null),
   photo = ref(''),
-  photoLoaded = ref(false),
-  redrawThumbnail = function () {
-    // TODO: add a check to see if the canvas is already loaded
-    if (mainCanvas.value === null) {
-      console.error('canvas not found,doing ugly retry in 0.1s')
-      // setTimeout(redrawThumbnail, 100)
-      return
-    }
-    const ctx = mainCanvas.value.getContext('2d')!
+  juzZaChwile = new FabricText('Już za chwilę...', {
+    fontFamily: 'Barlow Condensed',
+    fontStyle: 'normal',
+    fontWeight: 500,
+    fontSize: 99,
+    fill: 'white',
+    textAlign: 'center',
+    top: 8,
+    stroke: 'black',
+    strokeWidth: 8,
+    paintFirst: 'stroke'
+  }),
+  runnerText: FabricText = new FabricText('', {
+    fontFamily: 'Barlow Condensed',
+    fontStyle: 'normal',
+    fontWeight: 500,
+    fontSize: 83,
+    fill: 'white',
+    textAlign: 'center',
+    top: 648,
+    stroke: 'black',
+    strokeWidth: 8,
+    paintFirst: 'stroke'
+  }),
+  titleText: FabricText = new FabricText('', {
+    fontFamily: 'Barlow Condensed',
+    fontStyle: 'normal',
+    fontWeight: 600,
+    fontSize: 113,
+    fill: 'white',
+    textAlign: 'center',
+    top: 0,
+    stroke: 'black',
+    strokeWidth: 8,
+    paintFirst: 'stroke'
+  }),
+  subtitleText: FabricText = new FabricText('', {
+    fontFamily: 'Barlow Condensed',
+    fontStyle: 'normal',
+    fontWeight: 600,
+    fontSize: 90,
+    fill: 'white',
+    textAlign: 'center',
+    top: 786 + 8,
+    stroke: 'black',
+    strokeWidth: 8,
+    paintFirst: 'stroke'
+  }),
+  categoryText: FabricText = new FabricText('', {
+    fontFamily: 'Barlow Condensed',
+    fontStyle: 'normal',
+    fontWeight: 300,
+    fontSize: 42,
+    fill: 'white',
+    textAlign: 'center',
+    top: 887 + 3,
+    stroke: 'black',
+    strokeWidth: 5,
+    paintFirst: 'stroke'
+  }),
+  weCollected: FabricText = new FabricText('zebraliśmy już', {
+    fontFamily: 'Saira Condensed',
+    fontStyle: 'normal',
+    fontWeight: 600,
+    fontSize: 24,
+    fill: 'white',
+    textAlign: 'center',
+    top: 146,
+    left: 111,
+    stroke: 'black',
+    strokeWidth: 5,
+    paintFirst: 'stroke'
+  }),
+  moneyText: FabricText = new FabricText('', {
+    fontFamily: 'Saira Condensed',
+    fontStyle: 'normal',
+    fontWeight: 800,
+    fontSize: 77,
+    fill: '#ffbd16',
+    textAlign: 'center',
+    top: 172,
+    left: 0,
+    stroke: 'black',
+    strokeWidth: 5,
+    paintFirst: 'stroke'
+  }),
+  redrawThumbnail = function (filter: boolean = false) {
+    canvas.clear()
 
+    if (imageGradientBackground.value) {
+      canvas.add(imageGradientBackground.value)
+    }
+
+    if (backgroundImage.value) {
+      backgroundImage.value.scale(store.photoScale)
+      backgroundImage.value.set({
+        left: store.photoLeft,
+        top: store.photoTop
+      })
+
+      backgroundImage.value.angle = photoRotation.value
+
+      // TOOD: slow - use only for final render!
+      if (filter) {
+        const lanczos = newLanczos(backgroundImage.value)
+        backgroundImage.value.applyFilters([lanczos])
+      }
+
+      canvas.add(backgroundImage.value)
+    }
     if (imageGradient.value) {
-      ctx.drawImage(imageGradient.value, 0, 0)
+      canvas.add(imageGradient.value)
     }
 
-    drawBackground(ctx, backgroundImage.value, store.photoScale, store.photoLeft, store.photoTop)
-
-    if (imageGradient.value) {
-      ctx.globalAlpha = 0.12
-      ctx.drawImage(imageGradient.value, 0, 0)
-    }
-    ctx.globalAlpha = 1
     if (imageBanner.value) {
-      ctx.drawImage(imageBanner.value, 0, 0)
+      canvas.add(imageBanner.value)
     }
 
-    ctx.imageSmoothingQuality = 'high'
-    ctx.imageSmoothingEnabled = true
     if (imageLogoGSPS.value) {
-      ctx.drawImage(
-        imageLogoGSPS.value,
-        16,
-        15,
-        316,
-        316 * (imageLogoGSPS.value.height / imageLogoGSPS.value.width)
-      )
+      canvas.add(imageLogoGSPS.value)
     }
 
     if (imageLogoFoundation.value) {
-      ctx.drawImage(
-        imageLogoFoundation.value,
-        320,
-        0,
-        323,
-        323 * (imageLogoFoundation.value.height / imageLogoFoundation.value.width)
-      )
+      canvas.add(imageLogoFoundation.value)
     }
 
-    ctx.fillStyle = 'white'
-    ctx.strokeStyle = 'black'
-    ctx.lineWidth = 8
-    ctx.font = 'normal normal 500 99px Barlow Condensed'
-    ctx.textAlign = 'center'
-    // 1500 - ((1500 - 912) / 2)
-    renderShadowText(ctx, 'Już za chwilę...', 1206, 99, canvasWidth.value - 912)
+    canvas.add(juzZaChwile)
 
-    let runnerPosition = 648 + 83,
-      titlePosition = 740 + 113
+    let runnerPosition = 648 + 6,
+      titlePosition = 740 + 10
     if (store.subtitle) {
-      runnerPosition = 587 + 83
-      titlePosition = 668 + 113
+      runnerPosition = 587 + 6
+      titlePosition = 668 + 10
     }
 
-    // Runner 83medium
-    ctx.font = 'normal normal 500 83px Barlow Condensed'
-    renderShadowText(ctx, store.runner, canvasWidth.value / 2, runnerPosition, canvasWidth.value)
+    runnerText.set({ text: store.runner, top: runnerPosition })
+    canvas.add(runnerText)
+    canvas.centerObjectH(runnerText)
 
-    // Title, 113 semi-bold
-    ctx.font = 'normal normal 600 113px Barlow Condensed'
-    renderShadowText(ctx, store.title, canvasWidth.value / 2, titlePosition, canvasWidth.value)
+    titleText.set({ text: store.title, top: titlePosition })
+    canvas.add(titleText)
+    canvas.centerObjectH(titleText)
 
     if (store.subtitle) {
-      // Podtytuł 90 semi-bld
-      ctx.font = 'normal normal 600 90px Barlow Condensed'
-
-      renderShadowText(ctx, store.subtitle, canvasWidth.value / 2, 786 + 90, canvasWidth.value)
+      subtitleText.set({ text: store.subtitle })
+      canvas.add(subtitleText)
+      canvas.centerObjectH(subtitleText)
     }
 
-    // Kategoria 42 light
-    ctx.lineWidth = 5
-    ctx.font = 'normal normal 300 42px Barlow Condensed'
-    renderShadowText(ctx, store.category, canvasWidth.value / 2, 887 + 42, canvasWidth.value)
+    categoryText.set({ text: store.category })
+    canvas.add(categoryText)
+    canvas.centerObjectH(categoryText)
 
     if (store.money > 0) {
-      // We collected 24 bold
-      ctx.lineWidth = 5
-      ctx.font = 'normal normal 600 24px Saira Condensed'
-      renderShadowText(ctx, 'zebraliśmy już', 175, 170, canvasWidth.value)
+      canvas.add(weCollected)
 
-      // Money 42 ultra bold
-      ctx.lineWidth = 5
-      ctx.font = 'normal normal 800 77px Saira Condensed'
-      ctx.textAlign = 'center'
-      ctx.fillStyle = '#ffbd16'
-      renderShadowText(
-        ctx,
-        `${Math.round(store.money).toLocaleString('pl-PL')} PLN`,
-        (368 - 16) / 2,
-        242,
-        canvasWidth.value
-      )
+      moneyText.set({
+        text: `${Math.round(store.money).toLocaleString('pl-PL')} PLN`
+      })
+      moneyText.set({ left: 177 - moneyText.getScaledWidth() / 2 })
+      canvas.add(moneyText)
+    }
+    canvas.renderAll()
+  },
+  redrawCanvas = function () {
+    redrawThumbnail(false)
+    if (mainCanvas.value !== null && canvas !== null) {
+      const dstCtx = mainCanvas.value.getContext('2d')!
+      dstCtx.drawImage(canvas.toCanvasElement(), 0, 0)
+    }
+  },
+  savePNG = function () {
+    redrawThumbnail(true)
+    if (canvas !== null) {
+      const data = canvas.toDataURL({
+          multiplier: 1.0,
+          format: 'png'
+        }),
+        a = document.createElement('a')
+      a.download = `${getFullTitle(store.title, store.subtitle)}.png`
+      a.href = data
+      a.click()
+      console.info(`Zapis do pliku ${getFullTitle(store.title, store.subtitle)}.png`)
     }
   },
   routeQuery = useRoute().query
 
-// ImageBanner.src = imageBannerData
-
-backgroundImage.value.onload = () => {
-  photoLoaded.value = true
-  // Set default scale to fill the image
+watch(photo, async (newPhoto: string) => {
+  photoRotation.value = 0
+  backgroundImage.value = await FabricImage.fromURL(
+    newPhoto,
+    {},
+    {
+      originX: 'center',
+      originY: 'center'
+    }
+  )
   let scaleX = canvasWidth.value / backgroundImage.value.width
   const scaleY = canvasHeight.value / backgroundImage.value.height
   if (scaleX < scaleY) {
     scaleX = scaleY
   }
   store.photoScale = Math.round(scaleX * 100) / 100
-  redrawThumbnail()
-}
+  // TODO: fix position
+  store.photoLeft = canvasWidth.value / 2
+  store.photoTop = canvasHeight.value / 2
 
-watch(photo, (newPhoto: string) => {
-  store.photoLeft = 0
-  store.photoTop = 0
-  store.photoScale = 1.0
-  photoRotation.value = 0
-  photoLoaded.value = false
-
-  backgroundImage.value.src = newPhoto
+  redrawCanvas()
 })
-document.fonts.onloadingdone = redrawThumbnail
+document.fonts.onloadingdone = redrawCanvas
 
-watch(mainCanvas, redrawThumbnail)
+watch(mainCanvas, redrawCanvas)
 
 // Rotate image once before using it
 watch(photoRotation, async () => {
-  // Skip on image load
-  if (photoLoaded.value === false) {
-    return
-  }
-
-  const tmpCanvas = document.createElement('canvas'),
-    ctx = tmpCanvas.getContext('2d')!
-  tmpCanvas.width = backgroundImage.value.height
-  tmpCanvas.height = backgroundImage.value.width
-
-  ctx.translate(tmpCanvas.width / 2, tmpCanvas.height / 2)
-  ctx.rotate((90 * Math.PI) / 180)
-
-  ctx.drawImage(backgroundImage.value, -tmpCanvas.height / 2, -tmpCanvas.width / 2)
-
-  photoLoaded.value = false
-  backgroundImage.value.src = tmpCanvas.toDataURL('image/png')
+  redrawCanvas()
 })
 
 if (routeQuery.runner && typeof routeQuery.runner === 'string') {
@@ -193,21 +265,39 @@ if (routeQuery.money && typeof routeQuery.money === 'string') {
 }
 
 onMounted(async () => {
-  imageGradient.value = await loadImage(`${import.meta.env.VITE_IMAGES_GRADIENT}`)
-  imageGradient.value.onload = redrawThumbnail
-  imageLogoGSPS.value = await loadImage(`${import.meta.env.VITE_LOGO_FIRST}`)
-  imageLogoGSPS.value.onload = redrawThumbnail
-  imageLogoFoundation.value = await loadImage(`${import.meta.env.VITE_LOGO_SECOND}`)
-  imageLogoFoundation.value.onload = redrawThumbnail
-  imageBanner.value = await loadImage(`${import.meta.env.VITE_IMAGES_BANNER_RUNNER}`)
-  imageBanner.value.onload = redrawThumbnail
+  imageGradientBackground.value = await FabricImage.fromURL(
+    `${import.meta.env.VITE_IMAGES_GRADIENT}`
+  )
 
-  store.$subscribe((mutation, state) => {
-    // TODO: maybe limti scope here? Do we want to redraw on ANY change in the store?
+  imageGradient.value = await imageGradientBackground.value.clone()
+  imageGradient.value.opacity = 0.12
+
+  imageBanner.value = await FabricImage.fromURL(`${import.meta.env.VITE_IMAGES_BANNER_RUNNER}`)
+
+  imageLogoGSPS.value = await FabricImage.fromURL(`${import.meta.env.VITE_LOGO_FIRST}`)
+  {
+    imageLogoGSPS.value.setXY(new Point(16, 15))
+    imageLogoGSPS.value.scaleToWidth(316)
+    // const lanczos = newLanczos(imageLogoGSPS.value)
+    // imageLogoGSPS.value.applyFilters([lanczos])
+  }
+
+  imageLogoFoundation.value = await FabricImage.fromURL(`${import.meta.env.VITE_LOGO_SECOND}`)
+  {
+    imageLogoFoundation.value.scaleToWidth(323)
+    imageLogoFoundation.value.setX(320)
+    // const lanczos = newLanczos(imageLogoFoundation.value)
+    // imageLogoFoundation.value.applyFilters([lanczos])
+  }
+  juzZaChwile.set({ left: canvasWidth.value - juzZaChwile.width - 36 })
+
+  store.$subscribe(() => {
+    // TODO: maybe limit scope here? Do we want to redraw on ANY change in the store?
+    // (mutation, state) => {}
     // console.log('store updated:', mutation, state)
-    redrawThumbnail()
+    redrawCanvas()
   })
-  redrawThumbnail()
+  redrawCanvas()
 })
 </script>
 
@@ -240,6 +330,11 @@ onMounted(async () => {
       <v-col cols="12" md="4">
         <InputItem
           @updateBackground="(b: string) => (photo = b)"
+          @save-p-n-g="
+            () => {
+              savePNG()
+            }
+          "
           :enable-money="true"
           :canvasModel="mainCanvas"
         />
