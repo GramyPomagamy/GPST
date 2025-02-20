@@ -135,7 +135,7 @@ const store = useGenericStore(),
     if (store.subtitle != '') {
       titleText.set({ fontSize: 114, top: 10 })
     } else {
-      titleText.set({ fontSize: 150, top: 400 })
+      titleText.set({ fontSize: 150, top: 40 })
     }
 
     titleText.set({ text: store.title })
