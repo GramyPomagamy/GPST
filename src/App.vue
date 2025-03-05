@@ -18,7 +18,7 @@ const appVersion = import.meta.env.PACKAGE_VERSION
           ><template v-if="$vuetify.display.mdAndUp">Runnerzy</template></v-btn
         >
         <v-btn class="px-8" size="x-large" height="100%" prepend-icon="md:photo_camera" to="/photo">
-          <template v-if="$vuetify.display.mdAndUp"> Zdjęcia podczas wydarzenia </template>
+          <template v-if="$vuetify.display.mdAndUp">Zdjęcia</template>
         </v-btn>
         <v-btn
           class="px-8"
@@ -28,6 +28,15 @@ const appVersion = import.meta.env.PACKAGE_VERSION
           to="/youtube"
           ><template v-if="$vuetify.display.mdAndUp">Youtube</template></v-btn
         >
+        <v-btn
+          class="px-8"
+          size="x-large"
+          height="100%"
+          prepend-icon="mdi:mdi-instagram"
+          to="/story"
+        >
+          <template v-if="$vuetify.display.mdAndUp">Relacje</template>
+        </v-btn>
 
         <template v-slot:append>
           <v-btn
@@ -56,7 +65,12 @@ const appVersion = import.meta.env.PACKAGE_VERSION
         <RouterView />
       </v-main>
 
-      <v-footer class="d-flex flex-column bg-surface-variant">
+      <!--class="d-flex flex-column "-->
+      <v-footer
+        :app="true"
+        class="d-flex flex-column bg-surface-variant text-center"
+        style="height: 2.5em"
+      >
         By Halamix2 &#9874; 2024 - {{ new Date().getFullYear() }}, wersja {{ appVersion }}. Halamix
         nie potrafi we frontend, a jednak to zrobił; what's your excuse?
       </v-footer>
