@@ -2,9 +2,13 @@
 
 ## WIP
 
+- logos and tracker updated for GSPS Dzieciom 2025
 - Refactor code, GPST now uses Fabric.js library
   - Final render to file applies Lanczos3 filter to the photo
-  - rotation no longer resets scale
+  - photo rotation no longer resets scale
+- add Story view for Instagram thumbnail generation
+- retrieved money count now is rounded, to fix errors with displaying decimals
+- .htaccess is now generated, adjusted for the base path
 
 ## 0.3.0
 
