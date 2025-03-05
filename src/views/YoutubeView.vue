@@ -239,9 +239,9 @@ onMounted(async () => {
 
   imageBanner.value = await FabricImage.fromURL(`${import.meta.env.VITE_IMAGES_BANNER_YOUTUBE}`)
 
-  imageLogoGSPS.value = await FabricImage.fromURL(`${import.meta.env.VITE_LOGO_MA}`)
+  imageLogoGSPS.value = await FabricImage.fromURL(`${import.meta.env.VITE_LOGO_FIRST}`)
   {
-    imageLogoGSPS.value.setXY(new Point(30, 590))
+    imageLogoGSPS.value.setXY(new Point(30, 570))
     imageLogoGSPS.value.scaleToWidth(404)
     // const lanczos = newLanczos(imageLogoGSPS.value)
     // imageLogoGSPS.value.applyFilters([lanczos])
