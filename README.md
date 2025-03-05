@@ -8,7 +8,7 @@ This tools aims to help generating Twitter/Youtube thumbnails
 
 Latest main commit version available at https://gramypomagamy.github.io/GPST/
 
-# URL parameters
+## URL parameters
 
 GPST can read the following URL parameters
 
@@ -16,23 +16,28 @@ GPST can read the following URL parameters
 - title
 - subtitle
 - category
+- money
+- time
 
 You can then sen someone a link like this one: `localhost?runner=Halamix2&title=Stunt GP&category=Arcade`
 
-## Project Setup
+## Run GPST locally
 
-```sh
+To run GPST locally, run
+
+```bash
+# needed only once, unless the dependencies have changed
 npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
 npm run dev
 ```
 
 ### Building
 
-```sh
+To build a release run
+
+```bash
 npm run build
+
+#if you wish to store GPST in a subdir on a server you can use
+npm run build -- -- --base
 ```
