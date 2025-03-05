@@ -34,7 +34,7 @@ const onNewBackground = function () {
     )
       .then((response) => response.json())
       .then((resp) => {
-        store.money = Number(resp.agg.amount)
+        store.money = Math.round(Number(resp.agg.amount))
       })
   },
   savePNG = function () {
