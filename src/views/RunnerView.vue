@@ -14,6 +14,7 @@ import { StaticCanvas, FabricText, FabricImage, Point } from 'fabric'
 import type { StaticCanvasEvents } from 'fabric'
 
 const store = useGenericStore(),
+  previoutHashtag = import.meta.env.VITE_TWITTER_PREVIOUS_HASHTAG,
   canvasWidth = ref(1500),
   canvasHeight = ref(1000),
   canvas: StaticCanvas<StaticCanvasEvents> = new StaticCanvas('', {
@@ -284,7 +285,7 @@ onMounted(async () => {
 
   imageLogoFoundation.value = await FabricImage.fromURL(`${import.meta.env.VITE_LOGO_SECOND}`)
   {
-    imageLogoFoundation.value.scaleToWidth(323)
+    imageLogoFoundation.value.scaleToWidth(223)
     imageLogoFoundation.value.setX(320)
     // const lanczos = newLanczos(imageLogoFoundation.value)
     // imageLogoFoundation.value.applyFilters([lanczos])
@@ -319,7 +320,7 @@ onMounted(async () => {
               Hej! Brak pewności czy Twoja miniaturka wygląda dobrze?
               <a
                 class="font-weight-medium text-white"
-                href="https://twitter.com/search?q=from%3A%40GramyPomagamy+%23gspsdzieciom24&f=live"
+                :href="`https://twitter.com/search?q=from%3A%40GramyPomagamy+%23${previoutHashtag}&f=live`"
                 >Spójrz tu</a
               >
               na inne przykłady.

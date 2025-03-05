@@ -291,7 +291,8 @@ onMounted(async () => {
 
   imageLogoFoundation.value = await FabricImage.fromURL(`${import.meta.env.VITE_LOGO_SECOND}`)
   {
-    imageLogoFoundation.value.scaleToWidth(350)
+    imageLogoFoundation.value.scaleToWidth(240)
+    imageLogoFoundation.value.setXY(new Point(20, 10))
     // const lanczos = newLanczos(imageLogoFoundation.value)
     // imageLogoFoundation.value.applyFilters([lanczos])
   }
