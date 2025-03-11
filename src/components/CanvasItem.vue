@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import type { Ref } from 'vue'
+import '@/styles/Canvas.scss'
 
 import { useGenericStore } from '@/stores/generic'
 
@@ -65,9 +66,9 @@ onMounted(() => {
 })
 </script>
 <template>
-  <div>
+  <div style="text-align: center; align-items: center">
     <canvas
-      :class="`cursor-grab h-100 w-100`"
+      :class="`cursor-grab height-class`"
       @drop.prevent="canvasDrop"
       @wheel.prevent="canvasWheel"
       @mousedown.prevent="canvasMouseDown"

@@ -9,13 +9,26 @@ import generateFile from 'vite-plugin-generate-file'
 
 // https://vitejs.dev/config/
 const config = defineConfig({
-  plugins: [vue(), vuetify({ autoImport: { labs: true } }), vueDevTools()],
+  plugins: [
+    vue(),
+    vuetify({
+      autoImport: { labs: true }
+    }),
+    vueDevTools()
+  ],
   define: {
     'import.meta.env.PACKAGE_VERSION': JSON.stringify(packageJson.version)
   },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
+    }
+  },
+  css: {
+    preprocessorOptions: {
+      sass: {
+        api: 'modern-compiler'
+      }
     }
   }
 })

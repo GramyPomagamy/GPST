@@ -14,34 +14,22 @@ import { StaticCanvas, FabricText, FabricImage, Point } from 'fabric'
 import type { StaticCanvasEvents } from 'fabric'
 
 const store = useGenericStore(),
-  previousHashtag = import.meta.env.VITE_TWITTER_PREVIOUS_HASHTAG,
-  canvasWidth = ref(1500),
-  canvasHeight = ref(1000),
+  routeQuery = useRoute().query,
+  canvasWidth = ref(1080),
+  canvasHeight = ref(1920),
   canvas: StaticCanvas<StaticCanvasEvents> = new StaticCanvas('', {
     width: canvasWidth.value,
     height: canvasHeight.value
   }),
-  mainCanvas: Ref<HTMLCanvasElement | null> = ref(null),
-  backgroundImage: Ref<FabricImage | null> = ref(null),
-  photoRotation = ref(0),
   imageGradientBackground: Ref<FabricImage | null> = ref(null),
+  backgroundImage: Ref<FabricImage | null> = ref(null),
+  mainCanvas: Ref<HTMLCanvasElement | null> = ref(null),
+  photo = ref(''),
+  photoRotation = ref(0),
   imageGradient: Ref<FabricImage | null> = ref(null),
   imageLogoGSPS: Ref<FabricImage | null> = ref(null),
   imageLogoFoundation: Ref<FabricImage | null> = ref(null),
   imageBanner: Ref<FabricImage | null> = ref(null),
-  photo = ref(''),
-  juzZaChwile = new FabricText('Już za chwilę...', {
-    fontFamily: 'Barlow Condensed',
-    fontStyle: 'normal',
-    fontWeight: 500,
-    fontSize: 99,
-    fill: 'white',
-    textAlign: 'center',
-    top: 8,
-    stroke: 'black',
-    strokeWidth: 8,
-    paintFirst: 'stroke'
-  }),
   runnerText: FabricText = new FabricText('', {
     fontFamily: 'Barlow Condensed',
     fontStyle: 'normal',
@@ -73,7 +61,7 @@ const store = useGenericStore(),
     fontSize: 90,
     fill: 'white',
     textAlign: 'center',
-    top: 786 + 8,
+    top: 1650,
     stroke: 'black',
     strokeWidth: 8,
     paintFirst: 'stroke'
@@ -81,11 +69,11 @@ const store = useGenericStore(),
   categoryText: FabricText = new FabricText('', {
     fontFamily: 'Barlow Condensed',
     fontStyle: 'normal',
-    fontWeight: 300,
-    fontSize: 42,
+    fontWeight: 500, // TODO: change?
+    fontSize: 60,
     fill: 'white',
     textAlign: 'center',
-    top: 887 + 3,
+    top: 1790,
     stroke: 'black',
     strokeWidth: 5,
     paintFirst: 'stroke'
@@ -94,11 +82,11 @@ const store = useGenericStore(),
     fontFamily: 'Saira Condensed',
     fontStyle: 'normal',
     fontWeight: 600,
-    fontSize: 24,
+    fontSize: 50,
     fill: 'white',
     textAlign: 'center',
-    top: 146,
-    left: 111,
+    top: 30,
+    left: 750,
     stroke: 'black',
     strokeWidth: 5,
     paintFirst: 'stroke'
@@ -110,15 +98,14 @@ const store = useGenericStore(),
     fontSize: 77,
     fill: '#ffbd16',
     textAlign: 'center',
-    top: 172,
-    left: 0,
+    top: 120,
+    left: 750,
     stroke: 'black',
     strokeWidth: 5,
     paintFirst: 'stroke'
   }),
   redrawThumbnail = function (filter: boolean = false) {
     canvas.clear()
-
     if (imageGradientBackground.value) {
       canvas.add(imageGradientBackground.value)
     }
@@ -156,13 +143,11 @@ const store = useGenericStore(),
       canvas.add(imageLogoFoundation.value)
     }
 
-    canvas.add(juzZaChwile)
-
-    let runnerPosition = 648 + 6,
-      titlePosition = 740 + 10
+    let runnerPosition = 1530,
+      titlePosition = 1630
     if (store.subtitle) {
-      runnerPosition = 587 + 6
-      titlePosition = 668 + 10
+      runnerPosition = 1430
+      titlePosition = 1530
     }
 
     runnerText.set({ text: store.runner, top: runnerPosition })
@@ -189,9 +174,10 @@ const store = useGenericStore(),
       moneyText.set({
         text: `${Math.round(store.money).toLocaleString('pl-PL')} PLN`
       })
-      moneyText.set({ left: 177 - moneyText.getScaledWidth() / 2 })
+      moneyText.set({ left: 900 - moneyText.getScaledWidth() / 2 })
       canvas.add(moneyText)
     }
+
     canvas.renderAll()
   },
   redrawCanvas = function () {
@@ -214,8 +200,7 @@ const store = useGenericStore(),
       a.click()
       console.info(`Zapis do pliku ${getFullTitle(store.title, store.subtitle)}.png`)
     }
-  },
-  routeQuery = useRoute().query
+  }
 
 watch(photo, async (newPhoto: string) => {
   photoRotation.value = 0
@@ -239,11 +224,9 @@ watch(photo, async (newPhoto: string) => {
 
   redrawCanvas()
 })
+
 document.fonts.onloadingdone = redrawCanvas
 
-watch(mainCanvas, redrawCanvas)
-
-// Rotate image once before using it
 watch(photoRotation, async () => {
   redrawCanvas()
 })
@@ -267,34 +250,32 @@ if (routeQuery.money && typeof routeQuery.money === 'string') {
 
 onMounted(async () => {
   imageGradientBackground.value = await FabricImage.fromURL(
-    `${import.meta.env.VITE_IMAGES_GRADIENT}`
+    `${import.meta.env.VITE_IMAGES_GRADIENT_STORY}`
   )
 
   imageGradient.value = await imageGradientBackground.value.clone()
   imageGradient.value.opacity = 0.12
 
-  imageBanner.value = await FabricImage.fromURL(`${import.meta.env.VITE_IMAGES_BANNER_RUNNER}`)
+  imageBanner.value = await FabricImage.fromURL(`${import.meta.env.VITE_IMAGES_BANNER_STORY}`)
 
   imageLogoGSPS.value = await FabricImage.fromURL(`${import.meta.env.VITE_LOGO_FIRST}`)
   {
-    imageLogoGSPS.value.setXY(new Point(16, 15))
-    imageLogoGSPS.value.scaleToWidth(316)
+    imageLogoGSPS.value.setXY(new Point(40, 30))
+    imageLogoGSPS.value.scaleToWidth(380)
     // const lanczos = newLanczos(imageLogoGSPS.value)
     // imageLogoGSPS.value.applyFilters([lanczos])
   }
 
-  imageLogoFoundation.value = await FabricImage.fromURL(`${import.meta.env.VITE_LOGO_SECOND}`)
+  imageLogoFoundation.value = await FabricImage.fromURL(`${import.meta.env.VITE_LOGO_SECOND_STORY}`)
   {
-    imageLogoFoundation.value.scaleToWidth(223)
-    imageLogoFoundation.value.setX(320)
+    imageLogoFoundation.value.setXY(new Point(20, 200))
+    imageLogoFoundation.value.scaleToWidth(400)
     // const lanczos = newLanczos(imageLogoFoundation.value)
     // imageLogoFoundation.value.applyFilters([lanczos])
   }
-  juzZaChwile.set({ left: canvasWidth.value - juzZaChwile.width - 36 })
 
   store.$subscribe(() => {
-    // TODO: maybe limit scope here? Do we want to redraw on ANY change in the store?
-    // (mutation, state) => {}
+    // TODO: maybe limti scope here? Do we want to redraw on ANY change in the store?
     // console.log('store updated:', mutation, state)
     redrawCanvas()
   })
@@ -303,30 +284,21 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-container fluid class="main bg-surface">
-    <v-row>
+  <v-container fluid class="main bg-surface h-100">
+    <!--<v-row>
+      <v-col>
+        <h1>Miniaturka runnera na Instagrama</h1>
+      </v-col>
+    </v-row>-->
+    <v-row class="h-100">
       <v-col>
         <CanvasItem
-          :class="`h-auto w-auto`"
           :canvasWidth="canvasWidth"
           :canvasHeight="canvasHeight"
           @canvasElement="(can: HTMLCanvasElement) => (mainCanvas = can)"
           @updateBackground="(b: string) => (photo = b)"
           @updateRotation="(r: number) => (photoRotation = (photoRotation + r) % 360)"
         />
-        <v-row>
-          <v-col>
-            <p class="text-center">
-              Hej! Brak pewności czy Twoja miniaturka wygląda dobrze?
-              <a
-                class="font-weight-medium text-white"
-                :href="`https://twitter.com/search?q=from%3A%40GramyPomagamy+%23${previousHashtag}&f=live`"
-                >Spójrz tu</a
-              >
-              na inne przykłady.
-            </p>
-          </v-col>
-        </v-row>
       </v-col>
       <v-col cols="12" md="4">
         <InputItem
@@ -336,8 +308,8 @@ onMounted(async () => {
               savePNG()
             }
           "
-          :enable-money="true"
           :canvasModel="mainCanvas"
+          :enable-money="true"
         />
       </v-col>
     </v-row>
