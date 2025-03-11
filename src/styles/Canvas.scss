@@ -1,0 +1,11 @@
+@use 'vuetify/settings';
+@use "sass:map";
+@use "sass:list";
+
+.height-class {
+  max-height: calc(100vh - 3px - settings.$app-bar-prominent-height - settings.$app-bar-padding-end - list.nth(settings.$footer-padding, 1));
+  max-width: 100vw;
+  @media (min-width: 960px) {
+  max-width: calc(66.6666666vw - 40px);
+  }
+}
