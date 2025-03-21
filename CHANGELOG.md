@@ -1,6 +1,6 @@
 # Changelog
 
-## WIP
+## 0.4.0
 
 - logos and tracker updated for GSPS Dzieciom 2025
 - Refactor code, GPST now uses Fabric.js library
