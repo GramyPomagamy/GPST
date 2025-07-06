@@ -3,6 +3,7 @@
 ## WIP
 
 - fixed text handling (text centering, legth calculations, font loading)
+- logos and tracker updated for GSPS 2025
 
 ## 0.4.0
 
