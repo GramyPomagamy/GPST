@@ -1,5 +1,9 @@
 # Changelog
 
+## WIP
+
+- fixed text handling (text centering, legth calculations, font loading)
+
 ## 0.4.0
 
 - logos and tracker updated for GSPS Dzieciom 2025
