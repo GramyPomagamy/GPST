@@ -239,7 +239,6 @@ watch(photo, async (newPhoto: string) => {
 
   redrawCanvas()
 })
-document.fonts.onloadingdone = redrawCanvas
 
 watch(mainCanvas, redrawCanvas)
 
