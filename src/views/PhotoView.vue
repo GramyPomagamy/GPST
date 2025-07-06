@@ -327,7 +327,6 @@ onMounted(async () => {
             }
           "
           :enable-money="true"
-          :canvasModel="mainCanvas"
         />
       </v-col>
     </v-row>
