@@ -21,6 +21,6 @@ describe('CanvasItem', () => {
           plugins: [vuetify, createTestingPinia()]
         }
       })
-    //Expect(wrapper.text()).
+    expect(wrapper.text()).contain('Nie pójdzie bez JS')
   })
 })

@@ -282,7 +282,6 @@ onMounted(async () => {
             }
           "
           :enable-time="true"
-          :canvasModel="mainCanvas"
         />
       </v-col>
     </v-row>

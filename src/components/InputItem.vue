@@ -13,7 +13,6 @@ const store = useGenericStore(),
   props = defineProps<{
     enableTime?: boolean
     enableMoney?: boolean
-    canvasModel: HTMLCanvasElement | null
   }>(),
   emit = defineEmits<{
     updateBackground: [b: string]
@@ -39,12 +38,6 @@ const onNewBackground = function () {
   },
   savePNG = function () {
     emit('savePNG')
-    // const data = props.canvasModel!.toDataURL('image/png'),
-    //   a = document.createElement('a')
-    // a.download = `${getFullTitle(store.title, store.subtitle)}.png`
-    // a.href = data
-    // a.click()
-    // console.info(`Zapis do pliku ${getFullTitle(store.title, store.subtitle)}.png`)
   },
   chooseBackground = function () {
     if (inputBackground.value) {
@@ -141,7 +134,7 @@ const onNewBackground = function () {
     />
 
     <v-text-field
-      v-if="enableTime"
+      v-if="props.enableTime"
       clearable
       v-model="store.time"
       type="text"
@@ -153,7 +146,7 @@ const onNewBackground = function () {
       required
       prepend-inner-icon="schedule"
     />
-    <v-container fluid v-if="enableMoney">
+    <v-container fluid v-if="props.enableMoney">
       <v-row>
         <v-col>
           <v-number-input

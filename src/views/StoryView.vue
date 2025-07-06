@@ -308,7 +308,6 @@ onMounted(async () => {
               savePNG()
             }
           "
-          :canvasModel="mainCanvas"
           :enable-money="true"
         />
       </v-col>
