@@ -15,6 +15,7 @@
     "url": "https://github.com/halamix2/GPST"
   },
   "private": true,
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",
