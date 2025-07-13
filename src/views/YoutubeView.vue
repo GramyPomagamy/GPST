@@ -241,10 +241,10 @@ onMounted(async () => {
 
   imageLogoGSPS.value = await FabricImage.fromURL(`${import.meta.env.VITE_LOGO_FIRST}`)
   {
-    imageLogoGSPS.value.setXY(new Point(20, 420))
-    imageLogoGSPS.value.scaleToWidth(354)
-    // const lanczos = newLanczos(imageLogoGSPS.value)
-    // imageLogoGSPS.value.applyFilters([lanczos])
+    imageLogoGSPS.value.setXY(new Point(20, 480))
+    imageLogoGSPS.value.scaleToWidth(304)
+    const lanczos = newLanczos(imageLogoGSPS.value)
+    imageLogoGSPS.value.applyFilters([lanczos])
   }
 
   store.$subscribe(() => {
