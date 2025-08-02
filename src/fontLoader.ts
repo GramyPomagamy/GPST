@@ -38,7 +38,7 @@ const fontSairaCondensedExtrabold = new FontFace('Saira Condensed', fontURLs.Sai
   weight: '800'
 })
 
-const fontPTSansNarrowBold = new FontFace('Saira Condensed', fontURLs.PTSansNarrow700, {
+const fontPTSansNarrowBold = new FontFace('PT Sans Narrow', fontURLs.PTSansNarrow700, {
   style: 'normal',
   weight: '700'
 })
