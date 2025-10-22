@@ -1,12 +1,8 @@
-import { describe, expect, it } from 'vitest'
-
-import { mount } from '@vue/test-utils'
-
-import { defaultVuetify } from '@/vuetifyInstance'
-
 import { createTestingPinia } from '@pinia/testing'
-
+import { mount } from '@vue/test-utils'
+import { describe, expect, it } from 'vitest'
 import CanvasItem from '@/components/CanvasItem.vue'
+import { defaultVuetify } from '@/vuetifyInstance'
 
 const vuetify = defaultVuetify()
 

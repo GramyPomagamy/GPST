@@ -1,12 +1,9 @@
-import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-
+import { createApp } from 'vue'
 // Vuetify
 import 'vuetify/styles'
-
-import { defaultVuetify } from '@/vuetifyInstance'
 import { fonts } from '@/fontLoader'
-
+import { defaultVuetify } from '@/vuetifyInstance'
 import App from './App.vue'
 import router from './router'
 

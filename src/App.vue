@@ -38,7 +38,7 @@ const appVersion = import.meta.env.PACKAGE_VERSION
           <template v-if="$vuetify.display.mdAndUp">Relacje</template>
         </v-btn>
 
-        <template v-slot:append>
+        <template #append>
           <v-btn
             class="px-8"
             size="x-large"

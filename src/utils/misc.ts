@@ -1,4 +1,4 @@
-import { FabricImage, filters } from 'fabric'
+import { type FabricImage, filters } from 'fabric'
 
 const getFullTitle = function (title: string, ...subtitle: string[]): string {
     if (

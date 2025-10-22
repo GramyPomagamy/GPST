@@ -1,6 +1,5 @@
 import { h } from 'vue'
-import { createVuetify } from 'vuetify'
-import type { IconSet, IconProps } from 'vuetify'
+import { createVuetify, type IconProps, type IconSet } from 'vuetify'
 import { VLigatureIcon } from 'vuetify/components'
 import { aliases, md } from 'vuetify/iconsets/md'
 import { mdi } from 'vuetify/iconsets/mdi'

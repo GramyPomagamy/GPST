@@ -2,13 +2,12 @@
 import { onMounted, ref } from 'vue'
 import type { Ref } from 'vue'
 import '@/styles/Canvas.scss'
-
 import { useGenericStore } from '@/stores/generic'
 
 const store = useGenericStore(),
   props = defineProps<{
-    canvasWidth: number
     canvasHeight: number
+    canvasWidth: number
   }>(),
   emit = defineEmits<{
     canvasElement: [canvas: HTMLCanvasElement]
@@ -68,14 +67,14 @@ onMounted(() => {
 <template>
   <div style="text-align: center; align-items: center">
     <canvas
+      id="mainCanvas"
+      ref="canvasElement"
       :class="`cursor-grab height-class`"
+      :width="props.canvasWidth"
+      :height="props.canvasHeight"
       @drop.prevent="canvasDrop"
       @wheel.prevent="canvasWheel"
       @mousedown.prevent="canvasMouseDown"
-      ref="canvasElement"
-      id="mainCanvas"
-      :width="props.canvasWidth"
-      :height="props.canvasHeight"
     >
       <v-tooltip activator="parent" :transition="{}">
         <v-list lines="three" class="bg-surface-variant">

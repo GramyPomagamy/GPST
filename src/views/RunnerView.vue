@@ -1,17 +1,13 @@
 <script setup lang="ts">
+import { FabricImage, FabricText, Point, StaticCanvas } from 'fabric'
+import type { StaticCanvasEvents } from 'fabric'
 import { onMounted, ref, watch } from 'vue'
 import type { Ref } from 'vue'
-
+import { useRoute } from 'vue-router'
+import { useGenericStore } from '@/stores/generic'
+import { getFullTitle, newLanczos } from '@/utils/misc'
 import CanvasItem from '../components/CanvasItem.vue'
 import InputItem from '../components/InputItem.vue'
-import { useRoute } from 'vue-router'
-
-import { getFullTitle, newLanczos } from '@/utils/misc'
-
-import { useGenericStore } from '@/stores/generic'
-
-import { StaticCanvas, FabricText, FabricImage, Point } from 'fabric'
-import type { StaticCanvasEvents } from 'fabric'
 
 const store = useGenericStore(),
   previousHashtag = import.meta.env.VITE_TWITTER_PREVIOUS_HASHTAG,
@@ -307,11 +303,11 @@ onMounted(async () => {
       <v-col>
         <CanvasItem
           :class="`h-auto w-auto`"
-          :canvasWidth="canvasWidth"
-          :canvasHeight="canvasHeight"
-          @canvasElement="(can: HTMLCanvasElement) => (mainCanvas = can)"
-          @updateBackground="(b: string) => (photo = b)"
-          @updateRotation="(r: number) => (photoRotation = (photoRotation + r) % 360)"
+          :canvas-width="canvasWidth"
+          :canvas-height="canvasHeight"
+          @canvas-element="(can: HTMLCanvasElement) => (mainCanvas = can)"
+          @update-background="(b: string) => (photo = b)"
+          @update-rotation="(r: number) => (photoRotation = (photoRotation + r) % 360)"
         />
         <v-row>
           <v-col>
@@ -329,13 +325,13 @@ onMounted(async () => {
       </v-col>
       <v-col cols="12" md="4">
         <InputItem
-          @updateBackground="(b: string) => (photo = b)"
+          :enable-money="true"
+          @update-background="(b: string) => (photo = b)"
           @save-p-n-g="
             () => {
               savePNG()
             }
           "
-          :enable-money="true"
         />
       </v-col>
     </v-row>

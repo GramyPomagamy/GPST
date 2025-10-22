@@ -2,7 +2,6 @@
 import { ref } from 'vue'
 import type { Ref } from 'vue'
 import { useRoute } from 'vue-router'
-
 import { useGenericStore } from '@/stores/generic'
 
 const store = useGenericStore(),
@@ -11,12 +10,12 @@ const store = useGenericStore(),
   linkSnackbar = ref(false),
   snackbarText = ref(''),
   props = defineProps<{
-    enableTime?: boolean
     enableMoney?: boolean
+    enableTime?: boolean
   }>(),
   emit = defineEmits<{
-    updateBackground: [b: string]
     savePNG: []
+    updateBackground: [b: string]
   }>()
 const onNewBackground = function () {
     console.log(inputBackground.value!.files![0])
@@ -28,7 +27,7 @@ const onNewBackground = function () {
     reader.readAsDataURL(inputBackground.value!.files![0])
   },
   updateMoney = function () {
-    fetch(
+    void fetch(
       `${import.meta.env.VITE_DONATION_TRACKER_BASE_URL + import.meta.env.VITE_DONATION_TRACKER_SLUG}?json=gpst`
     )
       .then((response) => response.json())
@@ -73,16 +72,16 @@ const onNewBackground = function () {
 <template>
   <div class="d-flex flex-column justify-center">
     <v-file-input
-      class="d-none"
+      id="background"
       ref="inputBackground"
-      @change="onNewBackground"
+      class="d-none"
       label="Tło"
       type="file"
       name="background"
-      id="background"
       accept="image/*"
       prepend-inner-icon="photo_camera"
       prepend-icon=""
+      @change="onNewBackground"
     />
     <v-btn class="bg-secondary" prepend-icon="photo_camera" @click.prevent="chooseBackground">
       Dodaj zdjęcie
@@ -90,43 +89,43 @@ const onNewBackground = function () {
 
     <!-- TODO clearable is broken -->
     <v-text-field
-      clearable
+      id="runner"
       v-model="store.runner"
+      clearable
       type="text"
       name="runner"
-      id="runner"
       label="Runner"
       size="42"
       required
       prepend-inner-icon="person"
     />
     <v-text-field
-      clearable
+      id="title"
       v-model="store.title"
+      clearable
       type="text"
       name="title"
-      id="title"
       label="Tytuł"
       size="42"
       required
       prepend-inner-icon="uppercase"
     />
     <v-text-field
-      clearable
+      id="subtitle"
       v-model="store.subtitle"
+      clearable
       type="text"
       name="subtitle"
-      id="subtitle"
       size="42"
       label="Podtytuł (opcjonalne)"
       prepend-inner-icon="lowercase"
     />
     <v-text-field
-      clearable
+      id="category"
       v-model="store.category"
+      clearable
       type="text"
       name="category"
-      id="category"
       label="Kategoria"
       size="42"
       required
@@ -135,29 +134,29 @@ const onNewBackground = function () {
 
     <v-text-field
       v-if="props.enableTime"
-      clearable
+      id="time"
       v-model="store.time"
+      clearable
       type="text"
       name="time"
       label="Czas"
-      id="time"
       placeholder="12:34"
       size="12"
       required
       prepend-inner-icon="schedule"
     />
-    <v-container fluid v-if="props.enableMoney">
+    <v-container v-if="props.enableMoney" fluid>
       <v-row>
         <v-col>
           <v-number-input
-            clearable
+            id="money"
             v-model="store.money"
+            clearable
             hint="Ta sekcja jest pisana dla pieniędzy! (pzdr fani republiki)"
             type="number"
             name="money"
-            controlVariant="stacked"
+            control-variant="stacked"
             label="Uzbierano"
-            id="money"
             placeholder="0"
             size="10"
             required
@@ -182,7 +181,7 @@ const onNewBackground = function () {
         </v-col>
         <v-snackbar v-model="linkSnackbar">
           {{ snackbarText }}
-          <template v-slot:actions>
+          <template #actions>
             <v-btn variant="text" @click="linkSnackbar = false"> Zamknij </v-btn>
           </template>
         </v-snackbar>

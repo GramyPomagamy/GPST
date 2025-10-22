@@ -1,46 +1,26 @@
-import pluginVitest from '@vitest/eslint-plugin'
-import skipFormatting from '@vue/eslint-config-prettier/skip-formatting'
-import vueTsEslintConfig from '@vue/eslint-config-typescript'
-import pluginPlaywright from 'eslint-plugin-playwright'
-import pluginVue from 'eslint-plugin-vue'
+import { ConfigCreator } from '@gramypomagamy/eslint-config'
+
+const tsParser = ConfigCreator.createTsParser({
+  tsconfigFilePaths: ['tsconfig.app.json', 'tsconfig.node.json', 'tsconfig.vitest.json']
+})
+const tsCustom = ConfigCreator.createTsRules({
+  folderPath: 'src'
+})
+const vueCustom = ConfigCreator.createVueRules({
+  folderPath: 'src',
+  tsconfigFilePaths: ['tsconfig.app.json', 'tsconfig.node.json', 'tsconfig.vitest.json']
+})
 
 export default [
   {
     name: 'app/files-to-lint',
     files: ['**/*.{ts,mts,tsx,vue}']
   },
-
   {
     name: 'app/files-to-ignore',
-    ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**']
+    ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**', 'vite-env.d.ts', '**/e2e/**']
   },
-
-  ...pluginVue.configs['flat/essential'],
-  ...vueTsEslintConfig(),
-
-  {
-    ...pluginVitest.configs.recommended,
-    files: ['src/**/__tests__/*']
-  },
-
-  {
-    ...pluginPlaywright.configs['flat/recommended'],
-    files: ['e2e/**/*.{test,spec}.{js,ts,jsx,tsx}'],
-    rules: {
-      ...pluginPlaywright.configs['flat/recommended'].rules
-    }
-  },
-  skipFormatting,
-  {
-    rules: {
-      '@typescript-eslint/no-unused-expressions': [
-        'error',
-        {
-          allowShortCircuit: true,
-          allowTernary: true
-        }
-      ],
-      'vue/multi-word-component-names': 'off'
-    }
-  }
+  ...tsParser,
+  ...tsCustom,
+  ...vueCustom
 ]
