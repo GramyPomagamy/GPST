@@ -37,7 +37,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.17.0",
-    "@gramypomagamy/eslint-config": "git://github.com/GramyPomagamy/gsps-eslint-config.git#2d72605ee1b2d18d48e9c881b545013356ddd0e2",
+    "@gramypomagamy/eslint-config": "^3.0.0",
     "@pinia/testing": "^1.0.2",
     "@playwright/test": "^1.53.2",
     "@tsconfig/node22": "^22.0.2",
