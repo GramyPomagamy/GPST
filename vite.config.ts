@@ -3,7 +3,7 @@ import { URL, fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vuetify from 'vite-plugin-vuetify'
-import packageJson from './package.json'
+import packageJson from './package.json' with { type: 'json' }
 import vueDevTools from 'vite-plugin-vue-devtools'
 import generateFile from 'vite-plugin-generate-file'
 
