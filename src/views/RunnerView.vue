@@ -10,7 +10,7 @@ import CanvasItem from '../components/CanvasItem.vue'
 import InputItem from '../components/InputItem.vue'
 
 const store = useGenericStore(),
-  previousHashtag = import.meta.env.VITE_TWITTER_PREVIOUS_HASHTAG,
+  // previousHashtag = import.meta.env.VITE_TWITTER_PREVIOUS_HASHTAG,
   canvasWidth = ref(1500),
   canvasHeight = ref(1000),
   canvas: StaticCanvas<StaticCanvasEvents> = new StaticCanvas('', {
@@ -69,7 +69,7 @@ const store = useGenericStore(),
     fontSize: 90,
     fill: 'white',
     textAlign: 'center',
-    top: 786 + 8,
+    top: 849,
     stroke: 'black',
     strokeWidth: 8,
     paintFirst: 'stroke'
@@ -81,7 +81,7 @@ const store = useGenericStore(),
     fontSize: 42,
     fill: 'white',
     textAlign: 'center',
-    top: 887 + 3,
+    top: 916,
     stroke: 'black',
     strokeWidth: 5,
     paintFirst: 'stroke'
@@ -93,8 +93,8 @@ const store = useGenericStore(),
     fontSize: 24,
     fill: 'white',
     textAlign: 'center',
-    top: 146,
-    left: 111,
+    top: 162,
+    left: 175,
     stroke: 'black',
     strokeWidth: 5,
     paintFirst: 'stroke'
@@ -106,8 +106,8 @@ const store = useGenericStore(),
     fontSize: 77,
     fill: '#ffbd16',
     textAlign: 'center',
-    top: 172,
-    left: 0,
+    top: 218,
+    left: 177,
     stroke: 'black',
     strokeWidth: 5,
     paintFirst: 'stroke'
@@ -154,11 +154,11 @@ const store = useGenericStore(),
 
     canvas.add(juzZaChwile)
 
-    let runnerPosition = 648 + 6,
-      titlePosition = 740 + 10
+    let runnerPosition = 699 + 6,
+      titlePosition = 808 + 10
     if (store.subtitle) {
-      runnerPosition = 587 + 6
-      titlePosition = 668 + 10
+      runnerPosition = 638 + 6
+      titlePosition = 736 + 10
     }
 
     runnerText.set({ text: store.runner, top: runnerPosition })
@@ -185,7 +185,7 @@ const store = useGenericStore(),
       moneyText.set({
         text: `${Math.round(store.money).toLocaleString('pl-PL')} PLN`
       })
-      moneyText.set({ left: 177 - moneyText.getScaledWidth() / 2 })
+      // moneyText.set({ left: moneyText.getScaledWidth() })
       canvas.add(moneyText)
     }
     canvas.renderAll()
@@ -215,14 +215,7 @@ const store = useGenericStore(),
 
 watch(photo, async (newPhoto: string) => {
   photoRotation.value = 0
-  backgroundImage.value = await FabricImage.fromURL(
-    newPhoto,
-    {},
-    {
-      originX: 'center',
-      originY: 'center'
-    }
-  )
+  backgroundImage.value = await FabricImage.fromURL(newPhoto)
   let scaleX = canvasWidth.value / backgroundImage.value.width
   const scaleY = canvasHeight.value / backgroundImage.value.height
   if (scaleX < scaleY) {
@@ -264,16 +257,18 @@ onMounted(async () => {
   imageGradientBackground.value = await FabricImage.fromURL(
     `${import.meta.env.VITE_IMAGES_GRADIENT}`
   )
+  imageGradientBackground.value.setXY(new Point(canvasWidth.value / 2, canvasHeight.value / 2))
 
   imageGradient.value = await imageGradientBackground.value.clone()
   imageGradient.value.opacity = 0.12
 
   imageBanner.value = await FabricImage.fromURL(`${import.meta.env.VITE_IMAGES_BANNER_RUNNER}`)
+  imageBanner.value.setXY(new Point(canvasWidth.value / 2, canvasHeight.value / 2))
 
   imageLogoGSPS.value = await FabricImage.fromURL(`${import.meta.env.VITE_LOGO_FIRST}`)
   {
-    imageLogoGSPS.value.setXY(new Point(16, 15))
     imageLogoGSPS.value.scaleToWidth(316)
+    imageLogoGSPS.value.positionByLeftTop(new Point(16, 15))
     // const lanczos = newLanczos(imageLogoGSPS.value)
     // imageLogoGSPS.value.applyFilters([lanczos])
   }
@@ -281,11 +276,14 @@ onMounted(async () => {
   imageLogoFoundation.value = await FabricImage.fromURL(`${import.meta.env.VITE_LOGO_SECOND}`)
   {
     imageLogoFoundation.value.scaleToWidth(223)
-    imageLogoFoundation.value.setX(320)
+    imageLogoFoundation.value.positionByLeftTop(new Point(320, 0))
     // const lanczos = newLanczos(imageLogoFoundation.value)
     // imageLogoFoundation.value.applyFilters([lanczos])
   }
-  juzZaChwile.set({ left: canvasWidth.value - juzZaChwile.width - 36 })
+  juzZaChwile.set({
+    left: canvasWidth.value - juzZaChwile.width / 2 - 32,
+    top: juzZaChwile.height / 2 + 12
+  })
 
   store.$subscribe(() => {
     // TODO: maybe limit scope here? Do we want to redraw on ANY change in the store?
@@ -309,7 +307,7 @@ onMounted(async () => {
           @update-background="(b: string) => (photo = b)"
           @update-rotation="(r: number) => (photoRotation = (photoRotation + r) % 360)"
         />
-        <v-row>
+        <!--<v-row>
           <v-col>
             <p class="text-center">
               Hej! Brak pewności czy Twoja miniaturka wygląda dobrze?
@@ -321,7 +319,7 @@ onMounted(async () => {
               na inne przykłady.
             </p>
           </v-col>
-        </v-row>
+        </v-row>-->
       </v-col>
       <v-col cols="12" md="4">
         <InputItem

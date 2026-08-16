@@ -57,7 +57,7 @@ const store = useGenericStore(),
     fontSize: 90,
     fill: 'white',
     textAlign: 'center',
-    top: 1650,
+    top: 1705,
     stroke: 'black',
     strokeWidth: 8,
     paintFirst: 'stroke'
@@ -69,7 +69,7 @@ const store = useGenericStore(),
     fontSize: 60,
     fill: 'white',
     textAlign: 'center',
-    top: 1790,
+    top: 1826,
     stroke: 'black',
     strokeWidth: 5,
     paintFirst: 'stroke'
@@ -81,8 +81,8 @@ const store = useGenericStore(),
     fontSize: 50,
     fill: 'white',
     textAlign: 'center',
-    top: 30,
-    left: 750,
+    top: 60,
+    left: 880,
     stroke: 'black',
     strokeWidth: 5,
     paintFirst: 'stroke'
@@ -94,8 +94,8 @@ const store = useGenericStore(),
     fontSize: 77,
     fill: '#ffbd16',
     textAlign: 'center',
-    top: 120,
-    left: 750,
+    top: 165,
+    left: 899,
     stroke: 'black',
     strokeWidth: 5,
     paintFirst: 'stroke'
@@ -139,11 +139,11 @@ const store = useGenericStore(),
       canvas.add(imageLogoFoundation.value)
     }
 
-    let runnerPosition = 1530,
-      titlePosition = 1630
+    let runnerPosition = 1581,
+      titlePosition = 1698
     if (store.subtitle) {
-      runnerPosition = 1430
-      titlePosition = 1530
+      runnerPosition = 1481
+      titlePosition = 1598
     }
 
     runnerText.set({ text: store.runner, top: runnerPosition })
@@ -170,7 +170,6 @@ const store = useGenericStore(),
       moneyText.set({
         text: `${Math.round(store.money).toLocaleString('pl-PL')} PLN`
       })
-      moneyText.set({ left: 900 - moneyText.getScaledWidth() / 2 })
       canvas.add(moneyText)
     }
 
@@ -200,14 +199,7 @@ const store = useGenericStore(),
 
 watch(photo, async (newPhoto: string) => {
   photoRotation.value = 0
-  backgroundImage.value = await FabricImage.fromURL(
-    newPhoto,
-    {},
-    {
-      originX: 'center',
-      originY: 'center'
-    }
-  )
+  backgroundImage.value = await FabricImage.fromURL(newPhoto)
   let scaleX = canvasWidth.value / backgroundImage.value.width
   const scaleY = canvasHeight.value / backgroundImage.value.height
   if (scaleX < scaleY) {
@@ -248,24 +240,26 @@ onMounted(async () => {
   imageGradientBackground.value = await FabricImage.fromURL(
     `${import.meta.env.VITE_IMAGES_GRADIENT_STORY}`
   )
+  imageGradientBackground.value.setXY(new Point(canvasWidth.value / 2, canvasHeight.value / 2))
 
   imageGradient.value = await imageGradientBackground.value.clone()
   imageGradient.value.opacity = 0.12
 
   imageBanner.value = await FabricImage.fromURL(`${import.meta.env.VITE_IMAGES_BANNER_STORY}`)
+  imageBanner.value.setXY(new Point(canvasWidth.value / 2, canvasHeight.value / 2))
 
   imageLogoGSPS.value = await FabricImage.fromURL(`${import.meta.env.VITE_LOGO_FIRST}`)
   {
-    imageLogoGSPS.value.setXY(new Point(40, 30))
     imageLogoGSPS.value.scaleToWidth(380)
+    imageLogoGSPS.value.positionByLeftTop(new Point(40, 30))
     // const lanczos = newLanczos(imageLogoGSPS.value)
     // imageLogoGSPS.value.applyFilters([lanczos])
   }
 
   imageLogoFoundation.value = await FabricImage.fromURL(`${import.meta.env.VITE_LOGO_SECOND_STORY}`)
   {
-    imageLogoFoundation.value.setXY(new Point(20, 200))
     imageLogoFoundation.value.scaleToWidth(400)
+    imageLogoFoundation.value.positionByLeftTop(new Point(20, 200))
     // const lanczos = newLanczos(imageLogoFoundation.value)
     // imageLogoFoundation.value.applyFilters([lanczos])
   }
