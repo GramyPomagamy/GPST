@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FabricImage, FabricText, Group, Point, StaticCanvas } from 'fabric'
+import { FabricImage, FabricText, Group, Point, Rect, StaticCanvas } from 'fabric'
 import type { StaticCanvasEvents } from 'fabric'
 import { onMounted, ref, watch } from 'vue'
 import type { Ref } from 'vue'
@@ -33,7 +33,7 @@ const store = useGenericStore(),
     fontSize: 101,
     fill: 'white',
     textAlign: 'center',
-    top: 216,
+    top: 277,
     stroke: 'black',
     strokeWidth: 8,
     paintFirst: 'stroke'
@@ -67,9 +67,9 @@ const store = useGenericStore(),
     objectCaching: false
   }),
   titleGroup = new Group([titleText, subtitleText], {
-    top: 309, //505,
-    objectCaching: false,
-    originX: 'center'
+    top: 575,
+    left: canvasWidth.value / 2,
+    objectCaching: false
   }),
   categoryText: FabricText = new FabricText('', {
     fontFamily: 'Barlow Condensed',
@@ -78,7 +78,7 @@ const store = useGenericStore(),
     fontSize: 42,
     fill: 'white',
     textAlign: 'center',
-    top: 887 + 3,
+    top: 916,
     stroke: 'black',
     strokeWidth: 5,
     paintFirst: 'stroke'
@@ -90,8 +90,8 @@ const store = useGenericStore(),
     fontSize: 24,
     fill: 'white',
     textAlign: 'center',
-    top: 190,
-    left: 139,
+    top: 206,
+    left: 204,
     stroke: 'black',
     strokeWidth: 5,
     paintFirst: 'stroke'
@@ -103,8 +103,8 @@ const store = useGenericStore(),
     fontSize: 77,
     fill: '#ffbd16',
     textAlign: 'center',
-    top: 217,
-    left: 0,
+    top: 263,
+    left: 204,
     stroke: 'black',
     strokeWidth: 5,
     paintFirst: 'stroke'
@@ -172,14 +172,11 @@ const store = useGenericStore(),
 
     titleText.set({ text: store.title })
     subtitleText.set({ text: store.subtitle })
-    subtitleText.set({
-      left: titleText.getScaledWidth()
+    titleText.set({
+      left: -subtitleText.getScaledWidth() / 2
     })
-
-    // uglu hack, centerObjectH is broken
-    titleGroup.set({
-      top: 309 + titleFontSize / 2,
-      left: canvasWidth.value / 2 - (titleText.getScaledWidth() + subtitleText.getScaledWidth()) / 2
+    subtitleText.set({
+      left: titleText.getScaledWidth() / 2
     })
 
     canvas.add(titleGroup)
@@ -194,7 +191,6 @@ const store = useGenericStore(),
       moneyText.set({
         text: `${Math.round(store.money).toLocaleString('pl-PL')} PLN`
       })
-      moneyText.set({ left: 204 - moneyText.getScaledWidth() / 2 })
       canvas.add(moneyText)
     }
     canvas.renderAll()
@@ -223,14 +219,7 @@ const store = useGenericStore(),
 
 watch(photo, async (newPhoto: string) => {
   photoRotation.value = 0
-  backgroundImage.value = await FabricImage.fromURL(
-    newPhoto,
-    {},
-    {
-      originX: 'center',
-      originY: 'center'
-    }
-  )
+  backgroundImage.value = await FabricImage.fromURL(newPhoto)
   let scaleX = canvasWidth.value / backgroundImage.value.width
   const scaleY = canvasHeight.value / backgroundImage.value.height
   if (scaleX < scaleY) {
@@ -271,16 +260,18 @@ onMounted(async () => {
   imageGradientBackground.value = await FabricImage.fromURL(
     `${import.meta.env.VITE_IMAGES_GRADIENT}`
   )
+  imageGradientBackground.value.setXY(new Point(canvasWidth.value / 2, canvasHeight.value / 2))
 
   imageGradient.value = await imageGradientBackground.value.clone()
   imageGradient.value.opacity = 0.12
 
   imageBanner.value = await FabricImage.fromURL(`${import.meta.env.VITE_IMAGES_BANNER_MILESTONE}`)
+  imageBanner.value.setXY(new Point(canvasWidth.value / 2, canvasHeight.value / 2))
 
   imageLogoGSPS.value = await FabricImage.fromURL(`${import.meta.env.VITE_LOGO_FIRST}`)
   {
-    imageLogoGSPS.value.setXY(new Point(1110, 849))
     imageLogoGSPS.value.scaleToWidth(360)
+    imageLogoGSPS.value.positionByLeftTop(new Point(1110, 849))
     // const lanczos = newLanczos(imageLogoGSPS.value)
     // imageLogoGSPS.value.applyFilters([lanczos])
   }
@@ -288,7 +279,7 @@ onMounted(async () => {
   imageLogoFoundation.value = await FabricImage.fromURL(`${import.meta.env.VITE_LOGO_SECOND}`)
   {
     imageLogoFoundation.value.scaleToWidth(240)
-    imageLogoFoundation.value.setXY(new Point(20, 10))
+    imageLogoFoundation.value.positionByLeftTop(new Point(20, 10))
     // const lanczos = newLanczos(imageLogoFoundation.value)
     // imageLogoFoundation.value.applyFilters([lanczos])
   }

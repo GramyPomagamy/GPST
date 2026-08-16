@@ -31,12 +31,11 @@ const store = useGenericStore(),
     fontWeight: 700,
     fontSize: 70,
     fill: '#e1e1e1',
-    top: 460,
+    top: 504,
     left: canvasWidth.value,
     stroke: 'black',
     strokeWidth: 8,
-    paintFirst: 'stroke',
-    originX: 'right'
+    paintFirst: 'stroke'
   }),
   titleText: FabricText = new FabricText('', {
     fontFamily: 'PT Sans Narrow',
@@ -48,8 +47,7 @@ const store = useGenericStore(),
     left: canvasWidth.value,
     stroke: 'black',
     strokeWidth: 8,
-    paintFirst: 'stroke',
-    originX: 'right'
+    paintFirst: 'stroke'
   }),
   subtitleText: FabricText = new FabricText('', {
     fontFamily: 'PT Sans Narrow',
@@ -58,12 +56,11 @@ const store = useGenericStore(),
     fontSize: 77,
     fill: '#e1e1e1',
     textAlign: 'center',
-    top: 134,
+    top: 182,
     left: canvasWidth.value,
     stroke: 'black',
     strokeWidth: 8,
-    paintFirst: 'stroke',
-    originX: 'right'
+    paintFirst: 'stroke'
   }),
   categoryText: FabricText = new FabricText('', {
     fontFamily: 'Saira Condensed',
@@ -72,12 +69,11 @@ const store = useGenericStore(),
     fontSize: 62,
     fill: '#e1e1e1',
     textAlign: 'right',
-    top: 246,
+    top: 284,
     left: canvasWidth.value,
     stroke: 'black',
     strokeWidth: 5,
-    paintFirst: 'stroke',
-    originX: 'right'
+    paintFirst: 'stroke'
   }),
   timeText: FabricText = new FabricText('', {
     fontFamily: 'Saira Condensed',
@@ -86,12 +82,11 @@ const store = useGenericStore(),
     fontSize: 158,
     fill: '#ffbd16',
     textAlign: 'center',
-    top: 302,
+    top: 394,
     left: canvasWidth.value,
     stroke: 'black',
     strokeWidth: 5,
-    paintFirst: 'stroke',
-    originX: 'right'
+    paintFirst: 'stroke'
   }),
   redrawThumbnail = function (filter: boolean = false) {
     canvas.clear()
@@ -129,20 +124,23 @@ const store = useGenericStore(),
     }
 
     if (store.subtitle != '') {
-      titleText.set({ fontSize: 114, top: 10 })
+      titleText.set({ fontSize: 114, top: 79 })
     } else {
-      titleText.set({ fontSize: 150, top: 40 })
+      titleText.set({ fontSize: 150, top: 129 })
     }
 
     titleText.set({ text: store.title })
+    titleText.left = canvasWidth.value - titleText.getScaledWidth() / 2
     canvas.add(titleText)
 
     if (store.subtitle) {
       subtitleText.set({ text: store.subtitle })
+      subtitleText.left = canvasWidth.value - subtitleText.getScaledWidth() / 2
       canvas.add(subtitleText)
     }
 
     categoryText.set({ text: store.category })
+    categoryText.left = canvasWidth.value - categoryText.getScaledWidth() / 2
     canvas.add(categoryText)
     // // Time 158 Saira Condensed, Ultra-Bold Condensed
     // ctx.font = 'normal normal 800 158px Saira Condensed'
@@ -150,9 +148,11 @@ const store = useGenericStore(),
     // ctx.strokeText(store.time, rightSide, timePosition + 158, canvasWidth.value)
     // ctx.fillText(store.time, rightSide, timePosition + 158, canvasWidth.value)
     timeText.set({ text: store.time })
+    timeText.left = canvasWidth.value - timeText.getScaledWidth() / 2
     canvas.add(timeText)
 
     runnerText.set({ text: store.runner })
+    runnerText.left = canvasWidth.value - runnerText.getScaledWidth() / 2
     canvas.add(runnerText)
 
     canvas.renderAll()
@@ -181,14 +181,7 @@ const store = useGenericStore(),
 
 watch(photo, async (newPhoto: string) => {
   photoRotation.value = 0
-  backgroundImage.value = await FabricImage.fromURL(
-    newPhoto,
-    {},
-    {
-      originX: 'center',
-      originY: 'center'
-    }
-  )
+  backgroundImage.value = await FabricImage.fromURL(newPhoto)
   let scaleX = canvasWidth.value / backgroundImage.value.width
   const scaleY = canvasHeight.value / backgroundImage.value.height
   if (scaleX < scaleY) {
@@ -229,16 +222,18 @@ onMounted(async () => {
   imageGradientBackground.value = await FabricImage.fromURL(
     `${import.meta.env.VITE_IMAGES_GRADIENT}`
   )
+  imageGradientBackground.value.setXY(new Point(canvasWidth.value / 2, canvasHeight.value / 2))
 
   imageGradient.value = await imageGradientBackground.value.clone()
   imageGradient.value.opacity = 0.12
 
   imageBanner.value = await FabricImage.fromURL(`${import.meta.env.VITE_IMAGES_BANNER_YOUTUBE}`)
+  imageBanner.value.setXY(new Point(canvasWidth.value / 2, canvasHeight.value / 2))
 
   imageLogoGSPS.value = await FabricImage.fromURL(`${import.meta.env.VITE_LOGO_FIRST}`)
   {
-    imageLogoGSPS.value.setXY(new Point(30, 570))
     imageLogoGSPS.value.scaleToWidth(404)
+    imageLogoGSPS.value.positionByLeftTop(new Point(30, 570))
     // const lanczos = newLanczos(imageLogoGSPS.value)
     // imageLogoGSPS.value.applyFilters([lanczos])
   }
