@@ -23,13 +23,6 @@ const config = defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
-  },
-  css: {
-    preprocessorOptions: {
-      sass: {
-        api: 'modern-compiler'
-      }
-    }
   }
 })
 
